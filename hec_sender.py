@@ -24,7 +24,7 @@ PROD_MAP = {
 
 HEC_URL = os.getenv(
     "S1_HEC_URL",
-    "https://ingest.us1.sentinelone.net/services/collector/event",
+    "https://ingest.us1.sentinelone.net/services/collector/raw?sourcetype=azuread",
 )
 HEC_TOKEN = os.getenv("S1_HEC_TOKEN")
 if not HEC_TOKEN:
@@ -38,7 +38,7 @@ HEADERS = {
 SOURCETYPE_MAP = {
     "cloudtrail": "marketplace-awscloudtrail-latest",
     "fortigate": "marketplace-fortinetfortigate-latest",
-    "azuread": "microsoft_azure_ad",
+    "azuread": "azuread",
     "zscaler":  "marketplace-zscalerinternetaccess-latest",
 }
 
