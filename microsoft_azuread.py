@@ -1,3 +1,5 @@
+#/usr/bin/python
+# NOT WORKING 
 """
 Azure AD / Entra ID faux‑log generator
 --------------------------------------
@@ -17,21 +19,23 @@ The module exposes:
 
 Payload example:
 
-ATTR_FIELDS (added by the sender, not part of the event):
-    {
-        "dataSource.category": "security",
-        "dataSource.name": "Azure AD",
-        "dataSource.vendor": "Azure"
-    }
+Wrapper payload sent to HEC::
 
-Event payload (flat):
     {
-        "activityDateTime": "...",
-        "activityDisplayName": "...",
-        "initiatedByUserId": "...",
-        "eventCategory": "...",
-        "targetResources": [ {...} ],
-        ...
+        "time": 1753162831,
+        "event": {
+            "activityDateTime": "...",
+            "activityDisplayName": "...",
+            "initiatedByUserId": "...",
+            "eventCategory": "...",
+            "targetResources": [ { ... } ],
+            ...
+        },
+        "fields": {
+            "dataSource.category": "security",
+            "dataSource.name": "Azure AD",
+            "dataSource.vendor": "Azure"
+        }
     }
 """
 
@@ -42,7 +46,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, List
 
-# SOURCETYPE = "microsoft_azure_ad"
+# SOURCETYPE = "azure_entra_id"
 
 # --------------------------------------------------------------------------- #
 #  Static pools                                                               #
@@ -194,21 +198,21 @@ def azure_ad_log() -> Dict[str, Any]:
             _build_target("User", user["displayName"])
         )
 
-    # Return flat event dict; ATTR_FIELDS are merged by the sender.
-    return ev
+    # Wrap for Splunk HEC /collector/event endpoint
+    record = {
+        "time": int(datetime.now(tz=timezone.utc).timestamp()),
+        "event": ev,
+        "fields": ATTR_FIELDS,  # metadata travels in "fields" per HEC spec
+    }
+    return record
 
 
-# Optional for hec_sender – but kept for symmetry with other generators
+# Sent inside the "fields" object of the HEC wrapper
 ATTR_FIELDS = {
     "dataSource.category": "security",
     "dataSource.name": "Azure AD",
     "dataSource.vendor": "Azure",
 }
-
-
-def flatten_event(ev: dict) -> dict:
-    # Return flat event dict; ATTR_FIELDS are provided separately by the sender.
-    return ev
 
 # Alias expected by hec_sender.py
 azuread_log = azure_ad_log

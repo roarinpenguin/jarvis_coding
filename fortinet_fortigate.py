@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+#WORKING
+
 """Generate FortiGate-style log lines for SentinelOne demos."""
 from datetime import datetime
 from ipaddress import IPv4Address
