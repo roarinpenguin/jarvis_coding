@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-08-03T21:31:56.585032",
+  "timestamp": "2025-08-04T08:48:02.228801",
   "summary": {
     "total_generators": 42,
     "total_tests": 45,
-    "passed": 39,
-    "failed": 6,
+    "passed": 43,
+    "failed": 2,
     "warnings": 1,
-    "success_rate": 86.66666666666667
+    "success_rate": 95.55555555555556
   },
   "generators": {
     "apache_http": {
@@ -16,7 +16,7 @@
       "parsers": [
         "../parsers/community/apache_http_logs-latest"
       ],
-      "sample": "10.249.8.47 - - [04/Aug/2025:04:31:56 +0000] \"POST / HTTP/1.1\" 200 8492"
+      "sample": "10.65.206.138 - user62 [04/Aug/2025:15:48:02 +0000] \"GET /api/v1/users HTTP/2.0\" 503 284"
     },
     "armis": {
       "success": true,
@@ -25,7 +25,7 @@
       "parsers": [
         "../parsers/community/armis_armis_logs-latest"
       ],
-      "sample": "<134>Aug 04 04:30:56 armis-sensor armis - - {\"id\":\"902cd369-e826-4636-9643-2cbd862b8491\",\"type\":\"Activity\",\"_time\":\"2025-08-04T04:30:56.539438+00:00Z\",\"time\":1754281856,\"description\":\"Device activity "
+      "sample": "<134>Aug 04 15:46:17 armis-sensor armis - - {\"id\":\"2d378185-8d0e-4f39-a4a0-e95a64dd418c\",\"type\":\"AnomalousActivity\",\"_time\":\"2025-08-04T15:46:17.084513+00:00Z\",\"time\":1754322377,\"description\":\"Anomalo"
     },
     "aruba_clearpass": {
       "success": true,
@@ -34,71 +34,71 @@
       "parsers": [
         "../parsers/community/aruba_clearpass_logs-latest"
       ],
-      "sample": "2025-08-04 04:31:56,539 clearpass-3.company.com clearpass-server 10.100.7.251 System Logs 8943 component=Policy_Engine severity=INFO"
+      "sample": "2025-08-04 15:48:02,085 clearpass-4.company.com clearpass-server 10.100.6.10 Audit Records 4779 action=Device Onboarded admin_user=admin"
     },
     "aws_cloudtrail": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/aws_elasticloadbalancer_logs-latest",
         "../parsers/community/aws_vpcflow_logs-latest",
-        "../parsers/community/aws_guardduty_logs-latest"
+        "../parsers/community/aws_guardduty_logs-latest",
+        "../parsers/community/aws_elasticloadbalancer_logs-latest"
       ],
-      "sample": "{\"eventCategory\":\"Management\",\"eventName\":\"DescribeInstances\",\"eventSource\":\"ec2.amazonaws.com\",\"eventTime\":\"2025-08-04T04:31:56Z\",\"eventVersion\":\"1.09\",\"eventID\":\"1128e916-b4e2-4388-bba9-237f56d9d07a"
+      "sample": "{\"eventCategory\":\"Insight\",\"eventName\":\"GetFindings\",\"eventSource\":\"guardduty.amazonaws.com\",\"eventTime\":\"2025-08-04T15:48:02Z\",\"eventVersion\":\"1.09\",\"eventID\":\"f377cf00-9fe3-422a-b45a-29a3ddf91802\",\""
     },
     "aws_elb": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/aws_elasticloadbalancer_logs-latest",
         "../parsers/community/aws_vpcflow_logs-latest",
-        "../parsers/community/aws_guardduty_logs-latest"
+        "../parsers/community/aws_guardduty_logs-latest",
+        "../parsers/community/aws_elasticloadbalancer_logs-latest"
       ],
-      "sample": "{\"type\":\"https\",\"time\":\"2025-08-04T04:28:10.542075Z\",\"alb\":\"app/staging-web-alb/ad6509b60a99421d\",\"client_ip\":\"66.0.226.163\",\"client_port\":36639,\"backend_ip\":\"172.27.226.252\",\"backend_port\":5000,\"requ"
+      "sample": "{\"type\":\"http\",\"time\":\"2025-08-04T15:47:27.087696Z\",\"alb\":\"app/prod-web-alb/93c0873e3c564867\",\"client_ip\":\"173.232.19.178\",\"client_port\":28834,\"backend_ip\":\"192.168.232.220\",\"backend_port\":5000,\"reque"
     },
     "aws_guardduty": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/aws_elasticloadbalancer_logs-latest",
         "../parsers/community/aws_vpcflow_logs-latest",
-        "../parsers/community/aws_guardduty_logs-latest"
+        "../parsers/community/aws_guardduty_logs-latest",
+        "../parsers/community/aws_elasticloadbalancer_logs-latest"
       ],
-      "sample": "{\"schemaVersion\":\"2.0\",\"accountId\":\"671013114833\",\"region\":\"ap-south-1\",\"partition\":\"aws\",\"id\":\"a7b7880b-5562-41d9-b447-fb39d9c2c896\",\"arn\":\"arn:aws:guardduty:ap-south-1::784c2c7bbd6e47cd9a038e0717ece"
+      "sample": "{\"schemaVersion\":\"2.0\",\"accountId\":\"436600407548\",\"region\":\"ap-south-1\",\"partition\":\"aws\",\"id\":\"de05b07e-d608-4370-83ed-8e5f06c28688\",\"arn\":\"arn:aws:guardduty:ap-south-1::9d298166ddce48ecb2dff3746f5dd"
     },
     "aws_vpcflowlogs": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/aws_elasticloadbalancer_logs-latest",
         "../parsers/community/aws_vpcflow_logs-latest",
-        "../parsers/community/aws_guardduty_logs-latest"
+        "../parsers/community/aws_guardduty_logs-latest",
+        "../parsers/community/aws_elasticloadbalancer_logs-latest"
       ],
-      "sample": "{\"event.type\": \"network_flow\", \"message\": \"2 316744892306 eni-fc0f457b02ec4e79a 10.197.28.62 203.0.113.197 31891 3389 6 341 32373 1754281863 1754281916 ACCEPT OK\"}"
+      "sample": "{\"event.type\": \"network_flow\", \"message\": \"2 221011682858 eni-88f72b896e28423cb 10.177.158.20 203.0.113.140 60685 53 6 171 19921 1754322467 1754322482 REJECT OK\"}"
     },
     "beyondtrust_passwordsafe": {
       "success": true,
       "message": "Text log output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest",
-        "../parsers/community/beyondtrust_passwordsafe_logs-latest"
+        "../parsers/community/beyondtrust_passwordsafe_logs-latest",
+        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest"
       ],
-      "sample": "2025-08-04 04:28:38 10.0.0.150 {\"EventTime\":\"2025-08-04T04:28:38.545981Z\",\"EventType\":\"SessionEnd\",\"EventId\":\"9f582b12-70d8-47fd-b591-dbde854c4b03\",\"UserId\":\"bjohnson\",\"UserName\":\"Bob Johnson\",\"UserDi"
+      "sample": "2025-08-04 15:44:54 10.0.0.150 {\"EventTime\":\"2025-08-04T15:44:54.089402Z\",\"EventType\":\"AssetAccess\",\"EventId\":\"f9e2157a-bedb-4365-b2c9-4f985509a568\",\"UserId\":\"admin\",\"UserName\":\"Admin User\",\"UserDispl"
     },
     "beyondtrust_privilegemgmt_windows": {
       "success": true,
       "message": "Text log output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest",
-        "../parsers/community/beyondtrust_passwordsafe_logs-latest"
+        "../parsers/community/beyondtrust_passwordsafe_logs-latest",
+        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest"
       ],
-      "sample": "2025-08-04 04:29:18.547,[INFO]:,EPM_ALLOW,,Application execution blocked by policy,jdoe,DESKTOP-ABC123,Standard Users,Office Applications,Administrative task required,LOCAL\\Workgroup,52670c6d3b0107a14"
+      "sample": "2025-08-04 15:44:25.090,[INFO]:,EPM_ACCESS,,Registry modification detected,service_user,DEV-MACHINE-02,Standard Users,System Utilities,System maintenance activity,CORP\\Domain,231594aadabfc2589cd4f6f9c"
     },
     "checkpoint": {
       "success": true,
@@ -107,52 +107,52 @@
       "parsers": [
         "../parsers/community/checkpoint_checkpoint_logs-latest"
       ],
-      "sample": "Aug 4 04:31:56 checkpoint-1.company.com time=\"Aug 04 04:31:56\" orig=\"100.16.11.129\" origin=\"fw02\" action=\"Reject\" src=\"100.16.11.129\" dst=\"192.168.96.145\" proto=\"gre\" service=\"dns\" s_port=\"0\" rule=\"Mo"
+      "sample": "Aug 4 15:48:02 checkpoint-3.company.com time=\"Aug 04 15:48:02\" orig=\"220.85.143.101\" origin=\"mgmt-server\" action=\"Decrypt\" src=\"220.85.143.101\" dst=\"10.183.0.48\" proto=\"tcp\" service=\"80\" s_port=\"56490"
     },
     "cisco_asa": {
       "success": true,
       "message": "Text log output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/cisco_ios_logs-latest",
-        "../parsers/community/cisco_meraki_flow_logs-latest",
         "../parsers/community/cisco_firewall_threat_defense-latest",
-        "../parsers/community/cisco_isa3000_logs-latest",
         "../parsers/community/cisco_firewall-latest",
         "../parsers/community/cisco_fmc_logs-latest",
-        "../parsers/community/cisco_meraki-latest"
+        "../parsers/community/cisco_meraki_flow_logs-latest",
+        "../parsers/community/cisco_meraki-latest",
+        "../parsers/community/cisco_isa3000_logs-latest",
+        "../parsers/community/cisco_ios_logs-latest"
       ],
-      "sample": "<166>Aug 04 2025 04:31:56 asa-demo : %ASA-6-302015: Built outbound TCP connection 901425 for inside:192.0.2.10/44814 (192.0.2.10/44814) to outside:203.0.113.5/443 (203.0.113.5/443)"
+      "sample": "<166>Aug 04 2025 15:48:02 asa-demo : %ASA-6-302015: Built outbound TCP connection 538951 for inside:192.0.2.10/20188 (192.0.2.10/20188) to outside:203.0.113.5/443 (203.0.113.5/443)"
     },
     "cisco_meraki": {
       "success": true,
       "message": "Text log output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/cisco_ios_logs-latest",
-        "../parsers/community/cisco_meraki_flow_logs-latest",
         "../parsers/community/cisco_firewall_threat_defense-latest",
-        "../parsers/community/cisco_isa3000_logs-latest",
         "../parsers/community/cisco_firewall-latest",
         "../parsers/community/cisco_fmc_logs-latest",
-        "../parsers/community/cisco_meraki-latest"
+        "../parsers/community/cisco_meraki_flow_logs-latest",
+        "../parsers/community/cisco_meraki-latest",
+        "../parsers/community/cisco_isa3000_logs-latest",
+        "../parsers/community/cisco_ios_logs-latest"
       ],
-      "sample": "<135> 1754281916 meraki-mx64 flows start src=10.0.126.136 dst=93.184.213.22 mac=00:11:22:33:44:34 protocol=tcp sport=26067 dport=443"
+      "sample": "<134> 1754322482 meraki-mx64 ip_flow src=10.0.221.185 dst=93.184.3.84 protocol=icmp sport=2554 dport=443 translated_src_ip=172.16.205.227 translated_port=443"
     },
     "cisco_umbrella": {
-      "success": false,
-      "message": "Exception: No module named 'requests'",
-      "has_attr_fields": false,
+      "success": true,
+      "message": "Text log output validated",
+      "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/cisco_ios_logs-latest",
-        "../parsers/community/cisco_meraki_flow_logs-latest",
         "../parsers/community/cisco_firewall_threat_defense-latest",
-        "../parsers/community/cisco_isa3000_logs-latest",
         "../parsers/community/cisco_firewall-latest",
         "../parsers/community/cisco_fmc_logs-latest",
-        "../parsers/community/cisco_meraki-latest"
+        "../parsers/community/cisco_meraki_flow_logs-latest",
+        "../parsers/community/cisco_meraki-latest",
+        "../parsers/community/cisco_isa3000_logs-latest",
+        "../parsers/community/cisco_ios_logs-latest"
       ],
-      "sample": "Traceback (most recent call last):\n  File \"/Users/nathanial.smalley/projects/jarvis_coding/event_python_writer/test_all_generators.py\", line 71, in test_generator\n    module = importlib.import_module("
+      "sample": "\"1184c499-ca90-4db1-a819-59be215a859b\",\"2025-08-04 15:48:02\",\"user2501@example.com\",\"bob\",\"POLICY_UPDATE\",\"SUCCESS\",\"203.0.113.8\",\"{}\",\"{}\""
     },
     "cloudflare_waf": {
       "success": true,
@@ -161,55 +161,55 @@
       "parsers": [
         "../parsers/community/cloudflare_inc_waf-lastest"
       ],
-      "sample": "json.Timestamp = \"2025-08-04T04:31:56.553727+00:00Z\";\njson.CreatedAt = \"2025-08-04T04:31:56.553727+00:00Z\";\njson.EdgeStartTimestamp = 1754281916553726976;\njson.ClientIP = \"1.8.85.31\";\njson.ClientReque"
+      "sample": "json.Timestamp = \"2025-08-04T15:48:02.212491+00:00Z\";\njson.CreatedAt = \"2025-08-04T15:48:02.212491+00:00Z\";\njson.EdgeStartTimestamp = 1754322482212491008;\njson.ClientIP = \"133.168.202.85\";\njson.Client"
     },
     "corelight_conn": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/corelight_ssl_logs-latest",
         "../parsers/community/corelight_http_logs-latest",
         "../parsers/community/corelight_conn_logs-latest",
-        "../parsers/community/corelight_tunnel_logs-latest"
+        "../parsers/community/corelight_tunnel_logs-latest",
+        "../parsers/community/corelight_ssl_logs-latest"
       ],
-      "sample": "{\"ts\":1754281786.554298,\"uid\":\"CKKFyjc5YlDYH5B1b9\",\"id\":{\"orig_h\":\"10.159.253.15\",\"orig_p\":3189,\"resp_h\":\"23.109.184.26\",\"resp_p\":3306},\"proto\":\"tcp\",\"service\":\"mysql\",\"duration\":82.582042,\"orig_bytes"
+      "sample": "{\"ts\":1754322259.213095,\"uid\":\"Ck9HKAy2S5yIL6kt8h\",\"id\":{\"orig_h\":\"192.168.80.158\",\"orig_p\":39548,\"resp_h\":\"130.194.219.235\",\"resp_p\":27017},\"proto\":\"tcp\",\"service\":\"mongodb\",\"duration\":22.838914,\"ori"
     },
     "corelight_http": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/corelight_ssl_logs-latest",
         "../parsers/community/corelight_http_logs-latest",
         "../parsers/community/corelight_conn_logs-latest",
-        "../parsers/community/corelight_tunnel_logs-latest"
+        "../parsers/community/corelight_tunnel_logs-latest",
+        "../parsers/community/corelight_ssl_logs-latest"
       ],
-      "sample": "{\"ts\":1754281889.554824,\"uid\":\"CzD78DR6taNKCZKZoP\",\"id\":{\"orig_h\":\"10.105.191.127\",\"orig_p\":11039,\"resp_h\":\"10.38.205.189\",\"resp_p\":443},\"trans_depth\":1,\"method\":\"OPTIONS\",\"host\":\"internal.corp.local\""
+      "sample": "{\"ts\":1754322452.213678,\"uid\":\"CEHfKDxgY6bbLJpydI\",\"id\":{\"orig_h\":\"10.98.38.50\",\"orig_p\":14050,\"resp_h\":\"192.168.193.237\",\"resp_p\":443},\"trans_depth\":1,\"method\":\"POST\",\"host\":\"internal.corp.local\",\"ur"
     },
     "corelight_ssl": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/corelight_ssl_logs-latest",
         "../parsers/community/corelight_http_logs-latest",
         "../parsers/community/corelight_conn_logs-latest",
-        "../parsers/community/corelight_tunnel_logs-latest"
+        "../parsers/community/corelight_tunnel_logs-latest",
+        "../parsers/community/corelight_ssl_logs-latest"
       ],
-      "sample": "{\"ts\":1754281635.555296,\"uid\":\"C394fLt7AooId6cSmZ\",\"id\":{\"orig_h\":\"192.168.247.191\",\"orig_p\":44853,\"resp_h\":\"68.25.122.179\",\"resp_p\":443},\"version\":\"TLSv1.2\",\"cipher\":\"TLS_ECDHE_RSA_WITH_AES_256_CBC_S"
+      "sample": "{\"ts\":1754322263.214143,\"uid\":\"CApgpxUSRNsHuclwPD\",\"id\":{\"orig_h\":\"192.168.190.165\",\"orig_p\":2360,\"resp_h\":\"119.242.217.15\",\"resp_p\":443},\"version\":\"TLSv1.3\",\"cipher\":\"TLS_ECDHE_ECDSA_WITH_AES_128_GCM"
     },
     "corelight_tunnel": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/corelight_ssl_logs-latest",
         "../parsers/community/corelight_http_logs-latest",
         "../parsers/community/corelight_conn_logs-latest",
-        "../parsers/community/corelight_tunnel_logs-latest"
+        "../parsers/community/corelight_tunnel_logs-latest",
+        "../parsers/community/corelight_ssl_logs-latest"
       ],
-      "sample": "{\"ts\":1754281746.555651,\"uid\":\"CeaYEmv3AqjJSTetgd\",\"id\":{\"orig_h\":\"172.24.114.100\",\"orig_p\":0,\"resp_h\":\"2.19.63.233\",\"resp_p\":0},\"tunnel_type\":\"Tunnel::GRE\",\"action\":\"Tunnel::DISCOVER\",\"inner\":{\"id\":{"
+      "sample": "{\"ts\":1754322419.214574,\"uid\":\"CeXDABad4GzCqCrygA\",\"id\":{\"orig_h\":\"10.219.204.28\",\"orig_p\":3228,\"resp_h\":\"15.249.31.231\",\"resp_p\":5072},\"tunnel_type\":\"Tunnel::AYIYA\",\"action\":\"Tunnel::DISCOVER\",\"inner"
     },
     "crowdstrike_falcon": {
       "success": true,
@@ -218,7 +218,7 @@
       "parsers": [
         "../parsers/community/crowdstrike_endpoint-latest"
       ],
-      "sample": "CEF:0|CrowdStrike|Falcon|6.35.15406.0|1369|File System Activity|3|rt=1754281916567 start=1754281346449 end=0 dvchost=LAPTOP-XYZ789 duser=jdoe suid=S-1-5-21-492956551-752795348-5857-4292 externalId=ldt"
+      "sample": "CEF:0|CrowdStrike|Falcon|6.35.15406.0|6492|Ransomware Activity Detected|10|rt=1754322482215 start=1754321495331 end=0 dvchost=DESKTOP-ABC123 duser=fchen suid=S-1-5-21-477638871-567947606-1343-3378 ext"
     },
     "cyberark_pas": {
       "success": true,
@@ -227,7 +227,7 @@
       "parsers": [
         "../parsers/community/cyberark_pas_logs-latest"
       ],
-      "sample": "{\"policyName\":\"Ransomware Protection\",\"policyCategory\":\"threat_protection\",\"eventType\":\"Audit Event\",\"sourceType\":\"Process\",\"sourceName\":\"notepad++.exe\",\"userName\":\"bob.jones\",\"computerName\":\"DESKTOP-"
+      "sample": "{\"policyName\":\"Elevate to Administrator\",\"policyCategory\":\"elevation\",\"eventType\":\"Elevation Requested\",\"sourceType\":\"System\",\"sourceName\":\"cmd.exe\",\"userName\":\"alice.williams\",\"computerName\":\"DEV-MAC"
     },
     "darktrace": {
       "success": true,
@@ -236,7 +236,7 @@
       "parsers": [
         "../parsers/community/darktrace_darktrace_logs-latest"
       ],
-      "sample": "{\"time\":1754281916568,\"creationTime\":1754281801568,\"model\":{\"name\":\"Anomalous Server Activity / Rare External from Server\",\"description\":\"Server initiated unusual outbound connection to external IP\",\""
+      "sample": "{\"time\":1754322482216,\"incidentId\":\"ae4794fd-3a52-4178-bc2f-91d13273fc57\",\"title\":\"Lateral Movement Detected\",\"summary\":\"Device accessing multiple internal systems in unusual pattern\",\"category\":\"late"
     },
     "extrahop": {
       "success": true,
@@ -245,7 +245,7 @@
       "parsers": [
         "../parsers/community/extrahop_extrahop_logs-latest"
       ],
-      "sample": "{\"id\":9103450,\"start_time\":1754268536569,\"update_time\":1754268596569,\"mod_time\":1754268596569,\"title\":\"Ransomware Behavior Detected\",\"description\":\"Ransomware behavior detected on srv-web-25 - rapid f"
+      "sample": "{\"id\":7426479,\"start_time\":1754309222216,\"update_time\":1754310362216,\"mod_time\":1754310362216,\"title\":\"SQL Injection Attack Attempt\",\"description\":\"SQL injection attempt detected from 213.154.212.213 "
     },
     "forcepoint_firewall": {
       "success": true,
@@ -254,7 +254,7 @@
       "parsers": [
         "../parsers/community/forcepoint_forcepoint_logs-latest"
       ],
-      "sample": "2025-08-04T04:27:24.571+00:00 CEF:0|Forcepoint|NGFW|6.8.1|1003|SQL Injection Attempt|10|act=Block app=SMTP deviceDirection=0 rt=1754281644571 src=172.20.99.26 spt=64185 dst=221.1.46.203 dpt=7611 proto"
+      "sample": "2025-08-04T15:45:17.217+00:00 CEF:0|Forcepoint|NGFW|6.8.1|1002|Brute Force Attack|9|act=Deny app=File Transfer deviceDirection=1 rt=1754322317217 src=172.23.253.56 spt=52222 dst=162.64.91.73 dpt=67 pr"
     },
     "fortinet_fortigate": {
       "success": true,
@@ -272,7 +272,7 @@
       "parsers": [
         "../parsers/community/hashicorp_hcp_vault_logs-latest"
       ],
-      "sample": "{\"time\":\"2025-08-04T04:30:02.572064Z\",\"type\":\"response\",\"auth\":{\"client_token\":\"hvs.f4c904a8939e4c0ab43403c28bac83bd\",\"accessor\":\"acc_9da159e54fdc450c\",\"display_name\":\"jane.smith\",\"policies\":[\"readonl"
+      "sample": "{\"time\":\"2025-08-04T15:46:53.218597Z\",\"type\":\"request\",\"auth\":{\"client_token\":\"hvs.6202974244c846cb8a1b5dae8f12d647\",\"accessor\":\"acc_5e0cf2ae4471438b\",\"display_name\":\"bob.johnson\",\"policies\":[\"readonl"
     },
     "manageengine_ad_audit_plus": {
       "success": true,
@@ -281,7 +281,7 @@
       "parsers": [
         "../parsers/community/manageengine_adauditplus_logs-latest"
       ],
-      "sample": "<133>1 2025-08-04T04:27:12.573Z WORKSTATION-001 ADAuditPlus - - - [ Category = Directory Service Access ] [ SOURCE = Domain Controller ] [ EXTRA_COLUMN1 = Standard AD operation ] [ CLIENT_IP_ADDRESS ="
+      "sample": "<134>1 2025-08-04T15:45:27.219Z DC01 ADAuditPlus - - - [ Category = System Events ] [ SOURCE = Domain Controller ] [ EXTRA_COLUMN1 = Standard AD operation ] [ CLIENT_IP_ADDRESS = 10.254.174.201 ] [ EV"
     },
     "microsoft_365_mgmt_api": {
       "success": true,
@@ -289,12 +289,12 @@
       "has_attr_fields": true,
       "parsers": [
         "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
-        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
         "../parsers/community/microsoft_azure_ad_logs-latest",
-        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
-        "../parsers/community/microsoft_365_mgmt_api_logs-latest"
+        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
+        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
+        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest"
       ],
-      "sample": "{\"id\":\"e927bcc1-d8d2-46ac-bd88-5241095efcdb\",\"azureSubscriptionId\":\"1153707a-6b4f-4d9f-a6d1-9e4a9c83c231\",\"azureTenantId\":\"0953dc9c-46a2-450c-8a5c-4280c2719624\",\"activityGroupName\":\"Mass email sending"
+      "sample": "{\"id\":\"cd9f6aa4-8480-440b-8cd6-f7e448d68124\",\"azureSubscriptionId\":\"7157ff54-54f8-40dc-930e-8c85b9b6670f\",\"azureTenantId\":\"a260e288-0d9b-4959-868c-c4626803b8a5\",\"activityGroupName\":\"Multiple users del"
     },
     "microsoft_azure_ad_signin": {
       "success": true,
@@ -302,12 +302,12 @@
       "has_attr_fields": true,
       "parsers": [
         "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
-        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
         "../parsers/community/microsoft_azure_ad_logs-latest",
-        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
-        "../parsers/community/microsoft_365_mgmt_api_logs-latest"
+        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
+        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
+        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest"
       ],
-      "sample": "{\"records\":[{\"time\":\"2025-08-04T04:31:56.574647Z\",\"resourceId\":\"/tenants/3004b087-c916-46b2-b3b1-cd045525120c/providers/Microsoft.aadiam\",\"operationName\":\"Sign-in activity\",\"operationVersion\":\"1.0\",\"c"
+      "sample": "{\"records\":[{\"time\":\"2025-08-04T15:48:02.220770Z\",\"resourceId\":\"/tenants/2ac509d5-0a08-4176-af17-3d07732864a7/providers/Microsoft.aadiam\",\"operationName\":\"Sign-in activity\",\"operationVersion\":\"1.0\",\"c"
     },
     "microsoft_azuread": {
       "success": true,
@@ -315,12 +315,12 @@
       "has_attr_fields": true,
       "parsers": [
         "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
-        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
         "../parsers/community/microsoft_azure_ad_logs-latest",
-        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
-        "../parsers/community/microsoft_365_mgmt_api_logs-latest"
+        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
+        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
+        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest"
       ],
-      "sample": "{\"activityDateTime\":\"2025-08-03T16:58:27+00:00\",\"correlationId\":\"a0cd8343-1518-40fd-be89-84ce42e183d0\",\"id\":\"508d10e3-48c8-4b39-9d89-0b4d17abb0cb\",\"initiatedBy\":{},\"targetResources\":[{\"displayName\":\"A"
+      "sample": "{\"activityDateTime\":\"2025-08-04T05:01:52+00:00\",\"correlationId\":\"837f8983-c41c-4259-b822-b5dbde95253f\",\"id\":\"f8aab9cd-f60c-46fc-b9a2-4df35d0f9757\",\"initiatedBy\":{},\"targetResources\":[{\"displayName\":\"J"
     },
     "microsoft_defender_email": {
       "success": true,
@@ -328,12 +328,12 @@
       "has_attr_fields": true,
       "parsers": [
         "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
-        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
         "../parsers/community/microsoft_azure_ad_logs-latest",
-        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
-        "../parsers/community/microsoft_365_mgmt_api_logs-latest"
+        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
+        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
+        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest"
       ],
-      "sample": "{\"records\":[{\"time\":\"2025-08-04T04:31:56.575679Z\",\"resourceId\":\"/subscriptions/653d1933-d462-4a31-83e3-6c75247b1cee/resourcegroups/rg-security/providers/microsoft.operationalinsights/workspaces/securi"
+      "sample": "{\"records\":[{\"time\":\"2025-08-04T15:48:02.221940Z\",\"resourceId\":\"/subscriptions/53225dac-1085-4ac0-81bd-1d4f6410f908/resourcegroups/rg-security/providers/microsoft.operationalinsights/workspaces/securi"
     },
     "mimecast": {
       "success": true,
@@ -342,17 +342,17 @@
       "parsers": [
         "../parsers/community/mimecast_mimecast_logs-latest"
       ],
-      "sample": "{\"identifier\":\"Audit\",\"mimecastEvent\":{\"eventTime\":\"2025-08-04T04:31:56+0000\",\"auditType\":\"failed logon\",\"category\":\"Administration Logs\",\"eventInfo\":\"User admin performed failed logon action\",\"id\":\"6"
+      "sample": "{\"identifier\":\"Audit\",\"mimecastEvent\":{\"eventTime\":\"2025-08-04T15:48:02+0000\",\"auditType\":\"user creation\",\"category\":\"Archive Logs\",\"eventInfo\":\"User alice.williams performed failed logon action\",\"id\""
     },
     "netskope": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/netskope_logshipper_logs-latest",
-        "../parsers/community/netskope_netskope_logs-latest"
+        "../parsers/community/netskope_netskope_logs-latest",
+        "../parsers/community/netskope_logshipper_logs-latest"
       ],
-      "sample": "{\"_id\":\"fb63b322-eea6-402b-9a7a-cb39a778d7dc\",\"_event_id\":\"9156555\",\"_category_id\":4649,\"_category_tags\":[\"dlp\",\"development_tools\"],\"_correlation_id\":\"c2726347-b728-4f5a-9f3c-0ecd52f4b93f\",\"_detectio"
+      "sample": "{\"_id\":\"8b6ce8e5-7293-421f-b756-8c545c658192\",\"_event_id\":\"4776982\",\"_category_id\":6142,\"_category_tags\":[\"delete\",\"development_tools\"],\"_correlation_id\":\"d6377346-7f6d-4de0-9404-6f97c12fa04c\",\"_detec"
     },
     "okta_authentication": {
       "success": true,
@@ -361,74 +361,74 @@
       "parsers": [
         "../parsers/community/okta_ocsf_logs-latest"
       ],
-      "sample": "{\"activity_id\": 99, \"activity_name\": \"OIDC token revocation request\", \"actor.user.email_addr\": \"07f4cb4dcb59\", \"actor.user.name\": \"Okta Dashboard\", \"actor.user.type_id\": 99, \"actor.user.uid\": \"okta.86"
+      "sample": "{\"activity_id\": 99, \"activity_name\": \"OIDC token revocation request\", \"actor.user.email_addr\": \"ed55b47a2bbd\", \"actor.user.name\": \"Okta Dashboard\", \"actor.user.type_id\": 99, \"actor.user.uid\": \"okta.f4"
     },
     "paloalto_firewall": {
       "success": true,
       "message": "Text log output validated",
       "has_attr_fields": true,
       "parsers": [
+        "../parsers/community/paloalto_prismasase_logs-latest",
         "../parsers/community/paloalto_paloalto_logs-latest",
-        "../parsers/community/paloalto_alternate_logs-latest",
-        "../parsers/community/paloalto_prismasase_logs-latest"
+        "../parsers/community/paloalto_alternate_logs-latest"
       ],
-      "sample": ",2025/08/04 04:31:56,467756436431790,THREAT,virus,,2025/08/04 04:31:56,6.192.92.129,172.29.238.225,6.192.92.129,172.29.238.225,block-threats,,,ftp,vsys1,internal,internet,ethernet1/6,ethernet1/1,FORWA"
+      "sample": ",2025/08/04 15:48:02,613991101903427,THREAT,spyware,,2025/08/04 15:48:02,116.232.168.84,10.46.28.215,116.232.168.84,10.46.28.215,block-threats,,,ftp,vsys1,untrust,internal,ethernet1/4,ethernet1/7,FORW"
     },
     "parser_compatibility_checker": {
       "success": false,
       "message": "No log generation function found",
       "has_attr_fields": false,
       "parsers": [
-        "../parsers/community/managedengine_ad_audit_plus-latest",
-        "../parsers/community/mimecast_mimecast_logs-latest",
-        "../parsers/community/cyberark_pas_logs-latest",
-        "../parsers/community/cisco_meraki_flow_logs-latest",
-        "../parsers/community/incapsula_incapsula_logs-latest",
-        "../parsers/community/hashicorp_hcp_vault_logs-latest",
-        "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
-        "../parsers/community/aws_vpcflow_logs-latest",
-        "../parsers/community/darktrace_darktrace_logs-latest",
-        "../parsers/community/paloalto_prismasase_logs-latest",
-        "../parsers/community/corelight_ssl_logs-latest",
-        "../parsers/community/aws_elasticloadbalancer_logs-latest",
-        "../parsers/community/cisco_meraki-latest",
-        "../parsers/community/tailscale_tailscale_logs-latest",
-        "../parsers/community/extrahop_extrahop_logs-latest",
-        "../parsers/community/armis_armis_logs-latest",
-        "../parsers/community/cisco_ios_logs-latest",
-        "../parsers/community/cisco_firewall_threat_defense-latest",
-        "../parsers/community/forcepoint_forcepoint_logs-latest",
-        "../parsers/community/fortinet_fortigate_fortimanager_logs-latest",
-        "../parsers/community/cloudflare_inc_waf-lastest",
-        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
-        "../parsers/community/microsoft_azure_ad_logs-latest",
-        "../parsers/community/netskope_netskope_logs-latest",
-        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
-        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
-        "../parsers/community/checkpoint_checkpoint_logs-latest",
-        "../parsers/community/windows_dhcp_logs-latest",
-        "../parsers/community/aruba_clearpass_logs-latest",
-        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest",
-        "../parsers/community/crowdstrike_endpoint-latest",
         "../parsers/community/vectra_ai_logs-latest",
-        "../parsers/community/okta_ocsf_logs-latest",
-        "../parsers/community/cisco_isa3000_logs-latest",
-        "../parsers/community/cisco_firewall-latest",
-        "../parsers/community/singularityidentity_singularityidentity_logs-latest",
-        "../parsers/community/cisco_fmc_logs-latest",
-        "../parsers/community/windows_EventLog-pipeParseCommands-v0.1",
-        "../parsers/community/apache_http_logs-latest",
-        "../parsers/community/corelight_tunnel_logs-latest",
-        "../parsers/community/paloalto_paloalto_logs-latest",
         "../parsers/community/corelight_conn_logs-latest",
-        "../parsers/community/beyondtrust_passwordsafe_logs-latest",
-        "../parsers/community/vmware_vcenter_logs-latest",
-        "../parsers/community/manageengine_adauditplus_logs-latest",
-        "../parsers/community/corelight_http_logs-latest",
-        "../parsers/community/aws_guardduty_logs-latest",
-        "../parsers/community/netskope_logshipper_logs-latest",
+        "../parsers/community/windows_EventLog-pipeParseCommands-v0.1",
+        "../parsers/community/hashicorp_hcp_vault_logs-latest",
+        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
+        "../parsers/community/crowdstrike_endpoint-latest",
+        "../parsers/community/tailscale_tailscale_logs-latest",
+        "../parsers/community/cisco_isa3000_logs-latest",
+        "../parsers/community/cloudflare_inc_waf-lastest",
+        "../parsers/community/proofpoint_proofpoint_logs-latest",
+        "../parsers/community/darktrace_darktrace_logs-latest",
+        "../parsers/community/netskope_netskope_logs-latest",
+        "../parsers/community/extrahop_extrahop_logs-latest",
         "../parsers/community/paloalto_alternate_logs-latest",
-        "../parsers/community/proofpoint_proofpoint_logs-latest"
+        "../parsers/community/netskope_logshipper_logs-latest",
+        "../parsers/community/paloalto_prismasase_logs-latest",
+        "../parsers/community/paloalto_paloalto_logs-latest",
+        "../parsers/community/cisco_firewall-latest",
+        "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
+        "../parsers/community/cisco_meraki-latest",
+        "../parsers/community/vmware_vcenter_logs-latest",
+        "../parsers/community/beyondtrust_passwordsafe_logs-latest",
+        "../parsers/community/aws_elasticloadbalancer_logs-latest",
+        "../parsers/community/corelight_ssl_logs-latest",
+        "../parsers/community/okta_ocsf_logs-latest",
+        "../parsers/community/singularityidentity_singularityidentity_logs-latest",
+        "../parsers/community/aws_guardduty_logs-latest",
+        "../parsers/community/cyberark_pas_logs-latest",
+        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest",
+        "../parsers/community/incapsula_incapsula_logs-latest",
+        "../parsers/community/cisco_firewall_threat_defense-latest",
+        "../parsers/community/cisco_fmc_logs-latest",
+        "../parsers/community/windows_dhcp_logs-latest",
+        "../parsers/community/apache_http_logs-latest",
+        "../parsers/community/microsoft_azure_ad_logs-latest",
+        "../parsers/community/cisco_meraki_flow_logs-latest",
+        "../parsers/community/manageengine_adauditplus_logs-latest",
+        "../parsers/community/cisco_ios_logs-latest",
+        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
+        "../parsers/community/armis_armis_logs-latest",
+        "../parsers/community/checkpoint_checkpoint_logs-latest",
+        "../parsers/community/managedengine_ad_audit_plus-latest",
+        "../parsers/community/corelight_tunnel_logs-latest",
+        "../parsers/community/corelight_http_logs-latest",
+        "../parsers/community/aws_vpcflow_logs-latest",
+        "../parsers/community/forcepoint_forcepoint_logs-latest",
+        "../parsers/community/aruba_clearpass_logs-latest",
+        "../parsers/community/mimecast_mimecast_logs-latest",
+        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
+        "../parsers/community/fortinet_fortigate_fortimanager_logs-latest"
       ],
       "sample": null
     },
@@ -439,7 +439,7 @@
       "parsers": [
         "../parsers/community/proofpoint_proofpoint_logs-latest"
       ],
-      "sample": "{\"GUID\":\"9f9365d6-6509-4f77-9825-b898ac6f6db7\",\"QID\":\"Q774597\",\"id\":\"64eb5ffc-2c5a-45ce-b895-98f752f95bc7\",\"messageID\":\"<356e61f7-482c-4602-94fe-bd6fceab7e76@company.com>\",\"messageTime\":\"2025-08-04T04"
+      "sample": "{\"GUID\":\"7eec2390-538c-4348-99ee-572757f9f37b\",\"QID\":\"Q414979\",\"id\":\"0b8ef658-62e5-4328-aef4-1a28f70c91b3\",\"messageID\":\"<44fd3077-492c-41d0-b375-4d98bccbae81@malware-host-25.net>\",\"messageTime\":\"2025-"
     },
     "tailscale": {
       "success": true,
@@ -448,64 +448,64 @@
       "parsers": [
         "../parsers/community/tailscale_tailscale_logs-latest"
       ],
-      "sample": "{\"eventGroupID\":\"05ee5cdf-003d-453d-ac35-e8c6bda18076\",\"tailnet\":\"tailnet-company.com\",\"action\":\"CREATE\",\"actor\":{\"id\":\"ue7227df84f614321CNTRL\",\"loginName\":\"user48@company.com\",\"displayName\":\"User 24\""
+      "sample": "{\"start\":\"2025-08-04T15:44:43.225762+00:00Z\",\"end\":\"2025-08-04T15:47:17.225762+00:00Z\",\"virtualTraffic\":{\"src\":\"100.108.219.193\",\"dst\":\"100.85.26.165\",\"srcPort\":41724,\"dstPort\":80,\"proto\":6},\"physical"
     },
     "test_all_hec": {
       "success": false,
-      "message": "Exception: No module named 'requests'",
+      "message": "No log generation function found",
       "has_attr_fields": false,
       "parsers": [
-        "../parsers/community/managedengine_ad_audit_plus-latest",
-        "../parsers/community/mimecast_mimecast_logs-latest",
-        "../parsers/community/cyberark_pas_logs-latest",
-        "../parsers/community/cisco_meraki_flow_logs-latest",
-        "../parsers/community/incapsula_incapsula_logs-latest",
-        "../parsers/community/hashicorp_hcp_vault_logs-latest",
-        "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
-        "../parsers/community/aws_vpcflow_logs-latest",
-        "../parsers/community/darktrace_darktrace_logs-latest",
-        "../parsers/community/paloalto_prismasase_logs-latest",
-        "../parsers/community/corelight_ssl_logs-latest",
-        "../parsers/community/aws_elasticloadbalancer_logs-latest",
-        "../parsers/community/cisco_meraki-latest",
-        "../parsers/community/tailscale_tailscale_logs-latest",
-        "../parsers/community/extrahop_extrahop_logs-latest",
-        "../parsers/community/armis_armis_logs-latest",
-        "../parsers/community/cisco_ios_logs-latest",
-        "../parsers/community/cisco_firewall_threat_defense-latest",
-        "../parsers/community/forcepoint_forcepoint_logs-latest",
-        "../parsers/community/fortinet_fortigate_fortimanager_logs-latest",
-        "../parsers/community/cloudflare_inc_waf-lastest",
-        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
-        "../parsers/community/microsoft_azure_ad_logs-latest",
-        "../parsers/community/netskope_netskope_logs-latest",
-        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
-        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
-        "../parsers/community/checkpoint_checkpoint_logs-latest",
-        "../parsers/community/windows_dhcp_logs-latest",
-        "../parsers/community/aruba_clearpass_logs-latest",
-        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest",
-        "../parsers/community/crowdstrike_endpoint-latest",
         "../parsers/community/vectra_ai_logs-latest",
-        "../parsers/community/okta_ocsf_logs-latest",
-        "../parsers/community/cisco_isa3000_logs-latest",
-        "../parsers/community/cisco_firewall-latest",
-        "../parsers/community/singularityidentity_singularityidentity_logs-latest",
-        "../parsers/community/cisco_fmc_logs-latest",
-        "../parsers/community/apache_http_logs-latest",
-        "../parsers/community/corelight_tunnel_logs-latest",
-        "../parsers/community/paloalto_paloalto_logs-latest",
         "../parsers/community/corelight_conn_logs-latest",
-        "../parsers/community/beyondtrust_passwordsafe_logs-latest",
-        "../parsers/community/vmware_vcenter_logs-latest",
-        "../parsers/community/manageengine_adauditplus_logs-latest",
-        "../parsers/community/corelight_http_logs-latest",
-        "../parsers/community/aws_guardduty_logs-latest",
-        "../parsers/community/netskope_logshipper_logs-latest",
+        "../parsers/community/hashicorp_hcp_vault_logs-latest",
+        "../parsers/community/microsoft_365_mgmt_api_logs-latest",
+        "../parsers/community/crowdstrike_endpoint-latest",
+        "../parsers/community/tailscale_tailscale_logs-latest",
+        "../parsers/community/cisco_isa3000_logs-latest",
+        "../parsers/community/cloudflare_inc_waf-lastest",
+        "../parsers/community/proofpoint_proofpoint_logs-latest",
+        "../parsers/community/darktrace_darktrace_logs-latest",
+        "../parsers/community/netskope_netskope_logs-latest",
+        "../parsers/community/extrahop_extrahop_logs-latest",
         "../parsers/community/paloalto_alternate_logs-latest",
-        "../parsers/community/proofpoint_proofpoint_logs-latest"
+        "../parsers/community/netskope_logshipper_logs-latest",
+        "../parsers/community/paloalto_prismasase_logs-latest",
+        "../parsers/community/paloalto_paloalto_logs-latest",
+        "../parsers/community/cisco_firewall-latest",
+        "../parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest",
+        "../parsers/community/cisco_meraki-latest",
+        "../parsers/community/vmware_vcenter_logs-latest",
+        "../parsers/community/beyondtrust_passwordsafe_logs-latest",
+        "../parsers/community/aws_elasticloadbalancer_logs-latest",
+        "../parsers/community/corelight_ssl_logs-latest",
+        "../parsers/community/okta_ocsf_logs-latest",
+        "../parsers/community/singularityidentity_singularityidentity_logs-latest",
+        "../parsers/community/aws_guardduty_logs-latest",
+        "../parsers/community/cyberark_pas_logs-latest",
+        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest",
+        "../parsers/community/incapsula_incapsula_logs-latest",
+        "../parsers/community/cisco_firewall_threat_defense-latest",
+        "../parsers/community/cisco_fmc_logs-latest",
+        "../parsers/community/windows_dhcp_logs-latest",
+        "../parsers/community/apache_http_logs-latest",
+        "../parsers/community/microsoft_azure_ad_logs-latest",
+        "../parsers/community/cisco_meraki_flow_logs-latest",
+        "../parsers/community/manageengine_adauditplus_logs-latest",
+        "../parsers/community/cisco_ios_logs-latest",
+        "../parsers/community/microsoft_eventhub_defender_email_logs-latest",
+        "../parsers/community/armis_armis_logs-latest",
+        "../parsers/community/checkpoint_checkpoint_logs-latest",
+        "../parsers/community/managedengine_ad_audit_plus-latest",
+        "../parsers/community/corelight_tunnel_logs-latest",
+        "../parsers/community/corelight_http_logs-latest",
+        "../parsers/community/aws_vpcflow_logs-latest",
+        "../parsers/community/forcepoint_forcepoint_logs-latest",
+        "../parsers/community/aruba_clearpass_logs-latest",
+        "../parsers/community/mimecast_mimecast_logs-latest",
+        "../parsers/community/microsoft_eventhub_azure_signin_logs-latest",
+        "../parsers/community/fortinet_fortigate_fortimanager_logs-latest"
       ],
-      "sample": "Traceback (most recent call last):\n  File \"/Users/nathanial.smalley/projects/jarvis_coding/event_python_writer/test_all_generators.py\", line 71, in test_generator\n    module = importlib.import_module("
+      "sample": null
     },
     "vectra_ai": {
       "success": true,
@@ -514,7 +514,7 @@
       "parsers": [
         "../parsers/community/vectra_ai_logs-latest"
       ],
-      "sample": "<134>Aug 04 04:31:36 vectra-brain vectra_json_host -: {\"version\":\"v3.3\",\"host_id\":\"host-83610ebb\",\"category\":\"host\",\"certainty\":23,\"threat\":41,\"score\":9,\"severity\":\"low\",\"host_ip\":\"172.27.32.252\",\"hos"
+      "sample": "<134>Aug 04 15:45:16 vectra-brain vectra_json_account_detection -: {\"version\":\"v3.3\",\"account_uid\":\"dropbox:user665@company.com\",\"category\":\"account_detection\",\"detection\":\"Port Scan\",\"detection_id\":9"
     },
     "vmware_vcenter": {
       "success": true,
@@ -523,31 +523,31 @@
       "parsers": [
         "../parsers/community/vmware_vcenter_logs-latest"
       ],
-      "sample": "2025-08-04T04:31:56.582972+00:00Z info envoy[5543] [2110530 sub=trace] 2025-08-04T04:31:56.582972+00:00Z PUT /ui/app/vm/list HTTP/1.1 200 - - 224 3833 129 51 10.194.132.24 10.0.7.27:443 10.155.14.241:"
+      "sample": "2025-08-04T15:48:02.227353+00:00Z info envoy[8941] [8386663 sub=trace] 2025-08-04T15:48:02.227353+00:00Z GET /ui/login HTTP/1.1 200 - - 824 1748 246 61 10.146.206.63 10.0.3.76:443 10.241.63.93:443 10."
     },
     "windows_dhcp": {
       "success": true,
       "message": "Text log output validated",
       "has_attr_fields": true,
       "parsers": [
-        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest",
         "../parsers/community/windows_dhcp_logs-latest",
-        "../parsers/community/windows_EventLog-pipeParseCommands-v0.1"
+        "../parsers/community/windows_EventLog-pipeParseCommands-v0.1",
+        "../parsers/community/beyondtrust_privilegemgmtwindows_logs-latest"
       ],
-      "sample": "33,08/03/25,21:27:21,Packet Drop,192.168.1.230,IOT-SENSOR,5a:bc:71:21:c4:a8,CORP\\user66,e4fa8dd7,0,619"
+      "sample": "59,08/04/25,08:44:39,Dynamic DNS Registration Failed - Secure Zone,192.168.7.148,SERVER-DB01,a1:93:f0:7d:be:d8,,6ebc6515,0,1641,608470,dhcid_2753,616E64726F69642D64686370,android-dhcp,53657276696365,S"
     },
     "zscaler": {
       "success": true,
       "message": "JSON output validated",
       "has_attr_fields": true,
       "parsers": [],
-      "sample": "{\"datetime\": \"2025-08-04T04:31:56Z\", \"protocol\": \"HTTPS\", \"action\": \"Allowed\", \"requestmethod\": \"GET\", \"urlsupercategory\": \"Technology\", \"urlcategory\": \"Search Engines\", \"urlclass\": \"Information Techn"
+      "sample": "{\"datetime\": \"2025-08-04T15:48:02Z\", \"protocol\": \"FTP\", \"action\": \"Allowed\", \"requestmethod\": \"RETR\", \"urlsupercategory\": \"Technology\", \"urlcategory\": \"Technology\", \"urlclass\": \"Information Technology"
     }
   },
   "scenario_tools": {
-    "attack_scenario_orchestrator.py": false,
-    "quick_scenario.py": false,
-    "scenario_hec_sender.py": false
+    "attack_scenario_orchestrator.py": true,
+    "quick_scenario.py": true,
+    "scenario_hec_sender.py": true
   },
   "hec_ready": [
     "apache_http",
@@ -562,6 +562,7 @@
     "checkpoint",
     "cisco_asa",
     "cisco_meraki",
+    "cisco_umbrella",
     "cloudflare_waf",
     "corelight_conn",
     "corelight_http",

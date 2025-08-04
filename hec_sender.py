@@ -124,6 +124,14 @@ PROD_MAP = {
         "armis",
         ["armis_log"],
     ),
+    "sentinelone_endpoint": (
+        "sentinelone_endpoint",
+        ["sentinelone_endpoint_log"],
+    ),
+    "sentinelone_identity": (
+        "sentinelone_identity",
+        ["sentinelone_identity_log"],
+    ),
 }
 # I need to move this down below sourcetype_map so
 #HEC_URL = os.getenv(
@@ -169,6 +177,8 @@ SOURCETYPE_MAP = {
     "tailscale": "json",
     "extrahop": "json",
     "armis": "armis_syslog",
+    "sentinelone_endpoint": "json",
+    "sentinelone_identity": "json",
 }
 
 # Generators that already emit structured JSON events; these must be sent to /event
@@ -194,6 +204,8 @@ JSON_PRODUCTS = {
     "corelight_tunnel",
     "tailscale",
     "extrahop",
+    "sentinelone_endpoint",
+    "sentinelone_identity",
 }
 
 def _envelope(line: str, product: str, attr_fields: dict) -> str:
@@ -287,6 +299,8 @@ if __name__ == "__main__":
             "tailscale",
             "extrahop",
             "armis",
+            "sentinelone_endpoint",
+            "sentinelone_identity",
         ],
         default="fortinet_fortigate",
         help="Which log generator to use (default: fortinet_fortigate)",

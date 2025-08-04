@@ -40,6 +40,8 @@ from cyberark_pas import cyberark_pas_log
 from beyondtrust_passwordsafe import beyondtrust_passwordsafe_log
 from hashicorp_vault import hashicorp_vault_log
 from microsoft_365_mgmt_api import microsoft_365_mgmt_api_log
+from sentinelone_endpoint import sentinelone_endpoint_log
+from sentinelone_identity import sentinelone_identity_log
 
 class AttackScenarioOrchestrator:
     def __init__(self, retroactive_days: int = 0):
@@ -122,39 +124,49 @@ class AttackScenarioOrchestrator:
         # Define event distribution by phase
         event_distribution = {
             "reconnaissance": {
-                "email_security": 0.4,    # Heavy phishing attempts
-                "identity": 0.2,          # Failed login attempts
-                "network": 0.2,           # External reconnaissance 
-                "endpoint": 0.1,          # Limited endpoint activity
+                "email_security": 0.3,    # Heavy phishing attempts
+                "identity": 0.15,         # Failed login attempts
+                "network": 0.15,          # External reconnaissance 
+                "endpoint": 0.15,         # Limited endpoint activity
+                "sentinelone_endpoint": 0.1,  # SentinelOne endpoint monitoring
+                "sentinelone_identity": 0.05, # SentinelOne identity monitoring
                 "cloud": 0.1              # Cloud enumeration
             },
             "initial_access": {
-                "email_security": 0.3,    # Successful phishing
-                "identity": 0.3,          # Successful compromises
-                "endpoint": 0.2,          # Malware deployment
+                "email_security": 0.25,   # Successful phishing
+                "identity": 0.2,          # Successful compromises
+                "endpoint": 0.15,         # Malware deployment
+                "sentinelone_endpoint": 0.15, # SentinelOne threat detection
+                "sentinelone_identity": 0.1,  # SentinelOne authentication events
                 "network": 0.1,           # C2 communication
-                "cloud": 0.1              # Initial cloud access
+                "cloud": 0.05             # Initial cloud access
             },
             "persistence": {
-                "endpoint": 0.3,          # Persistence mechanisms
-                "identity": 0.2,          # Credential theft
-                "network": 0.2,           # Lateral movement
-                "privileged_access": 0.2, # Privilege escalation attempts
-                "cloud": 0.1              # Cloud persistence
+                "endpoint": 0.2,          # Persistence mechanisms
+                "sentinelone_endpoint": 0.2,  # SentinelOne behavioral detection
+                "identity": 0.15,         # Credential theft
+                "sentinelone_identity": 0.1,  # SentinelOne identity anomalies
+                "network": 0.15,          # Lateral movement
+                "privileged_access": 0.15, # Privilege escalation attempts
+                "cloud": 0.05             # Cloud persistence
             },
             "escalation": {
-                "privileged_access": 0.4, # Heavy privilege escalation
-                "endpoint": 0.2,          # Advanced malware
-                "network": 0.2,           # Internal reconnaissance
-                "secrets": 0.1,           # Secrets access
-                "cloud": 0.1              # Cloud privilege escalation
+                "privileged_access": 0.3, # Heavy privilege escalation
+                "sentinelone_endpoint": 0.2,  # SentinelOne advanced threats
+                "endpoint": 0.15,         # Advanced malware
+                "sentinelone_identity": 0.1,  # SentinelOne privilege escalation
+                "network": 0.15,          # Internal reconnaissance
+                "secrets": 0.05,          # Secrets access
+                "cloud": 0.05             # Cloud privilege escalation
             },
             "exfiltration": {
-                "network": 0.3,           # Data exfiltration
-                "cloud": 0.3,             # Cloud data access
-                "privileged_access": 0.2, # High-privilege activities
-                "endpoint": 0.1,          # Evidence cleanup
-                "secrets": 0.1            # Secrets theft
+                "network": 0.25,          # Data exfiltration
+                "cloud": 0.25,            # Cloud data access
+                "sentinelone_endpoint": 0.2,  # SentinelOne data access detection
+                "privileged_access": 0.15, # High-privilege activities
+                "sentinelone_identity": 0.1,  # SentinelOne suspicious access
+                "endpoint": 0.05,         # Evidence cleanup
+                "secrets": 0.05           # Secrets theft
             }
         }
         
@@ -207,6 +219,10 @@ class AttackScenarioOrchestrator:
                 return self._generate_privileged_access_event(phase, event_time, base_context)
             elif category == "secrets":
                 return self._generate_secrets_event(phase, event_time, base_context)
+            elif category == "sentinelone_endpoint":
+                return self._generate_sentinelone_endpoint_event(phase, event_time, base_context)
+            elif category == "sentinelone_identity":
+                return self._generate_sentinelone_identity_event(phase, event_time, base_context)
                 
         except Exception as e:
             print(f"Error generating {category} event: {e}")
@@ -454,6 +470,151 @@ class AttackScenarioOrchestrator:
         return {
             **context,
             'platform': 'm365',
+            'raw_event': event_data
+        }
+    
+    def _generate_sentinelone_endpoint_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
+        """Generate SentinelOne endpoint security events"""
+        if phase == "reconnaissance":
+            # Reconnaissance phase - process monitoring and network connections
+            event_data = sentinelone_endpoint_log({
+                "event.type": "Network Connection",
+                "event.category": "Network",
+                "src.process.user": random.choice(self.target_users).split('@')[0],
+                "dst.ip.address": random.choice(self.attack_infrastructure[:2]),
+                "indicator.category": "Reconnaissance",
+                "src.process.indicatorReconnaissanceCount": random.randint(1, 5)
+            })
+        
+        elif phase == "initial_access":
+            # Initial access - malware detection and process execution
+            compromised_user = random.choice(self.target_users).split('@')[0]
+            if compromised_user not in [u.split('@')[0] for u in self.compromised_users]:
+                self.compromised_users.append(f"{compromised_user}@financorp.com")
+            
+            event_data = sentinelone_endpoint_log({
+                "event.type": "Malware Detection",
+                "event.category": "Threats",
+                "src.process.user": compromised_user,
+                "indicator.category": "Malware",
+                "indicator.name": "Emotet",
+                "src.process.indicatorEvasionCount": random.randint(1, 3),
+                "src.process.indicatorExploitationCount": random.randint(1, 2)
+            })
+        
+        elif phase == "persistence":
+            # Persistence phase - registry modifications and file operations
+            event_data = sentinelone_endpoint_log({
+                "event.type": "Registry Modification",
+                "event.category": "Registry",
+                "src.process.user": random.choice([u.split('@')[0] for u in self.compromised_users]) if self.compromised_users else "john.doe",
+                "registry.keyPath": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                "src.process.indicatorPersistenceCount": random.randint(1, 4),
+                "src.process.registryChangeCount": random.randint(5, 15)
+            })
+        
+        elif phase == "escalation":
+            # Escalation phase - privilege escalation and credential access
+            event_data = sentinelone_endpoint_log({
+                "event.type": "Credential Access",
+                "event.category": "Credentials",
+                "src.process.user": random.choice([u.split('@')[0] for u in self.compromised_users]) if self.compromised_users else "john.doe",
+                "src.process.name": "mimikatz.exe",
+                "indicator.category": "Credential Theft",
+                "src.process.indicatorPostExploitationCount": random.randint(1, 3),
+                "src.process.crossProcessCount": random.randint(10, 25)
+            })
+        
+        elif phase == "exfiltration":
+            # Exfiltration phase - file access and network transfers
+            event_data = sentinelone_endpoint_log({
+                "event.type": "File Access",
+                "event.category": "File",
+                "src.process.user": random.choice([u.split('@')[0] for u in self.compromised_users]) if self.compromised_users else "john.doe",
+                "tgt.file.path": "C:\\Users\\john.doe\\Documents\\Financial_Data.xlsx",
+                "tgt.file.size": random.randint(1048576, 104857600),  # 1MB to 100MB
+                "src.process.netConnOutCount": random.randint(5, 15)
+            })
+        
+        else:
+            # Default endpoint activity
+            event_data = sentinelone_endpoint_log()
+        
+        return {
+            **context,
+            'platform': 'sentinelone_endpoint',
+            'raw_event': event_data
+        }
+    
+    def _generate_sentinelone_identity_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
+        """Generate SentinelOne identity and authentication events"""
+        if phase == "reconnaissance":
+            # Reconnaissance phase - failed login attempts
+            event_data = sentinelone_identity_log({
+                "event.type": "Failed Login",
+                "event.category": "Authentication",
+                "event.login.loginIsSuccessful": False,
+                "event.login.userName": random.choice(self.target_users).split('@')[0],
+                "src.ip.address": random.choice(self.attack_infrastructure[:2]),
+                "winEventLog.id": 4625,
+                "indicator.category": "Brute Force"
+            })
+        
+        elif phase == "initial_access":
+            # Initial access - successful compromise
+            compromised_user = random.choice(self.target_users).split('@')[0]
+            if f"{compromised_user}@financorp.com" not in self.compromised_users:
+                self.compromised_users.append(f"{compromised_user}@financorp.com")
+            
+            event_data = sentinelone_identity_log({
+                "event.type": "User Login",
+                "event.category": "Authentication",
+                "event.login.loginIsSuccessful": True,
+                "event.login.userName": compromised_user,
+                "src.ip.address": random.choice(self.attack_infrastructure),
+                "winEventLog.id": 4624,
+                "indicator.category": "Suspicious Login",
+                "indicator.description": f"Login from suspicious IP for user {compromised_user}"
+            })
+        
+        elif phase == "persistence":
+            # Persistence phase - account modifications
+            event_data = sentinelone_identity_log({
+                "event.type": "Group Membership Change",
+                "event.category": "Account Management",
+                "event.login.userName": random.choice([u.split('@')[0] for u in self.compromised_users]) if self.compromised_users else "john.doe",
+                "winEventLog.id": 4728,
+                "winEventLog.description": "A member was added to a security-enabled global group"
+            })
+        
+        elif phase == "escalation":
+            # Escalation phase - privilege escalation
+            event_data = sentinelone_identity_log({
+                "event.type": "Privilege Escalation",
+                "event.category": "Authorization",
+                "event.login.userName": random.choice([u.split('@')[0] for u in self.compromised_users]) if self.compromised_users else "john.doe",
+                "winEventLog.id": 4672,
+                "indicator.category": "Privilege Escalation",
+                "indicator.description": "Special privileges assigned to new logon"
+            })
+        
+        elif phase == "exfiltration":
+            # Exfiltration phase - suspicious access patterns
+            event_data = sentinelone_identity_log({
+                "event.type": "Suspicious Login Pattern",
+                "event.category": "Behavioral Analytics",
+                "event.login.userName": random.choice([u.split('@')[0] for u in self.compromised_users]) if self.compromised_users else "john.doe",
+                "indicator.category": "Anomalous Behavior",
+                "indicator.description": "Unusual access pattern detected - potential data exfiltration"
+            })
+        
+        else:
+            # Default identity activity
+            event_data = sentinelone_identity_log()
+        
+        return {
+            **context,
+            'platform': 'sentinelone_identity',
             'raw_event': event_data
         }
 

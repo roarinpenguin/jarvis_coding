@@ -12,11 +12,11 @@ import os
 import time
 import random
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List
 
 # Import the existing hec_sender functionality
-from hec_sender import send_one, ATTR_FIELDS
+from hec_sender import send_one
 
 class ScenarioHECSender:
     def __init__(self):
@@ -33,7 +33,9 @@ class ScenarioHECSender:
             "cloud": ["netskope", "microsoft_365_mgmt_api"],
             "privileged_access": ["cyberark_pas", "beyondtrust_passwordsafe"],
             "secrets": ["hashicorp_vault"],
-            "m365": ["microsoft_365_mgmt_api"]
+            "m365": ["microsoft_365_mgmt_api"],
+            "sentinelone_endpoint": ["sentinelone_endpoint"],
+            "sentinelone_identity": ["sentinelone_identity"]
         }
         
         # Get ATTR_FIELDS for each product
