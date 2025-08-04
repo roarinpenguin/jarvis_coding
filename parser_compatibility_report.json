@@ -1,0 +1,531 @@
+{
+  "summary": {
+    "total_generators": 36,
+    "compatible_count": 13,
+    "high_confidence_count": 5,
+    "issues_count": 21,
+    "compatibility_rate": 36.11111111111111
+  },
+  "results": {
+    "apache_http": {
+      "status": "analyzed",
+      "parser": "apache_http_logs-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Text/Other",
+      "issues": [],
+      "matches": [
+        "Field extraction pattern: $src.ip.address$ - $actor.user.name$ \\\\[$timestamp...",
+        "Field extraction pattern: $src.ip.address$ - $actor.user.name$ - \\\\[$timesta..."
+      ]
+    },
+    "armis": {
+      "status": "analyzed",
+      "parser": "armis_armis_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "Syslog",
+      "issues": [
+        "Generator produces text but parser expects JSON"
+      ],
+      "matches": []
+    },
+    "aruba_clearpass": {
+      "status": "analyzed",
+      "parser": "aruba_clearpass_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "CSV",
+      "issues": [],
+      "matches": []
+    },
+    "aws_cloudtrail": {
+      "status": "analyzed",
+      "parser": "aws_vpcflow_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "aws_elb": {
+      "status": "analyzed",
+      "parser": "aws_elasticloadbalancer_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "aws_guardduty": {
+      "status": "analyzed",
+      "parser": "aws_guardduty_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "aws_vpcflowlogs": {
+      "status": "analyzed",
+      "parser": "aws_vpcflow_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "beyondtrust_passwordsafe": {
+      "status": "analyzed",
+      "parser": "beyondtrust_passwordsafe_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "checkpoint": {
+      "status": "analyzed",
+      "parser": "checkpoint_checkpoint_logs-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Key-Value",
+      "issues": [],
+      "matches": [
+        "Field extraction pattern: .*$_=keyPattern$=\\..."
+      ]
+    },
+    "cisco_asa": {
+      "status": "analyzed",
+      "parser": "cisco_firewall-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Syslog",
+      "issues": [],
+      "matches": [
+        "Field extraction pattern: \\\\<\\\\d+\\\\>$timestamp=tsPattern$ $host$ : .*...",
+        "Field extraction pattern: .* : %[^\\\\:]+: Built $direction=alphaOnly$ $protoc...",
+        "Field extraction pattern: .* : %[^\\\\:]+: Built $direction=alphaOnly$ $protoc...",
+        "Field extraction pattern: .* : %[^\\\\:]+: Built dynamic $protocol=alphaOnly$ ...",
+        "Field extraction pattern: .* : %[^\\\\:]+: Teardown $protocol=alphaOnly$ conne..."
+      ]
+    },
+    "cisco_meraki": {
+      "status": "analyzed",
+      "parser": "cisco_meraki-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Syslog",
+      "issues": [],
+      "matches": [
+        "Field extraction pattern: $code$ $unix.time$ $device.hostname$ $event.type$ ...",
+        "Field extraction pattern: $code$ $unix.time$ $device.hostname$ $event.type$ ...",
+        "Field extraction pattern: $code$ $unix.time$ $device.hostname$ $event.type$ ..."
+      ]
+    },
+    "cisco_umbrella": {
+      "status": "parser_error",
+      "parser": "cisco_ios_logs-latest",
+      "compatible": false
+    },
+    "cloudflare_waf": {
+      "status": "analyzed",
+      "parser": "cloudflare_inc_waf-lastest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "Key-Value",
+      "issues": [],
+      "matches": []
+    },
+    "corelight_conn": {
+      "status": "analyzed",
+      "parser": "corelight_conn_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "corelight_http": {
+      "status": "analyzed",
+      "parser": "corelight_http_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "corelight_ssl": {
+      "status": "analyzed",
+      "parser": "corelight_ssl_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "corelight_tunnel": {
+      "status": "analyzed",
+      "parser": "corelight_tunnel_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "crowdstrike_falcon": {
+      "status": "analyzed",
+      "parser": "crowdstrike_endpoint-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Text/Other",
+      "issues": [],
+      "matches": [
+        "Field extraction pattern: .*[\\\\s]$_=keyPattern$=$_$ \\\\w+=...",
+        "Field extraction pattern: .*[\\\\|\\\\s]$_=keyPattern$=$_$ \\\\w+=...",
+        "Field extraction pattern: .*\\\\s$_=keyPattern$=$_=lastValuePattern$..."
+      ]
+    },
+    "cyberark_pas": {
+      "status": "analyzed",
+      "parser": "cyberark_pas_logs-latest",
+      "compatible": true,
+      "confidence": "high",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": [
+        "JSON format match: .*${parse=json}$..."
+      ]
+    },
+    "darktrace": {
+      "status": "analyzed",
+      "parser": "darktrace_darktrace_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "extrahop": {
+      "status": "analyzed",
+      "parser": "extrahop_extrahop_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "fortinet_fortigate": {
+      "status": "analyzed",
+      "parser": "fortinet_fortigate_fortimanager_logs-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Key-Value",
+      "issues": [],
+      "matches": [
+        "Field extraction pattern: .*$_=identifier$=$_=quoteOrSpace{attrBlacklist=}$..."
+      ]
+    },
+    "hashicorp_vault": {
+      "status": "analyzed",
+      "parser": "hashicorp_hcp_vault_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "microsoft_365_mgmt_api": {
+      "status": "analyzed",
+      "parser": "microsoft_365_mgmt_api_logs-latest",
+      "compatible": true,
+      "confidence": "high",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": [
+        "JSON format match: .*${parse=json}{attrBlacklist=(userStates)}$...",
+        "JSON format match: .*userStates\\'.\\\\s.$userStates_{parse=json}$..."
+      ]
+    },
+    "microsoft_azure_ad_signin": {
+      "status": "analyzed",
+      "parser": "microsoft_eventhub_azure_signin_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [
+        "Generator produces JSON but parser expects text format"
+      ],
+      "matches": []
+    },
+    "microsoft_azuread": {
+      "status": "analyzed",
+      "parser": "microsoft_azure_ad_logs-latest",
+      "compatible": true,
+      "confidence": "high",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": [
+        "JSON format match: .*${parse=json}{attrBlacklist=(targetResources)}$..."
+      ]
+    },
+    "microsoft_defender_email": {
+      "status": "analyzed",
+      "parser": "microsoft_eventhub_defender_email_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [
+        "Generator produces JSON but parser expects text format"
+      ],
+      "matches": []
+    },
+    "mimecast": {
+      "status": "analyzed",
+      "parser": "mimecast_mimecast_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [
+        "Generator produces JSON but parser expects text format"
+      ],
+      "matches": []
+    },
+    "netskope": {
+      "status": "analyzed",
+      "parser": "netskope_netskope_logs-latest",
+      "compatible": true,
+      "confidence": "high",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": [
+        "JSON format match: .*${parse=json}{attrWhitelist=(_id|action|activity..."
+      ]
+    },
+    "okta_authentication": {
+      "status": "analyzed",
+      "parser": "okta_ocsf_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "paloalto_firewall": {
+      "status": "analyzed",
+      "parser": "paloalto_alternate_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "CSV",
+      "issues": [],
+      "matches": []
+    },
+    "proofpoint": {
+      "status": "analyzed",
+      "parser": "proofpoint_proofpoint_logs-latest",
+      "compatible": true,
+      "confidence": "high",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": [
+        "JSON format match: .*${parse=json}{attrBlacklist=(xmailer|campaignId|..."
+      ]
+    },
+    "tailscale": {
+      "status": "analyzed",
+      "parser": "tailscale_tailscale_logs-latest",
+      "compatible": false,
+      "confidence": "low",
+      "generator_type": "JSON",
+      "issues": [],
+      "matches": []
+    },
+    "vectra_ai": {
+      "status": "analyzed",
+      "parser": "vectra_ai_logs-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Syslog",
+      "issues": [
+        "Generator produces text but parser expects JSON"
+      ],
+      "matches": [
+        "Field extraction pattern: <\\\\d+>$timestamp=tsPattern$ $vsensor$ vectra_json_...",
+        "Field extraction pattern: <\\\\d+>$timestamp=tsPattern$ $vsensor$ vectra_json_...",
+        "Field extraction pattern: <\\\\d+>$timestamp=tsPattern$ $vsensor$ vectra_json_...",
+        "Field extraction pattern: <\\\\d+>$timestamp=tsPattern$ $vsensor$ vectra_json_...",
+        "Field extraction pattern: <\\\\d+>$timestamp=tsPattern$ $vsensor$ vectra_json ..."
+      ]
+    },
+    "vmware_vcenter": {
+      "status": "analyzed",
+      "parser": "vmware_vcenter_logs-latest",
+      "compatible": true,
+      "confidence": "medium",
+      "generator_type": "Text/Other",
+      "issues": [],
+      "matches": [
+        "Field extraction pattern: .*$createdTime=tzPattern$\\\\s+\\\\|\\\\s+$endpt_name$\\\\...",
+        "Field extraction pattern: .*$ip=ipPattern$ $user$ $authUser$ \\\\[$accessDateT...",
+        "Field extraction pattern: .*\\\\[$createdTime=tzPattern3$\\\\] \\\\[$worker_name$\\...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ ssoAdminServe...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $main_pid$ $sub_pid$ $wo...",
+        "Field extraction pattern: .*$createdTime=tzPattern2$ $process_name$\\\\[$proce...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ \\\\[$process_id$\\\\] $seve...",
+        "Field extraction pattern: .*procstate \\\\S+ \\\\S+ \\\\S+ $user$\\\\s+$ppid$\\\\s+$pi...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ \\\\[$process_name$ \\\\[\\\\]...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*$createdTime=tzPattern$ $severity$ $process_name...",
+        "Field extraction pattern: .*PWD\\\\=$pwd$ ; USER\\\\=$username$ ; COMMAND\\\\=$cmd..."
+      ]
+    },
+    "zscaler": {
+      "status": "no_parser",
+      "parser": null,
+      "compatible": false
+    }
+  },
+  "issues": [
+    {
+      "generator": "armis",
+      "parser": "armis_armis_logs-latest",
+      "generator_type": "Syslog",
+      "issues": [
+        "Generator produces text but parser expects JSON"
+      ]
+    },
+    {
+      "generator": "aruba_clearpass",
+      "parser": "aruba_clearpass_logs-latest",
+      "generator_type": "CSV",
+      "issues": []
+    },
+    {
+      "generator": "aws_cloudtrail",
+      "parser": "aws_vpcflow_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "aws_elb",
+      "parser": "aws_elasticloadbalancer_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "aws_guardduty",
+      "parser": "aws_guardduty_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "aws_vpcflowlogs",
+      "parser": "aws_vpcflow_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "beyondtrust_passwordsafe",
+      "parser": "beyondtrust_passwordsafe_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "cloudflare_waf",
+      "parser": "cloudflare_inc_waf-lastest",
+      "generator_type": "Key-Value",
+      "issues": []
+    },
+    {
+      "generator": "corelight_conn",
+      "parser": "corelight_conn_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "corelight_http",
+      "parser": "corelight_http_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "corelight_ssl",
+      "parser": "corelight_ssl_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "corelight_tunnel",
+      "parser": "corelight_tunnel_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "darktrace",
+      "parser": "darktrace_darktrace_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "extrahop",
+      "parser": "extrahop_extrahop_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "hashicorp_vault",
+      "parser": "hashicorp_hcp_vault_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "microsoft_azure_ad_signin",
+      "parser": "microsoft_eventhub_azure_signin_logs-latest",
+      "generator_type": "JSON",
+      "issues": [
+        "Generator produces JSON but parser expects text format"
+      ]
+    },
+    {
+      "generator": "microsoft_defender_email",
+      "parser": "microsoft_eventhub_defender_email_logs-latest",
+      "generator_type": "JSON",
+      "issues": [
+        "Generator produces JSON but parser expects text format"
+      ]
+    },
+    {
+      "generator": "mimecast",
+      "parser": "mimecast_mimecast_logs-latest",
+      "generator_type": "JSON",
+      "issues": [
+        "Generator produces JSON but parser expects text format"
+      ]
+    },
+    {
+      "generator": "okta_authentication",
+      "parser": "okta_ocsf_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    },
+    {
+      "generator": "paloalto_firewall",
+      "parser": "paloalto_alternate_logs-latest",
+      "generator_type": "CSV",
+      "issues": []
+    },
+    {
+      "generator": "tailscale",
+      "parser": "tailscale_tailscale_logs-latest",
+      "generator_type": "JSON",
+      "issues": []
+    }
+  ]
+}

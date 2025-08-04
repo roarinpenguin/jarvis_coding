@@ -41,6 +41,7 @@ Wrapper payload sent to HEC::
 
 from __future__ import annotations
 
+import json
 import random
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -172,7 +173,7 @@ def _build_target(res_type: str, display: str) -> Dict[str, Any]:
     }
 
 
-def azure_ad_log() -> Dict[str, Any]:
+def azure_ad_log(overrides: dict | None = None) -> str:
     """Return **one** flat Azure AD audit‑log event."""
     malicious = random.random() < 0.3  # 30 % chance attacker event
     ev = _base_event()
@@ -198,13 +199,12 @@ def azure_ad_log() -> Dict[str, Any]:
             _build_target("User", user["displayName"])
         )
 
-    # Wrap for Splunk HEC /collector/event endpoint
-    record = {
-        "time": int(datetime.now(tz=timezone.utc).timestamp()),
-        "event": ev,
-        "fields": ATTR_FIELDS,  # metadata travels in "fields" per HEC spec
-    }
-    return record
+    # Apply overrides
+    if overrides:
+        ev.update(overrides)
+
+    # Return JSON string instead of complex HEC wrapper
+    return json.dumps(ev, separators=(",", ":"))
 
 
 # Sent inside the "fields" object of the HEC wrapper

@@ -24,6 +24,10 @@ PROD_MAP = {
         "aws_guardduty",
         ["guardduty_log"],
     ),
+    "aws_elb": (
+        "aws_elb",
+        ["aws_elb_log"],
+    ),
     "microsoft_azuread": (
         "microsoft_azuread",
         ["azuread_log"],
@@ -43,6 +47,82 @@ PROD_MAP = {
     "cisco_meraki": (
         "cisco_meraki",
         ["meraki_log"],
+    ),
+    "crowdstrike_falcon": (
+        "crowdstrike_falcon",
+        ["crowdstrike_log"],
+    ),
+    "cyberark_pas": (
+        "cyberark_pas",
+        ["cyberark_pas_log"],
+    ),
+    "darktrace": (
+        "darktrace",
+        ["darktrace_log"],
+    ),
+    "proofpoint": (
+        "proofpoint",
+        ["proofpoint_log"],
+    ),
+    "microsoft_365_mgmt_api": (
+        "microsoft_365_mgmt_api",
+        ["microsoft_365_mgmt_api_log"],
+    ),
+    "netskope": (
+        "netskope",
+        ["netskope_log"],
+    ),
+    "mimecast": (
+        "mimecast",
+        ["mimecast_log"],
+    ),
+    "microsoft_azure_ad_signin": (
+        "microsoft_azure_ad_signin",
+        ["microsoft_azure_ad_signin_log"],
+    ),
+    "microsoft_defender_email": (
+        "microsoft_defender_email",
+        ["microsoft_defender_email_log"],
+    ),
+    "beyondtrust_passwordsafe": (
+        "beyondtrust_passwordsafe",
+        ["beyondtrust_passwordsafe_log"],
+    ),
+    "hashicorp_vault": (
+        "hashicorp_vault",
+        ["hashicorp_vault_log"],
+    ),
+    "corelight_conn": (
+        "corelight_conn",
+        ["corelight_conn_log"],
+    ),
+    "corelight_http": (
+        "corelight_http",
+        ["corelight_http_log"],
+    ),
+    "corelight_ssl": (
+        "corelight_ssl",
+        ["corelight_ssl_log"],
+    ),
+    "corelight_tunnel": (
+        "corelight_tunnel",
+        ["corelight_tunnel_log"],
+    ),
+    "vectra_ai": (
+        "vectra_ai",
+        ["vectra_ai_log"],
+    ),
+    "tailscale": (
+        "tailscale",
+        ["tailscale_log"],
+    ),
+    "extrahop": (
+        "extrahop",
+        ["extrahop_log"],
+    ),
+    "armis": (
+        "armis",
+        ["armis_log"],
     ),
 }
 # I need to move this down below sourcetype_map so
@@ -64,11 +144,31 @@ SOURCETYPE_MAP = {
     "aws_cloudtrail": "marketplace-awscloudtrail-latest",
     "aws_vpcflowlogs": "marketplace-awsvpcflowlogs-latest",
     "aws_guardduty": "CommAwsGuardduty",
+    "aws_elb": "json",
     "microsoft_azuread": "azuread",
     "okta_authentication": "json",
     "cisco_asa": "CommCiscoASA",
     "cisco_umbrella": "community-ciscoumbrella-latest",
     "cisco_meraki": "CommCiscoMeraki",
+    "crowdstrike_falcon": "json",
+    "cyberark_pas": "json",
+    "darktrace": "json",
+    "proofpoint": "json",
+    "microsoft_365_mgmt_api": "json",
+    "netskope": "json",
+    "mimecast": "json",
+    "microsoft_azure_ad_signin": "json",
+    "microsoft_defender_email": "json",
+    "beyondtrust_passwordsafe": "json",
+    "hashicorp_vault": "json",
+    "corelight_conn": "json",
+    "corelight_http": "json",
+    "corelight_ssl": "json",
+    "corelight_tunnel": "json",
+    "vectra_ai": "syslog",
+    "tailscale": "json",
+    "extrahop": "json",
+    "armis": "armis_syslog",
 }
 
 # Generators that already emit structured JSON events; these must be sent to /event
@@ -76,6 +176,24 @@ JSON_PRODUCTS = {
     "aws_cloudtrail",
     "microsoft_azuread",
     "okta_authentication",
+    "crowdstrike_falcon",
+    "cyberark_pas",
+    "darktrace",
+    "proofpoint",
+    "microsoft_365_mgmt_api",
+    "netskope",
+    "mimecast",
+    "microsoft_azure_ad_signin",
+    "microsoft_defender_email",
+    "beyondtrust_passwordsafe",
+    "hashicorp_vault",
+    "aws_elb",
+    "corelight_conn",
+    "corelight_http",
+    "corelight_ssl",
+    "corelight_tunnel",
+    "tailscale",
+    "extrahop",
 }
 
 def _envelope(line: str, product: str, attr_fields: dict) -> str:
@@ -128,7 +246,7 @@ def send_many_with_spacing(lines, product: str, attr_fields: dict,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Generate & send FortiGate, Zscaler, CloudTrail, VPC Flow Logs, GuardDuty, Azure AD, Okta Authentication, Cisco ASA, Cisco Umbrella, or Cisco Meraki events (one‑by‑one) to S1"
+        description="Generate & send security events from various vendors (one‑by‑one) to S1"
     )
     parser.add_argument("-n", "--count", type=int, default=1,
                         help="How many events to send (default 1)")
@@ -144,11 +262,31 @@ if __name__ == "__main__":
             "aws_cloudtrail",
             "aws_vpcflowlogs",
             "aws_guardduty",
+            "aws_elb",
             "microsoft_azuread",
             "okta_authentication",
             "cisco_asa",
             "cisco_umbrella",
             "cisco_meraki",
+            "crowdstrike_falcon",
+            "cyberark_pas",
+            "darktrace",
+            "proofpoint",
+            "microsoft_365_mgmt_api",
+            "netskope",
+            "mimecast",
+            "microsoft_azure_ad_signin",
+            "microsoft_defender_email",
+            "beyondtrust_passwordsafe",
+            "hashicorp_vault",
+            "corelight_conn",
+            "corelight_http",
+            "corelight_ssl",
+            "corelight_tunnel",
+            "vectra_ai",
+            "tailscale",
+            "extrahop",
+            "armis",
         ],
         default="fortinet_fortigate",
         help="Which log generator to use (default: fortinet_fortigate)",
