@@ -331,7 +331,7 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'endpoint',
+            'platform': 'crowdstrike_falcon',
             'raw_event': event_data
         }
     

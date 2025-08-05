@@ -254,7 +254,31 @@ def crowdstrike_log(overrides: dict | None = None) -> str:
     
     # Apply any overrides to extensions
     if overrides:
-        extensions.update(overrides)
+        # Map common field names to CEF extension fields
+        override_mappings = {
+            "ThreatFamily": ("cs4", "cs4Label", "ThreatFamily"),
+            "ThreatName": ("cs5", "cs5Label", "ThreatName"),
+            "Severity": None,  # Severity is handled in CEF header
+            "UserName": "duser",
+            "HostName": "dvchost",
+            "CommandLine": "cs1"
+        }
+        
+        for key, value in overrides.items():
+            if key in override_mappings:
+                mapping = override_mappings[key]
+                if mapping is None:
+                    continue  # Skip fields handled elsewhere
+                elif isinstance(mapping, tuple):
+                    # Handle labeled fields (e.g., cs4 and cs4Label)
+                    extensions[mapping[0]] = value
+                    extensions[mapping[1]] = mapping[2]
+                else:
+                    # Direct mapping
+                    extensions[mapping] = value
+            else:
+                # Pass through unmapped overrides
+                extensions[key] = value
     
     # Build CEF extension string
     extension_pairs = []

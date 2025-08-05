@@ -18,7 +18,7 @@ ATTR_FIELDS: Dict[str, str] = {
     "dataSource.name": "SentinelOne",
     "dataSource.category": "security",
     "metadata.product.vendor_name": "SentinelOne",
-    "metadata.product.name": "SentinelOne",
+    "metadata.product.name": "EDR",
     "metadata.version": "1.0.0",
 }
 
@@ -44,63 +44,108 @@ USERS = ["john.doe", "jane.smith", "bob.jones", "alice.williams", "charlie.brown
 ENDPOINT_EVENT_TYPES = [
     {
         "eventType": "Process Creation",
+        "metaEventName": "PROCESSCREATION",
         "severity": "INFO",
         "category": "Process",
         "threatLevel": 0
     },
     {
         "eventType": "File Creation",
+        "metaEventName": "HTTP",
         "severity": "INFO", 
         "category": "File",
         "threatLevel": 0
     },
     {
         "eventType": "Network Connection",
+        "metaEventName": "HTTP",
         "severity": "INFO",
         "category": "Network",
         "threatLevel": 0
     },
     {
         "eventType": "Malware Detection",
+        "metaEventName": "FILESCAN",
         "severity": "CRITICAL",
         "category": "Threats",
         "threatLevel": 10
     },
     {
         "eventType": "Suspicious Activity",
+        "metaEventName": "PROCESSCREATION",
         "severity": "HIGH",
         "category": "Behavioral",
         "threatLevel": 8
     },
     {
         "eventType": "Registry Modification",
+        "metaEventName": "REGKEYCREATE",
         "severity": "MEDIUM",
         "category": "Registry",
         "threatLevel": 5
     },
     {
         "eventType": "PowerShell Execution",
+        "metaEventName": "SCRIPTS",
         "severity": "MEDIUM",
         "category": "Process",
         "threatLevel": 6
     },
     {
         "eventType": "Credential Access",
+        "metaEventName": "PROCESSCREATION",
         "severity": "HIGH",
         "category": "Credentials",
         "threatLevel": 9
     },
     {
         "eventType": "Container Activity",
+        "metaEventName": "PROCESSCREATION",
         "severity": "INFO",
         "category": "Container",
         "threatLevel": 2
     },
     {
         "eventType": "Kubernetes Event",
+        "metaEventName": "PROCESSCREATION",
         "severity": "INFO",
         "category": "Kubernetes",
         "threatLevel": 1
+    },
+    {
+        "eventType": "Scheduled Task Update",
+        "metaEventName": "SCHEDTASKUPDATE",
+        "severity": "MEDIUM",
+        "category": "ScheduledTask",
+        "threatLevel": 3
+    },
+    {
+        "eventType": "Scheduled Task Start",
+        "metaEventName": "SCHEDTASKSTART",
+        "severity": "INFO",
+        "category": "ScheduledTask",
+        "threatLevel": 2
+    },
+    {
+        "eventType": "Scheduled Task Trigger",
+        "metaEventName": "SCHEDTASKTRIGGER",
+        "severity": "INFO",
+        "category": "ScheduledTask",
+        "threatLevel": 2
+    },
+    {
+        "eventType": "Scheduled Task Delete",
+        "metaEventName": "SCHEDTASKDELETE",
+        "severity": "MEDIUM",
+        "category": "ScheduledTask",
+        "threatLevel": 4
+    },
+    {
+        "eventType": "Duplicate Process",
+        "metaEventName": "DUPLICATEPROCESS",
+        "severity": "HIGH",
+        "category": "Process",
+        "threatLevel": 7
     }
 ]
 
@@ -180,6 +225,7 @@ def sentinelone_endpoint_log(custom_fields: Dict = None) -> str:
         "event.time": format_timestamp(event_time),
         "event.category": event_info["category"],
         "event.type": event_info["eventType"],
+        "meta.event.name": event_info["metaEventName"],
         
         # Endpoint information
         "endpoint.name": endpoint_name,
@@ -376,7 +422,7 @@ def sentinelone_endpoint_log(custom_fields: Dict = None) -> str:
             "event.url.action": random.choice(["Allowed", "Blocked"])
         })
     
-    elif event_info["eventType"] == "Scheduled Task":
+    elif event_info["eventType"] in ["Scheduled Task Update", "Scheduled Task Start", "Scheduled Task Trigger", "Scheduled Task Delete"]:
         task_name = f"UpdateTask_{random.randint(1,100)}"
         event.update({
             "task.name": task_name,

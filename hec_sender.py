@@ -158,7 +158,7 @@ SOURCETYPE_MAP = {
     "cisco_asa": "CommCiscoASA",
     "cisco_umbrella": "community-ciscoumbrella-latest",
     "cisco_meraki": "CommCiscoMeraki",
-    "crowdstrike_falcon": "json",
+    "crowdstrike_falcon": "CommCrowdstrikeEP",
     "cyberark_pas": "json",
     "darktrace": "json",
     "proofpoint": "json",
