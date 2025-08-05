@@ -243,6 +243,9 @@ site/
 # ======================
 # Add project-specific patterns here
 
+# Claude Code Settings
+.claude/
+
 # Keep important example files
 !README.md
 !CLAUDE.md
