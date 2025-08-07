@@ -18,7 +18,7 @@ ATTR_FIELDS: Dict[str, str] = {
 _PRI = "<134>"       # local0.notice
 _DEV = "meraki-mx64"
 
-def meraki_log(log_type: str | None = None) -> str:
+def cisco_meraki_log(log_type: str | None = None) -> str:
     """
     Generate a Meraki syslog line that matches one of the parser's
     three accepted formats:
@@ -64,3 +64,7 @@ def meraki_log(log_type: str | None = None) -> str:
         )
 
     return message
+
+
+if __name__ == "__main__":
+    print(cisco_meraki_log())
