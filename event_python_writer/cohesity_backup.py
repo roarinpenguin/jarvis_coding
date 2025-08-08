@@ -1,132 +1,65 @@
 #!/usr/bin/env python3
 """
 Cohesity backup event generator
-Generates synthetic Cohesity backup system events
+Generates synthetic Cohesity backup system events in syslog format
 """
 import random
 from datetime import datetime, timezone, timedelta
 
+# SentinelOne AI-SIEM specific field attributes
 ATTR_FIELDS = {
     "dataSource.vendor": "Cohesity",
     "dataSource.name": "Cohesity Backup",
-    "dataSource.category": "system",
+    "dataSource.category": "system"
 }
 
-# Backup job types
+# Job names
 JOB_NAMES = [
     "Daily_VM_Backup", "Weekly_SQL_Backup", "Monthly_Archive", "Adhoc_DB_Backup",
     "Exchange_Backup", "File_Server_Backup", "NAS_Backup", "Cloud_Sync", 
-    "Disaster_Recovery", "Compliance_Archive"
+    "Disaster_Recovery", "Compliance_Archive", "Daily_Exchange_Backup"
 ]
 
-# Object types being backed up
+# Object names
 OBJECT_NAMES = [
-    "vm-Prod01", "vm-Web01", "vm-App01", "db-sql01", "db-oracle01",
-    "exchange-mail01", "nas-files01", "fs-data01", "vm-Dev01", "vm-Test01"
+    "vm-Prod01", "vm-Dev02", "vm-Test03", "sql-server-01", "web-server-02", 
+    "file-server-01", "exchange-01", "nas-storage", "cloud-archive"
 ]
 
-# Backup statuses
-STATUSES = ["STARTED", "SUCCESS", "FAILED", "WARNING"]
+# Statuses
+STATUSES = ["STARTED", "COMPLETED", "FAILED", "PAUSED", "RUNNING", "CANCELLED", "WARNING"]
 
 # Initiators
-INITIATORS = ["schedule", "manual", "policy", "admin"]
+INITIATORS = ["schedule", "manual", "policy", "system", "user", "trigger"]
 
-# Error messages for failed backups
-ERROR_MESSAGES = [
-    "Snapshot creation failed",
-    "Network timeout during transfer", 
-    "Insufficient storage space",
-    "VM powered off during backup",
-    "Database locked for exclusive use",
-    "Authentication failure to source",
-    "Disk read error encountered"
+# Messages
+MESSAGES = [
+    "Protection run started", "Backup completed successfully", "Backup failed due to network error",
+    "Scheduled backup initiated", "Manual backup requested", "Policy-driven backup started",
+    "Incremental backup in progress", "Full backup completed"
 ]
 
-def generate_run_id():
-    """Generate a run ID."""
-    return f"r-{random.randint(1000, 9999)}"
-
-def generate_duration():
-    """Generate backup duration in HH:MM:SS format."""
-    hours = random.randint(0, 8)
-    minutes = random.randint(0, 59)
-    seconds = random.randint(0, 59)
-    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-
-def generate_bytes_protected():
-    """Generate bytes protected with unit."""
-    value = random.randint(1, 2000)
-    unit = random.choice(["MB", "GB", "TB"])
-    return f"{value}{unit}"
-
-def generate_throughput():
-    """Generate throughput with unit."""
-    value = random.randint(1, 50)
-    unit = random.choice(["MB/min", "GB/min"])
-    return f"{value}{unit}"
-
 def cohesity_backup_log() -> str:
-    """Generate a single Cohesity backup event log"""
+    """Generate a single Cohesity backup event log in syslog format"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 240))
+    event_time = now - timedelta(minutes=random.randint(0, 1440))
     
-    # Generate basic event components
-    run_id = generate_run_id()
+    timestamp = event_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    run_id = f"r-{random.randint(1000, 9999)}"
     job_name = random.choice(JOB_NAMES)
     object_name = random.choice(OBJECT_NAMES)
     status = random.choice(STATUSES)
-    initiator = random.choice(INITIATORS)
+    initiated_by = random.choice(INITIATORS)
+    message = random.choice(MESSAGES)
     
-    # Build log components
-    timestamp = event_time.isoformat().replace('+00:00', 'Z')
-    log_parts = [
-        f'{timestamp} Cohesity',
-        f'runId="{run_id}"',
-        f'jobName="{job_name}"',
-        f'objectName="{object_name}"',
-        f'status="{status}"'
-    ]
+    # Generate syslog format matching the original test event
+    log = (f'{timestamp} Cohesity runId="{run_id}" jobName="{job_name}" '
+           f'objectName="{object_name}" status="{status}" initiatedBy="{initiated_by}" '
+           f'message="{message}"')
     
-    # Add status-specific fields
-    if status in ["SUCCESS", "FAILED", "WARNING"]:
-        duration = generate_duration()
-        log_parts.append(f'duration="{duration}"')
-        
-        if status == "SUCCESS":
-            bytes_protected = generate_bytes_protected()
-            throughput = generate_throughput()
-            log_parts.append(f'bytesProtected={bytes_protected}')
-            log_parts.append(f'throughput="{throughput}"')
-            
-        elif status == "FAILED":
-            error = random.choice(ERROR_MESSAGES)
-            log_parts.append(f'error="{error}"')
-    
-    # Add initiator for STARTED events
-    if status == "STARTED":
-        log_parts.append(f'initiatedBy="{initiator}"')
-    
-    # Generate appropriate message
-    if status == "STARTED":
-        message = "Protection run started"
-    elif status == "SUCCESS":
-        message = "Backup completed successfully"
-    elif status == "FAILED":
-        if "error" in locals():
-            message = f"Backup run failed during {error.lower().split()[0]} {error.lower().split()[1] if len(error.split()) > 1 else 'operation'}"
-        else:
-            message = "Backup run failed"
-    elif status == "WARNING":
-        message = "Backup completed with warnings"
-    else:
-        message = "Backup operation in progress"
-    
-    log_parts.append(f'message="{message}"')
-    
-    return ' '.join(log_parts)
+    return log
 
 if __name__ == "__main__":
-    # Generate sample events
     print("Sample Cohesity Backup Events:")
     print("=" * 50)
     for i in range(3):

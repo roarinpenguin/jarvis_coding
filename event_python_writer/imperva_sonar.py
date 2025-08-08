@@ -31,7 +31,7 @@ def get_random_ip():
     """Generate a random IP address."""
     return f"192.0.2.{random.randint(1, 255)}" if random.random() < 0.7 else f"203.0.113.{random.randint(1, 255)}"
 
-def imperva_sonar_log() -> str:
+def imperva_sonar_log() -> dict:
     """Generate a single Imperva Sonar event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 60))
@@ -42,17 +42,19 @@ def imperva_sonar_log() -> str:
     database = random.choice(DATABASES)
     
     timestamp = event_time.isoformat().replace('+00:00', 'Z')
-    log_parts = [
-        f'{timestamp} ImpervaSonar',
-        f'eventType="{event_type}"',
-        f'databaseUser="{db_user}"', 
-        f'sourceIP="{source_ip}"',
-        f'database="{database}"'
-    ]
+    log_dict = {
+        "timestamp": timestamp,
+        "dataSource": "ImpervaSonar",
+        "eventType": event_type,
+        "databaseUser": db_user,
+        "sourceIP": source_ip,
+        "database": database,
+        **ATTR_FIELDS
+    }
     
     if event_type == "DB_LOGIN":
         outcome = random.choice(["SUCCESS", "FAILURE"])
-        log_parts.append(f'outcome="{outcome}"')
+        log_dict["outcome"] = outcome
         
         if outcome == "SUCCESS":
             message = f"User {db_user} connected to {database} database"
@@ -64,9 +66,9 @@ def imperva_sonar_log() -> str:
         outcome = "ALLOWED"
         policy = random.choice(POLICIES)
         
-        log_parts.append(f'statement="{statement}"')
-        log_parts.append(f'outcome="{outcome}"')
-        log_parts.append(f'policy="{policy}"')
+        log_dict["statement"] = statement
+        log_dict["outcome"] = outcome
+        log_dict["policy"] = policy
         
         table_name = "payroll" if "payroll" in statement else "audit_log" if "audit_log" in statement else "table"
         message = f"Query executed against {table_name} table"
@@ -76,21 +78,22 @@ def imperva_sonar_log() -> str:
         outcome = "BLOCKED"
         policy = random.choice(POLICIES)
         
-        log_parts.append(f'statement="{statement}"')
-        log_parts.append(f'outcome="{outcome}"')
-        log_parts.append(f'policy="{policy}"')
+        log_dict["statement"] = statement
+        log_dict["outcome"] = outcome
+        log_dict["policy"] = policy
         
         if "DROP" in statement:
             message = "Drop table command blocked by security policy"
         else:
             message = "Bulk delete operation blocked by security policy"
     
-    log_parts.append(f'message="{message}"')
-    return ' '.join(log_parts)
+    log_dict["message"] = message
+    return log_dict
 
 if __name__ == "__main__":
+    import json
     print("Sample Imperva Sonar Events:")
     print("=" * 50)
     for i in range(3):
         print(f"\nEvent {i+1}:")
-        print(imperva_sonar_log())
+        print(json.dumps(imperva_sonar_log(), indent=2))

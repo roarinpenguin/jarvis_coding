@@ -1,0 +1,122 @@
+{
+  "attributes": {
+    "dataSource.vendor": "Cisco",
+    "dataSource.name": "Cisco Duo Security",
+    "dataSource.category": "security",
+    "dataSource.technology": "multi_factor_authentication",
+    "source": "cisco_duo"
+  },
+  
+  "patterns": {},
+  
+  "formats": [
+    {
+      "id": "cisco_duo_json",
+      "format": "$unmapped.{parse=gron}$",
+      "attributes": {
+        "dataSource.app": "Cisco Duo MFA Authentication",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "category_uid": 3,
+        "category_name": "Identity & Access Management",
+        "type_uid": 300201,
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "severity_id": 2
+      },
+      "rewrites": [
+        {
+          "input": "unmapped.timestamp",
+          "output": "time",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.user",
+          "output": "user.name",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.ip",
+          "output": "src_endpoint.ip",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.factor",
+          "output": "auth_protocol",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.result",
+          "output": "disposition",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.location",
+          "output": "src_endpoint.location.desc",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.device",
+          "output": "device.type",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.application",
+          "output": "app_name",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "unmapped.result",
+          "output": "status_id",
+          "match": "SUCCESS",
+          "replace": "1"
+        },
+        {
+          "input": "unmapped.result",
+          "output": "status_id",
+          "match": "DENIED|FAILED",
+          "replace": "2"
+        },
+        {
+          "input": "unmapped.result",
+          "output": "status_id",
+          "match": "PENDING",
+          "replace": "99"
+        },
+        {
+          "input": "unmapped.result",
+          "output": "severity_id",
+          "match": "SUCCESS",
+          "replace": "1"
+        },
+        {
+          "input": "unmapped.result",
+          "output": "severity_id",
+          "match": "DENIED|FAILED",
+          "replace": "4"
+        },
+        {
+          "input": "unmapped.result",
+          "output": "severity_id",
+          "match": "PENDING",
+          "replace": "2"
+        },
+        {
+          "input": "unmapped.user",
+          "output": "observables",
+          "match": ".*",
+          "replace": "[{\"name\":\"user\",\"type\":\"User\",\"value\":\"$0\",\"type_id\":4},{\"name\":\"src_ip\",\"type\":\"IP Address\",\"value\":\"${unmapped.ip}\",\"type_id\":2}]"
+        }
+      ],
+      "halt": true
+    }
+  ]
+}

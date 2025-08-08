@@ -24,7 +24,7 @@ def generate_ip():
     """Generate an IP address in 192.168.1.x range."""
     return f"192.168.1.{random.randint(100, 200)}"
 
-def isc_dhcp_log() -> str:
+def isc_dhcp_log() -> dict:
     """Generate a single ISC DHCP server log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(seconds=random.randint(0, 3600))
@@ -37,33 +37,45 @@ def isc_dhcp_log() -> str:
     interface = random.choice(INTERFACES)
     hostname = random.choice(HOSTNAMES)
     
-    # Format timestamp in syslog style
-    timestamp = event_time.strftime("%b %d %H:%M:%S")
+    # Build structured log entry
+    log_entry = {
+        "timestamp": event_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "process": "dhcpd",
+        "process_id": pid,
+        "dhcp_message_type": dhcp_type,
+        "client_mac": mac,
+        "client_ip": ip,
+        "interface": interface,
+        "client_hostname": hostname,
+        **ATTR_FIELDS
+    }
     
-    # Build log entry based on DHCP type
+    # Add type-specific fields and message
     if dhcp_type == "DHCPDISCOVER":
-        log_entry = f"{timestamp} dhcpd[{pid}]: {dhcp_type} from {mac} via {interface}"
+        log_entry["message"] = f"{dhcp_type} from {mac} via {interface}"
     elif dhcp_type == "DHCPOFFER":
-        log_entry = f"{timestamp} dhcpd[{pid}]: {dhcp_type} on {ip} to {mac} via {interface}"
+        log_entry["message"] = f"{dhcp_type} on {ip} to {mac} via {interface}"
     elif dhcp_type == "DHCPACK":
         lease_duration = random.choice([3600, 86400, 604800])  # 1 hour, 1 day, 1 week
+        log_entry["lease_duration"] = lease_duration
         if hostname:
-            log_entry = f"{timestamp} dhcpd[{pid}]: {dhcp_type} on {ip} to {mac} ({hostname}) via {interface} lease-duration {lease_duration}"
+            log_entry["message"] = f"{dhcp_type} on {ip} to {mac} ({hostname}) via {interface} lease-duration {lease_duration}"
         else:
-            log_entry = f"{timestamp} dhcpd[{pid}]: {dhcp_type} on {ip} to {mac} via {interface} lease-duration {lease_duration}"
+            log_entry["message"] = f"{dhcp_type} on {ip} to {mac} via {interface} lease-duration {lease_duration}"
     elif dhcp_type == "DHCPRELEASE":
         if hostname:
-            log_entry = f"{timestamp} dhcpd[{pid}]: {dhcp_type} of {ip} from {mac} ({hostname}) via {interface}"
+            log_entry["message"] = f"{dhcp_type} of {ip} from {mac} ({hostname}) via {interface}"
         else:
-            log_entry = f"{timestamp} dhcpd[{pid}]: {dhcp_type} of {ip} from {mac} via {interface}"
+            log_entry["message"] = f"{dhcp_type} of {ip} from {mac} via {interface}"
     else:  # DHCPREQUEST
-        log_entry = f"{timestamp} dhcpd[{pid}]: {dhcp_type} for {ip} from {mac} via {interface}"
+        log_entry["message"] = f"{dhcp_type} for {ip} from {mac} via {interface}"
     
     return log_entry
 
 if __name__ == "__main__":
+    import json
     print("Sample ISC DHCP Events:")
     print("=" * 50)
     for i in range(3):
         print(f"\nEvent {i+1}:")
-        print(isc_dhcp_log())
+        print(json.dumps(isc_dhcp_log(), indent=2))

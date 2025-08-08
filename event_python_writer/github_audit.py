@@ -1,218 +1,98 @@
 #!/usr/bin/env python3
 """
 GitHub audit log event generator
+Generates synthetic GitHub audit logs in syslog format
 """
-from __future__ import annotations
 import random
-import time
-from datetime import datetime, timezone
-from typing import Dict
+from datetime import datetime, timezone, timedelta
 
-ATTR_FIELDS: Dict[str, str] = {
+# SentinelOne AI-SIEM specific field attributes
+ATTR_FIELDS = {
     "dataSource.vendor": "GitHub",
     "dataSource.name": "GitHub Audit",
-    "dataSource.category": "audit",
-    "metadata.product.vendor_name": "GitHub",
-    "metadata.product.name": "GitHub Audit",
-    "metadata.version": "1.0.0",
-    "class_uid": "8001",
-    "class_name": "DevOps Activity",
-    "category_uid": "8",
-    "category_name": "System Activity",
-    "activity_id": "1",
-    "activity_name": "Repository Activity",
-    "type_uid": "800101"
+    "dataSource.category": "audit"
 }
 
-def github_audit_log() -> Dict:
-    """Generate GitHub audit log event"""
-    
-    # Common actors/users
-    actors = [
-        "devuser", "admin", "buildbot", "security_team", 
-        "john.doe", "jane.smith", "deploy_user", "ci_service"
-    ]
-    
-    # Organizations
-    orgs = [
-        "acme-corp", "tech-startup", "enterprise-co",
-        "open-source-org", "dev-team", "security-org"
-    ]
-    
-    # Repositories
-    repositories = [
-        "new-repo", "legacy-repo", "app-service", "api-gateway",
-        "frontend-app", "backend-service", "infrastructure", "configs"
-    ]
-    
-    # GitHub actions with their activity mappings
-    actions = [
-        # Repository actions (activity_id: 1)
-        {
-            "action": "repo.create",
-            "activity_id": 1,
-            "activity_name": "Repository Create",
-            "severity": 1,
-            "desc_template": "Repository {org}/{repo} created"
-        },
-        {
-            "action": "repo.delete", 
-            "activity_id": 1,
-            "activity_name": "Repository Delete",
-            "severity": 3,
-            "desc_template": "Attempt to delete repository {repo} {outcome}"
-        },
-        # Branch actions (activity_id: 2)
-        {
-            "action": "branch.protect",
-            "activity_id": 2,
-            "activity_name": "Branch Protection",
-            "severity": 1,
-            "desc_template": "Enabled branch protection on {repo}/main"
-        },
-        {
-            "action": "branch.delete",
-            "activity_id": 2,
-            "activity_name": "Branch Delete",
-            "severity": 2,
-            "desc_template": "Branch {branch} deleted from {repo}"
-        },
-        # Code actions (activity_id: 3)
-        {
-            "action": "git.push",
-            "activity_id": 3,
-            "activity_name": "Code Push",
-            "severity": 1,
-            "desc_template": "Code pushed to {repo}"
-        },
-        {
-            "action": "pull_request.merge",
-            "activity_id": 3,
-            "activity_name": "Pull Request Merge",
-            "severity": 1,
-            "desc_template": "Pull request merged in {repo}"
-        },
-        # Access actions (activity_id: 4)
-        {
-            "action": "repo.access",
-            "activity_id": 4,
-            "activity_name": "Repository Access",
-            "severity": 2,
-            "desc_template": "Repository access granted to {actor}"
-        },
-        {
-            "action": "team.add_member",
-            "activity_id": 4,
-            "activity_name": "Team Member Add",
-            "severity": 2,
-            "desc_template": "User {actor} added to team"
-        }
-    ]
-    
-    # Outcomes with weights
-    outcomes = [
-        {"name": "success", "status_id": 1, "severity_modifier": 0, "weight": 8},
-        {"name": "failure", "status_id": 2, "severity_modifier": 1, "weight": 2}
-    ]
-    
-    # Client IPs
-    client_ips = [
-        "198.51.100.24", "203.0.113.10", "192.0.2.50",
-        "198.51.100.100", "203.0.113.200", "192.168.1.50"
-    ]
-    
-    # Generate event data
-    timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-    actor = random.choice(actors)
-    org = random.choice(orgs)
-    repository = random.choice(repositories)
-    action_info = random.choice(actions)
-    outcome = random.choices(outcomes, weights=[o["weight"] for o in outcomes], k=1)[0]
-    client_ip = random.choice(client_ips)
-    
-    # Generate description based on action and outcome
-    description = action_info["desc_template"].format(
-        org=org,
-        repo=repository,
-        actor=actor,
-        branch="main",
-        outcome="denied due to policy" if outcome["name"] == "failure" else ""
-    )
-    
-    # Adjust severity based on outcome
-    final_severity = min(6, action_info["severity"] + outcome["severity_modifier"])
-    
-    # Create OCSF-compliant event
-    event = {
-        "timestamp": timestamp,
-        "time": int(time.time() * 1000),
-        "class_uid": 8001,
-        "class_name": "DevOps Activity",
-        "category_uid": 8,
-        "category_name": "System Activity",
-        "activity_id": action_info["activity_id"],
-        "activity_name": action_info["activity_name"],
-        "type_uid": 800100 + action_info["activity_id"],
-        "severity_id": final_severity,
-        "status_id": outcome["status_id"],
-        
-        "user": {
-            "name": actor,
-            "account_uid": actor,
-            "account_type": "Service" if "bot" in actor or "service" in actor else "User"
-        },
-        
-        "src_endpoint": {
-            "ip": client_ip
-        },
-        
-        "resource": {
-            "name": repository,
-            "type": "Repository",
-            "uid": f"{org}/{repository}"
-        },
-        
-        "status": outcome["name"],
-        "message": description,
-        
-        "enrichments": {
-            "organization": org,
-            "action": action_info["action"],
-            "repository_full_name": f"{org}/{repository}"
-        },
-        
-        "metadata": {
-            "tenant_uid": org,
-            "version": "1.0.0",
-            "product": {
-                "vendor_name": "GitHub",
-                "name": "GitHub Audit"
-            }
-        },
-        
-        "observables": [
-            {
-                "name": "user",
-                "type": "User",
-                "value": actor
-            },
-            {
-                "name": "repository",
-                "type": "Other", 
-                "value": f"{org}/{repository}"
-            },
-            {
-                "name": "src_ip",
-                "type": "IP Address",
-                "value": client_ip
-            }
-        ],
-        
-        **ATTR_FIELDS
-    }
-    
-    return event
+# Actions
+ACTIONS = [
+    "repo.create", "repo.destroy", "repo.archive", "repo.unarchive",
+    "repo.public", "repo.private", "repo.transfer",
+    "team.create", "team.destroy", "team.add_member", "team.remove_member",
+    "org.add_member", "org.remove_member", "org.update_member",
+    "repo.add_collaborator", "repo.remove_collaborator",
+    "repo.change_collaborator_permission",
+    "oauth_access.create", "oauth_access.destroy",
+    "public_key.create", "public_key.delete",
+    "repo_secret.create", "repo_secret.update", "repo_secret.remove",
+    "protected_branch.create", "protected_branch.destroy",
+    "pull_request.merge", "pull_request.close"
+]
 
+# Outcomes
+OUTCOMES = ["success", "failure", "unknown"]
+
+# Organizations
+ORGS = ["acme-corp", "tech-startup", "enterprise-co", "dev-team", "ops-group"]
+
+# Repositories  
+REPOS = [
+    "web-app", "mobile-app", "api-gateway", "microservice-auth",
+    "infrastructure", "documentation", "config-repo", "test-suite",
+    "data-pipeline", "ml-models", "frontend", "backend", "new-repo"
+]
+
+# Users
+USERS = [
+    "alice", "bob", "charlie", "devuser", "admin", "cicd-bot",
+    "release-manager", "security-scanner", "dependabot"
+]
+
+def generate_ip() -> str:
+    """Generate IP address"""
+    return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
+
+def github_audit_log() -> str:
+    """Generate a single GitHub audit event log in syslog format"""
+    now = datetime.now(timezone.utc)
+    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    
+    timestamp = event_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    actor = random.choice(USERS)
+    org = random.choice(ORGS)
+    repo = random.choice(REPOS)
+    action = random.choice(ACTIONS)
+    outcome = random.choice(OUTCOMES)
+    ip = generate_ip()
+    
+    # Build description based on action
+    if "repo" in action:
+        description = f"Repository {org}/{repo} {action.split('.')[1]}"
+        repository = f"{org}/{repo}"
+    elif "team" in action:
+        team_name = random.choice(["developers", "admins", "reviewers"])
+        description = f"Team {team_name} {action.split('.')[1]}"
+        repository = ""
+    elif "org" in action:
+        description = f"Organization {org} {action.split('.')[1]}"
+        repository = ""
+    else:
+        description = f"Action {action} performed"
+        repository = f"{org}/{repo}"
+    
+    # Generate syslog format matching the test event
+    log = f'{timestamp} github.audit actor="{actor}" org="{org}"'
+    
+    if repository:
+        log += f' repository="{repository}"'
+    
+    log += f' action="{action}" outcome="{outcome}" description="{description}" ip="{ip}"'
+    
+    return log
 
 if __name__ == "__main__":
-    print(github_audit_log())
+    # Generate sample events
+    print("Sample GitHub Audit Events:")
+    print("=" * 50)
+    for i in range(3):
+        print(f"\nEvent {i+1}:")
+        print(github_audit_log())

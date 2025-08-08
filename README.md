@@ -1,6 +1,6 @@
 # Security Event Generation and Parsing Project
 
-A comprehensive toolkit for generating synthetic security log events and parsing configurations for 68+ security products and platforms.
+A comprehensive toolkit for generating synthetic security log events and parsing configurations for 100+ security products and platforms.
 
 ## Overview
 
@@ -37,23 +37,31 @@ python event_python_writer/quick_scenario.py
 python event_python_writer/attack_scenario_orchestrator.py
 ```
 
-## Available Event Generators (68 Total)
+## Available Event Generators (100+ Total)
 
-### Cloud & Infrastructure
+### Cloud & Infrastructure  
 - `abnormal_security`: Abnormal Security email security events
 - `apache_http`: Apache HTTP server access logs
 - `aws_cloudtrail`: AWS CloudTrail events
 - `aws_elb`: AWS Elastic Load Balancer logs
 - `aws_guardduty`: AWS GuardDuty findings
+- `aws_route53`: AWS Route 53 DNS query logs
 - `aws_vpc_dns`: AWS VPC DNS query logs
 - `aws_vpcflowlogs`: AWS VPC Flow Logs
+- `aws_waf`: AWS Web Application Firewall logs
 - `google_cloud_dns`: Google Cloud DNS query and audit events
 - `google_workspace`: Google Workspace admin and user activity events
 
 ### Network Security & Infrastructure
+- `akamai_cdn`: Akamai CDN access and performance logs
+- `akamai_dns`: Akamai DNS resolution and security logs
+- `akamai_general`: Akamai general security and performance events
+- `akamai_sitedefender`: Akamai SiteDefender WAF security events
 - `cisco_asa`: Cisco ASA firewall logs
+- `cisco_duo`: Cisco Duo multi-factor authentication events
 - `cisco_fmc`: Cisco Firepower Management Center security events
 - `cisco_ios`: Cisco IOS network device syslog events
+- `cisco_ironport`: Cisco IronPort Email Security Appliance logs
 - `cisco_isa3000`: Cisco ISA3000 industrial security appliance events
 - `cisco_ise`: Cisco Identity Services Engine authentication events
 - `cisco_meraki`: Cisco Meraki logs
@@ -66,21 +74,35 @@ python event_python_writer/attack_scenario_orchestrator.py
 - `corelight_tunnel`: Corelight tunnel traffic logs
 - `extreme_networks`: Extreme Networks switch and access point events
 - `f5_networks`: F5 BIG-IP load balancer and security events
+- `f5_vpn`: F5 VPN access and session logs
 - `fortinet_fortigate`: FortiGate firewall logs (multiple types)
+- `isc_bind`: ISC BIND DNS server query and security logs
+- `isc_dhcp`: ISC DHCP server lease and network logs
 - `juniper_networks`: Juniper Networks device events
 - `paloalto_prismasase`: Palo Alto Prisma SASE security and network events
 - `ubiquiti_unifi`: Ubiquiti UniFi network equipment events
 - `zscaler`: Zscaler proxy logs
+- `zscaler_dns_firewall`: Zscaler DNS firewall security events
 - `zscaler_firewall`: Zscaler firewall and security events
 
 ### Endpoint & Identity Security
 - `armis`: Armis IoT device discovery and security events
 - `crowdstrike_falcon`: CrowdStrike Falcon endpoint events
+- `hypr_auth`: HYPR passwordless authentication events
+- `iis_w3c`: Microsoft IIS W3C web server logs
+- `jamf_protect`: Jamf Protect macOS endpoint security events
+- `linux_auth`: Linux authentication logs (/var/log/auth.log)
+- `microsoft_365_collaboration`: Microsoft 365 SharePoint/OneDrive collaboration events
+- `microsoft_365_defender`: Microsoft 365 Defender endpoint security events
 - `microsoft_azure_ad_signin`: Microsoft Azure AD signin events
 - `microsoft_azuread`: Azure AD audit logs
 - `microsoft_defender_email`: Microsoft Defender for Office 365 events
 - `microsoft_windows_eventlog`: Microsoft Windows Event Log events
 - `okta_authentication`: Okta authentication events
+- `pingfederate`: PingFederate SSO authentication and provisioning events
+- `pingone_mfa`: PingOne multi-factor authentication events
+- `pingprotect`: PingProtect fraud detection and authentication events
+- `rsa_adaptive`: RSA Adaptive Authentication risk-based security events
 - `sentinelone_endpoint`: SentinelOne XDR endpoint events (servers, workstations, Kubernetes)
 - `sentinelone_identity`: SentinelOne Ranger AD identity/authentication events
 
@@ -89,11 +111,13 @@ python event_python_writer/attack_scenario_orchestrator.py
 - `proofpoint`: Proofpoint email security events
 
 ### Web Application Security
+- `imperva_sonar`: Imperva Sonar database security and compliance logs
 - `imperva_waf`: Imperva Web Application Firewall security events
 - `incapsula`: Imperva Incapsula WAF security events
 
 ### Privileged Access & Identity Management
 - `beyondtrust_passwordsafe`: BeyondTrust Password Safe audit events
+- `cyberark_conjur`: CyberArk Conjur secrets management audit events
 - `cyberark_pas`: CyberArk Privileged Access Security events
 - `hashicorp_vault`: HashiCorp Vault secrets management events
 - `securelink`: SecureLink privileged remote access events
@@ -104,13 +128,19 @@ python event_python_writer/attack_scenario_orchestrator.py
 - `manch_siem`: Manchester SIEM security events and alerts
 - `vectra_ai`: Vectra AI network detection and response events
 
-### IT Management
+### IT Management & Data Protection
+- `axway_sftp`: Axway SFTP file transfer and audit logs
+- `cohesity_backup`: Cohesity data management and backup logs
+- `github_audit`: GitHub repository and organization audit logs
 - `manageengine_general`: ManageEngine IT management and security events
 - `microsoft_365_mgmt_api`: Microsoft 365 Management API events
 - `sap`: SAP ERP, HANA, and security audit events
+- `veeam_backup`: Veeam backup and recovery operations logs
+- `wiz_cloud`: Wiz cloud security posture and compliance events
 
 ### DevOps & CI/CD
 - `buildkite`: Buildkite CI/CD audit and pipeline events
+- `harness_ci`: Harness CI/CD pipeline and deployment logs
 - `teleport`: Teleport access proxy events (SSH, database, Kubernetes)
 
 ### Network Access & VPN
@@ -187,12 +217,25 @@ export HEC_TOKEN="your-hec-token-here"
 │   ├── attack_scenario_orchestrator.py   # APT campaign generator
 │   ├── scenario_hec_sender.py            # Scenario event sender
 │   ├── quick_scenario.py                 # Quick scenario generator
-│   └── [vendor]_[product].py             # Individual event generators (68 total)
+│   └── [vendor]_[product].py             # Individual event generators (100+ total)
 └── parsers/community/                    # Log parser configurations
-    └── [vendor]_[product]_[description]-latest/  # Parser definitions (68 total)
+    └── [vendor]_[product]_[description]-latest/  # Parser definitions (100+ total)
 ```
 
 ## Development
+
+### Recently Added (35 New Parsers)
+This project was recently expanded with 35 new OCSF-compliant parsers:
+- **First batch**: 10 parsers (AWS WAF, Route53, Cisco IronPort, CyberArk Conjur, IIS W3C, Linux Auth, Microsoft 365 Collaboration/Defender, PingFederate, Zscaler DNS Firewall)
+- **Second batch**: 20 parsers (All Akamai products, Axway SFTP, Cisco Duo, Cohesity, F5 VPN, GitHub Audit, Harness CI, HYPR Auth, Imperva Sonar, ISC BIND/DHCP, Jamf Protect, Ping MFA/Protect, RSA Adaptive, Veeam, Wiz Cloud)
+- **Converted from legacy formats**: 5 parsers (Cisco FMC, IOS, ISA3000, Meraki Flow, Palo Alto Prisma SASE)
+
+### Parser Features
+- **OCSF 1.1.0 Compliance**: All parsers follow Open Cybersecurity Schema Framework standards
+- **JSON Format**: Modern JSON-based configuration replacing legacy .conf and .docx formats
+- **Field Mapping**: Comprehensive field mapping to OCSF schema with proper class_uid, activity_id mappings
+- **Observables Extraction**: Automatic extraction of IP addresses, usernames, and other entities for correlation
+- **Status and Severity Mapping**: Intelligent mapping of vendor-specific status/severity to standardized values
 
 ### Adding New Generators
 1. Create new generator following naming convention
@@ -202,8 +245,11 @@ export HEC_TOKEN="your-hec-token-here"
 5. Add to `JSON_PRODUCTS` set if generating JSON
 6. Update documentation
 
-### Testing Generators
+### Testing
 ```bash
+# Comprehensive validation (JSON parsers + event generators)
+python test_json_parsers.py
+
 # Test individual generator
 python event_python_writer/your_generator.py
 

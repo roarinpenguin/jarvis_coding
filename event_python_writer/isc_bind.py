@@ -34,7 +34,7 @@ def generate_connection_uid():
     """Generate connection UID."""
     return f"0x7f{random.randint(10000000, 99999999):08x}"
 
-def isc_bind_log() -> str:
+def isc_bind_log() -> dict:
     """Generate a single ISC BIND DNS query log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(seconds=random.randint(0, 3600))
@@ -47,17 +47,29 @@ def isc_bind_log() -> str:
     opcode = random.choice(OPCODES)
     conn_uid = generate_connection_uid()
     
-    # Format timestamp in BIND style
-    timestamp = event_time.strftime("%d-%b-%Y %H:%M:%S.%f")[:-3]
-    
-    # Build log entry
-    log_entry = f"{timestamp} queries: info: client @{conn_uid} {src_ip}#{src_port} ({hostname}): query: {hostname} IN {query_type} + ({opcode})"
+    # Build structured log entry
+    log_entry = {
+        "timestamp": event_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+        "log_level": "info",
+        "log_type": "queries",
+        "client_uid": conn_uid,
+        "client_ip": src_ip,
+        "client_port": src_port,
+        "query_hostname": hostname,
+        "query_name": hostname,
+        "query_class": "IN",
+        "query_type": query_type,
+        "query_opcode": opcode,
+        "message": f"client @{conn_uid} {src_ip}#{src_port} ({hostname}): query: {hostname} IN {query_type} + ({opcode})",
+        **ATTR_FIELDS
+    }
     
     return log_entry
 
 if __name__ == "__main__":
+    import json
     print("Sample ISC BIND DNS Events:")
     print("=" * 50)
     for i in range(3):
         print(f"\nEvent {i+1}:")
-        print(isc_bind_log())
+        print(json.dumps(isc_bind_log(), indent=2))

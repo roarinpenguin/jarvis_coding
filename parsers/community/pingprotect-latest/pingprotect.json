@@ -1,0 +1,158 @@
+{
+  "attributes": {
+    "dataSource.category": "security",
+    "dataSource.name": "PingProtect",
+    "dataSource.vendor": "Ping Identity",
+    "metadata.product.name": "PingProtect",
+    "metadata.product.vendor_name": "Ping Identity",
+    "metadata.version": "1.0.0"
+  },
+  "formats": [
+    {
+      "format": "$unmapped.{parse=gron}$",
+      "rewrites": [
+        {
+          "input": "unmapped.timestamp",
+          "output": "timestamp",
+          "match": ".*",
+          "replace": "$0"
+        }
+      ]
+    }
+  ],
+  "mappings": {
+    "version": 1,
+    "mappings": [
+      {
+        "predicate": "true",
+        "transformations": [
+          {
+            "constant": {
+              "value": 3002,
+              "field": "class_uid"
+            }
+          },
+          {
+            "constant": {
+              "value": "Authentication",
+              "field": "class_name"
+            }
+          },
+          {
+            "constant": {
+              "value": 3,
+              "field": "category_uid"
+            }
+          },
+          {
+            "constant": {
+              "value": "Identity & Access Management",
+              "field": "category_name"
+            }
+          },
+          {
+            "constant": {
+              "value": 300201,
+              "field": "type_uid"
+            }
+          },
+          {
+            "copy": {
+              "from": "unmapped.timestamp",
+              "to": "time"
+            }
+          },
+          {
+            "cast": {
+              "field": "time",
+              "type": "iso8601TimestampToEpochSec"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.recordedAt",
+              "to": "recorded_time"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.actors.client.id",
+              "to": "client.uid"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.actors.user.id",
+              "to": "actor.user.uid"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.source.ip",
+              "to": "src_endpoint.ip"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.action.type",
+              "to": "type_name"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.action.description",
+              "to": "activity_name"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.result.status",
+              "to": "status"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.result.description",
+              "to": "message"
+            }
+          },
+          {
+            "constant": {
+              "value": 1,
+              "field": "activity_id",
+              "predicate": "type_name = 'SECRET.READ'"
+            }
+          },
+          {
+            "constant": {
+              "value": 2,
+              "field": "activity_id",
+              "predicate": "type_name = 'ROLE_ASSIGNMENT.DELETED'"
+            }
+          },
+          {
+            "constant": {
+              "value": 3,
+              "field": "activity_id",
+              "predicate": "type_name = 'MFA.CHALLENGE'"
+            }
+          },
+          {
+            "constant": {
+              "value": 1,
+              "field": "severity_id",
+              "predicate": "status = 'SUCCESS'"
+            }
+          },
+          {
+            "constant": {
+              "value": 3,
+              "field": "severity_id",
+              "predicate": "status = 'FAILURE'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

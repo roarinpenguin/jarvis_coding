@@ -1,0 +1,165 @@
+{
+  "attributes": {
+    "dataSource.category": "security",
+    "dataSource.name": "PingOne MFA",
+    "dataSource.vendor": "Ping Identity",
+    "metadata.product.name": "PingOne MFA",
+    "metadata.product.vendor_name": "Ping Identity",
+    "metadata.version": "1.0.0"
+  },
+  "formats": [
+    {
+      "format": "$unmapped.{parse=gron}$",
+      "rewrites": [
+        {
+          "input": "unmapped.timestamp",
+          "output": "timestamp",
+          "match": ".*",
+          "replace": "$0"
+        }
+      ]
+    }
+  ],
+  "mappings": {
+    "version": 1,
+    "mappings": [
+      {
+        "predicate": "true",
+        "transformations": [
+          {
+            "constant": {
+              "value": 3002,
+              "field": "class_uid"
+            }
+          },
+          {
+            "constant": {
+              "value": "Authentication",
+              "field": "class_name"
+            }
+          },
+          {
+            "constant": {
+              "value": 3,
+              "field": "category_uid"
+            }
+          },
+          {
+            "constant": {
+              "value": "Identity & Access Management",
+              "field": "category_name"
+            }
+          },
+          {
+            "constant": {
+              "value": 300201,
+              "field": "type_uid"
+            }
+          },
+          {
+            "copy": {
+              "from": "unmapped.timestamp",
+              "to": "time"
+            }
+          },
+          {
+            "cast": {
+              "field": "time",
+              "type": "iso8601TimestampToEpochSec"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.recordedAt",
+              "to": "recorded_time"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.user",
+              "to": "user.email_addr"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.source.ip",
+              "to": "src_endpoint.ip"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.action.type",
+              "to": "type_name"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.factor",
+              "to": "auth_factor"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.result.status",
+              "to": "status"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.description",
+              "to": "message"
+            }
+          },
+          {
+            "rename": {
+              "from": "unmapped.sessionId",
+              "to": "session.uid"
+            }
+          },
+          {
+            "constant": {
+              "value": 1,
+              "field": "activity_id",
+              "predicate": "type_name = 'MFA.AUTHENTICATE'"
+            }
+          },
+          {
+            "constant": {
+              "value": 2,
+              "field": "activity_id", 
+              "predicate": "type_name = 'MFA.ENROLL'"
+            }
+          },
+          {
+            "constant": {
+              "value": "Logon",
+              "field": "activity_name",
+              "predicate": "type_name = 'MFA.AUTHENTICATE'"
+            }
+          },
+          {
+            "constant": {
+              "value": "Create",
+              "field": "activity_name",
+              "predicate": "type_name = 'MFA.ENROLL'"
+            }
+          },
+          {
+            "constant": {
+              "value": 1,
+              "field": "severity_id",
+              "predicate": "status = 'SUCCESS'"
+            }
+          },
+          {
+            "constant": {
+              "value": 3,
+              "field": "severity_id",
+              "predicate": "status = 'FAILURE'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -18,9 +18,9 @@ ATTR_FIELDS: Dict[str, str] = {
 _PRI = "<134>"       # local0.notice
 _DEV = "meraki-mx64"
 
-def cisco_meraki_log(log_type: str | None = None) -> str:
+def cisco_meraki_log(log_type: str | None = None) -> dict:
     """
-    Generate a Meraki syslog line that matches one of the parser's
+    Generate a Meraki syslog event that matches one of the parser's
     three accepted formats:
 
       • vpn_firewall
@@ -30,41 +30,61 @@ def cisco_meraki_log(log_type: str | None = None) -> str:
     Pass `log_type` to force a specific format, otherwise one is chosen at random.
     """
     log_type = log_type or random.choice(["vpn_firewall", "ip_flow", "flows"])
-    now_unix = str(int(time.time()))
+    now_unix = int(time.time())
     host = _DEV
-    code = random.choice(["<134>", "<135>"])  # informational / notice
+    priority_code = random.choice([134, 135])  # informational / notice
 
     src_ip = f"10.0.{random.randint(0, 255)}.{random.randint(1, 254)}"
     dst_ip = f"93.184.{random.randint(0, 255)}.{random.randint(1, 254)}"
-    sport = str(random.randint(1024, 65535))
-    dport = str(random.choice([80, 443, 500, 4500, 53]))
+    sport = random.randint(1024, 65535)
+    dport = random.choice([80, 443, 500, 4500, 53])
     proto = random.choice(["tcp", "udp", "icmp"])
     connection_status = random.choice(["start", "allowed", "tear"])
 
+    # Base log structure
+    log_entry = {
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now_unix)),
+        "syslog_priority": priority_code,
+        "unix_timestamp": now_unix,
+        "hostname": host,
+        "log_type": log_type,
+        "src_ip": src_ip,
+        "dst_ip": dst_ip,
+        "protocol": proto,
+        "src_port": sport,
+        "dst_port": dport,
+        **ATTR_FIELDS
+    }
+
     if log_type == "vpn_firewall":
         pattern_val = random.choice(["allowed 12345", "blocked 443"])
-        message = (
-            f"{code} {now_unix} {host} vpn_firewall src={src_ip} dst={dst_ip} "
-            f"protocol={proto} sport={sport} dport={dport} pattern: {pattern_val}"
-        )
+        log_entry.update({
+            "vpn_firewall_pattern": pattern_val,
+            "message": f"<{priority_code}> {now_unix} {host} vpn_firewall src={src_ip} dst={dst_ip} protocol={proto} sport={sport} dport={dport} pattern: {pattern_val}"
+        })
     elif log_type == "ip_flow":
         trans_src = f"172.16.{random.randint(0,255)}.{random.randint(1,254)}"
         trans_port = dport
-        message = (
-            f"{code} {now_unix} {host} ip_flow src={src_ip} dst={dst_ip} "
-            f"protocol={proto} sport={sport} dport={dport} "
-            f"translated_src_ip={trans_src} translated_port={trans_port}"
-        )
+        log_entry.update({
+            "translated_src_ip": trans_src,
+            "translated_port": trans_port,
+            "message": f"<{priority_code}> {now_unix} {host} ip_flow src={src_ip} dst={dst_ip} protocol={proto} sport={sport} dport={dport} translated_src_ip={trans_src} translated_port={trans_port}"
+        })
     else:  # flows
         mac = "00:11:22:33:44:{:02x}".format(random.randint(0, 255))
-        message = (
-            f"{code} {now_unix} {host} flows {connection_status} "
-            f"src={src_ip} dst={dst_ip} mac={mac} protocol={proto} "
-            f"sport={sport} dport={dport}"
-        )
+        log_entry.update({
+            "connection_status": connection_status,
+            "mac_address": mac,
+            "message": f"<{priority_code}> {now_unix} {host} flows {connection_status} src={src_ip} dst={dst_ip} mac={mac} protocol={proto} sport={sport} dport={dport}"
+        })
 
-    return message
+    return log_entry
 
 
 if __name__ == "__main__":
-    print(cisco_meraki_log())
+    import json
+    print("Sample Cisco Meraki Events:")
+    print("=" * 50)
+    for i, log_type in enumerate(["vpn_firewall", "ip_flow", "flows"], 1):
+        print(f"\nEvent {i} ({log_type}):")
+        print(json.dumps(cisco_meraki_log(log_type), indent=2))

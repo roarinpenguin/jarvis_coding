@@ -1,0 +1,179 @@
+{
+  attributes: {
+    "dataSource.category": "security",
+    "dataSource.name": "HYPR Authentication",
+    "dataSource.vendor": "HYPR"
+  },
+  patterns: {
+    timestampPattern: "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+    logPattern: "HYPR\\s+eventType=\"([^\"]+)\"\\s+user=\"([^\"]+)\"\\s+device=\"([^\"]+)\"\\s+isSuccessful=([^\\s]+)(?:\\s+authenticator=\"([^\"]+)\")?(?:\\s+factor=\"([^\"]+)\")?(?:\\s+errorCode=\"([^\"]+)\")?(?:\\s+error=\"([^\"]+)\")?(?:\\s+sessionId=\"([^\"]+)\")?\\s+message=\"([^\"]+)\""
+  },
+  formats: [
+    {
+      id: "hypr_format",
+      format: "$timestamp=timestampPattern$ $logPattern$"
+    }
+  ],
+  mappings: {
+    version: 1,
+    mappings: [
+      {
+        predicate: "eventType = *",
+        transformations: [
+          {
+            constant: {
+              value: "3002",
+              field: "class_uid"
+            }
+          },
+          {
+            constant: {
+              value: "Authentication",
+              field: "class_name"
+            }
+          },
+          {
+            regex: {
+              field: "type_name",
+              pattern: "logPattern",
+              group: 1
+            }
+          },
+          {
+            regex: {
+              field: "actor.user.email_addr",
+              pattern: "logPattern",
+              group: 2
+            }
+          },
+          {
+            regex: {
+              field: "device.name",
+              pattern: "logPattern",
+              group: 3
+            }
+          },
+          {
+            regex: {
+              field: "status_code",
+              pattern: "logPattern",
+              group: 4
+            }
+          },
+          {
+            regex: {
+              field: "auth_protocol",
+              pattern: "logPattern",
+              group: 5
+            }
+          },
+          {
+            regex: {
+              field: "auth_factor",
+              pattern: "logPattern",
+              group: 6
+            }
+          },
+          {
+            regex: {
+              field: "status_code",
+              pattern: "logPattern",
+              group: 7
+            }
+          },
+          {
+            regex: {
+              field: "status_detail",
+              pattern: "logPattern",
+              group: 8
+            }
+          },
+          {
+            regex: {
+              field: "session.uid",
+              pattern: "logPattern",
+              group: 9
+            }
+          },
+          {
+            regex: {
+              field: "message",
+              pattern: "logPattern",
+              group: 10
+            }
+          },
+          {
+            constant: {
+              value: "1",
+              field: "activity_id",
+              predicate: "type_name = 'AUTHENTICATION'"
+            }
+          },
+          {
+            constant: {
+              value: "2",
+              field: "activity_id",
+              predicate: "type_name = 'REGISTRATION'"
+            }
+          },
+          {
+            constant: {
+              value: "99",
+              field: "activity_id",
+              predicate: "activity_id = null"
+            }
+          },
+          {
+            constant: {
+              value: "Logon",
+              field: "activity_name",
+              predicate: "activity_id = '1'"
+            }
+          },
+          {
+            constant: {
+              value: "Create",
+              field: "activity_name",
+              predicate: "activity_id = '2'"
+            }
+          },
+          {
+            constant: {
+              value: "Other",
+              field: "activity_name",
+              predicate: "activity_id = '99'"
+            }
+          },
+          {
+            constant: {
+              value: "1",
+              field: "severity_id",
+              predicate: "status_code = 'true'"
+            }
+          },
+          {
+            constant: {
+              value: "3",
+              field: "severity_id",
+              predicate: "status_code = 'false'"
+            }
+          },
+          {
+            constant: {
+              value: "Informational",
+              field: "severity",
+              predicate: "severity_id = '1'"
+            }
+          },
+          {
+            constant: {
+              value: "High",
+              field: "severity",
+              predicate: "severity_id = '3'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

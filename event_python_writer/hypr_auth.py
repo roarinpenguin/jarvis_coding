@@ -1,96 +1,62 @@
 #!/usr/bin/env python3
 """
 HYPR authentication event generator
-Generates synthetic HYPR FIDO2 and passwordless authentication events
+Generates synthetic HYPR FIDO2 and passwordless authentication events in syslog format
 """
-import json
 import random
 from datetime import datetime, timezone, timedelta
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "HYPR",
-    "dataSource.name": "HYPR Authentication",
-    "dataSource.category": "security",
-}
+# Event types
+EVENT_TYPES = ["REGISTRATION", "AUTHENTICATION", "VERIFICATION", "ENROLLMENT", "REVOCATION"]
 
-EVENT_TYPES = ["REGISTRATION", "AUTHENTICATION"]
-USERS = ["alice@example.com", "bob@example.com", "charlie@example.com", "admin@example.com"]
-DEVICES = ["iPhone13", "Windows10", "MacBookPro", "Android", "iPad"]
-AUTHENTICATORS = ["FIDO2", "Biometric", "PIN"]
-FACTORS = ["passwordless", "FIDO2", "biometric", "pin"]
-
-ERROR_CODES = [
-    "1203003", "1203004", "1203005", "AUTH_FAILED", "DEVICE_NOT_REGISTERED"
+# Users
+USERS = [
+    "alice@example.com", "bob@company.org", "charlie@business.net", 
+    "admin@system.com", "user@domain.com", "service@app.com"
 ]
 
-ERROR_MESSAGES = [
-    "FIDO2_SETTINGS_NULL_EC",
-    "DEVICE_NOT_FOUND",
-    "INVALID_AUTHENTICATOR", 
-    "USER_NOT_FOUND",
-    "AUTHENTICATION_TIMEOUT"
-]
+# Devices
+DEVICES = ["iPhone13", "Samsung-Galaxy", "Google-Pixel", "iPad", "Windows-Hello", "MacBook-Touch"]
 
-def generate_session_id():
-    """Generate a session ID."""
-    import uuid
-    return str(uuid.uuid4())
+# Success indicators
+SUCCESS_VALUES = [True, False]
+
+# Authenticators
+AUTHENTICATORS = ["FIDO2", "Biometric", "Push", "SMS", "Email", "Hardware-Token"]
+
+# Messages
+MESSAGES = [
+    "User registered new FIDO2 credential", "Biometric authentication successful",
+    "Push notification approved", "User enrollment completed", "Device verification failed",
+    "Authentication request processed", "Token revoked successfully"
+]
 
 def hypr_auth_log() -> str:
-    """Generate a single HYPR authentication event log"""
+    """Generate a single HYPR authentication event log in syslog format"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 60))
+    event_time = now - timedelta(minutes=random.randint(0, 1440))
     
+    timestamp = event_time.strftime("%Y-%m-%dT%H:%M:%SZ")
     event_type = random.choice(EVENT_TYPES)
     user = random.choice(USERS)
     device = random.choice(DEVICES)
-    is_successful = random.choice([True, True, True, False])  # 75% success rate
+    is_successful = random.choice(SUCCESS_VALUES)
+    authenticator = random.choice(AUTHENTICATORS)
+    message = random.choice(MESSAGES)
     
-    timestamp = event_time.isoformat().replace('+00:00', 'Z')
-    log_parts = [
-        f'{timestamp} HYPR',
-        f'eventType="{event_type}"',
-        f'user="{user}"',
-        f'device="{device}"',
-        f'isSuccessful={str(is_successful).lower()}'
-    ]
+    # Generate syslog format matching the original test event
+    log = (f'{timestamp} HYPR eventType="{event_type}" user="{user}" '
+           f'device="{device}" isSuccessful={str(is_successful).lower()} '
+           f'authenticator="{authenticator}" message="{message}"')
     
-    if event_type == "REGISTRATION":
-        authenticator = random.choice(AUTHENTICATORS)
-        log_parts.append(f'authenticator="{authenticator}"')
-        
-        if is_successful:
-            message = f"User registered new {authenticator} credential"
-        else:
-            error_code = random.choice(ERROR_CODES)
-            error = random.choice(ERROR_MESSAGES)
-            log_parts.append(f'errorCode="{error_code}"')
-            log_parts.append(f'error="{error}"')
-            message = f"Registration failed - {error.lower().replace('_', ' ')}"
-    
-    else:  # AUTHENTICATION
-        factor = random.choice(FACTORS)
-        log_parts.append(f'factor="{factor}"')
-        
-        if is_successful:
-            session_id = generate_session_id()
-            log_parts.append(f'sessionId="{session_id}"')
-            message = f"{factor.capitalize()} login completed"
-        else:
-            error_code = random.choice(ERROR_CODES)
-            error = random.choice(ERROR_MESSAGES)
-            log_parts.append(f'errorCode="{error_code}"')
-            log_parts.append(f'error="{error}"')
-            
-            if "FIDO2" in error:
-                message = "Authentication failed due to missing relying party settings"
-            elif "DEVICE_NOT_FOUND" in error:
-                message = "Authentication failed - device not registered"
-            else:
-                message = f"Authentication failed - {error.lower().replace('_', ' ')}"
-    
-    log_parts.append(f'message="{message}"')
-    return ' '.join(log_parts)
+    return log
+
+# ATTR_FIELDS for AI-SIEM compatibility
+ATTR_FIELDS = {
+    "vendor": "hypr",
+    "product": "auth",
+    "log_type": "authentication"
+}
 
 if __name__ == "__main__":
     print("Sample HYPR Authentication Events:")
