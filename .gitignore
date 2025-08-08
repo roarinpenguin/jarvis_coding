@@ -44,6 +44,9 @@ detection_test_report_*.json
 test_report_*.json
 coverage_report_*.json
 performance_report_*.json
+parser_validation_*.md
+parser_comprehensive_test_*.md
+parser_test_*.json
 
 # Python Environment and Dependencies
 # ===================================
@@ -210,6 +213,15 @@ tmp/
 !sample.csv
 large_datasets/
 bulk_events/
+
+# API Documentation Files
+# =======================
+# Ignore large swagger/OpenAPI files
+swagger*.json
+openapi*.json
+api_spec*.json
+*_swagger.json
+*_openapi.json
 
 # Docker
 # ======

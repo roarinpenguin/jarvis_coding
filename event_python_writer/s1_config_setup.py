@@ -252,6 +252,32 @@ def main():
             print("❌ No .env.s1 file found")
         return
     
+    if args.validate_service_account:
+        # Validate existing service account
+        try:
+            from s1_dv_api_client import SentinelOneDVClient
+            client = SentinelOneDVClient()
+            validation = client.validate_service_account()
+            
+            print("🔍 Service Account Validation Results:")
+            print("=" * 45)
+            
+            if validation['valid']:
+                print("✅ Service account is properly configured!")
+                print(f"   Account: {validation['account_info'].get('account_name', 'Unknown')}")
+                print(f"   Permissions: {list(validation['permissions'].keys())}")
+                print(f"   DV Access: {'✅' if validation['dv_access'] else '❌'}")
+                print(f"   HEC Access: {'✅' if validation['hec_access'] else '❌'}")
+            else:
+                print("❌ Service account configuration issues:")
+                for error in validation['errors']:
+                    print(f"   • {error}")
+                print("\n💡 Run with --service-account to reconfigure")
+                
+        except Exception as e:
+            print(f"❌ Validation failed: {e}")
+        return
+    
     if args.test_only:
         # Test existing environment variables
         api_url = os.getenv('S1_API_URL')
@@ -273,10 +299,16 @@ def main():
         return
     
     # Interactive setup
-    api_url, api_token, hec_token = setup_credentials()
+    if args.service_account:
+        print("🤖 Setting up service account for automated parser testing")
+        print("📖 For detailed instructions, see SERVICE_ACCOUNT_SETUP.md\n")
+    
+    credentials = setup_credentials(service_account=args.service_account)
+    api_url, api_token, hec_token = credentials[:3]
+    service_user_id, account_id, site_id = credentials[3:] if len(credentials) > 3 else (None, None, None)
     
     if not all([api_url, api_token, hec_token]):
-        print("❌ Configuration incomplete. All fields are required.")
+        print("❌ Configuration incomplete. Required fields: URL, API token, HEC token.")
         return
     
     # Test connectivity
@@ -284,8 +316,16 @@ def main():
     hec_ok = test_hec_connectivity(api_url, hec_token)
     
     if api_ok and hec_ok:
-        save_config(api_url, api_token, hec_token)
-        print("\n🎉 Setup complete! You can now use the parser validation tools.")
+        save_config(api_url, api_token, hec_token, service_user_id, account_id, site_id, 
+                   service_account=args.service_account)
+        
+        if args.service_account:
+            print("\n🎉 Service account setup complete!")
+            print("🔄 Next steps:")
+            print("   1. Test service account: python s1_config_setup.py --validate-service-account")
+            print("   2. Run parser tests: python comprehensive_parser_tester.py --fixed")
+        else:
+            print("\n🎉 Setup complete! You can now use the parser validation tools.")
     else:
         print("\n❌ Setup failed due to connectivity issues. Please check your credentials and try again.")
 

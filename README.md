@@ -174,8 +174,10 @@ python event_python_writer/scenario_hec_sender.py
 
 ## Detection Rules
 
-The repository includes comprehensive detection rules in `detections.conf`:
-- **Coverage**: 30+ detection rules across all attack phases
+⚠️ **Note**: The detection rules in `detections.conf` are currently being reworked and are not yet ready for production use.
+
+The repository will include comprehensive detection rules:
+- **Coverage**: 30+ detection rules across all attack phases  
 - **Platforms**: SentinelOne, CrowdStrike, Microsoft, Darktrace, and other security vendors
 - **Correlation**: Cross-platform correlation rules for campaign-wide detection
 
@@ -212,11 +214,16 @@ export HEC_TOKEN="your-hec-token-here"
 ├── README.md                              # This file
 ├── CLAUDE.md                              # Development guidance  
 ├── detections.conf                        # SentinelOne detection rules
-├── event_python_writer/                  # Event generators
+├── event_python_writer/                  # Event generators & testing tools
 │   ├── hec_sender.py                     # HEC client for sending events
 │   ├── attack_scenario_orchestrator.py   # APT campaign generator
 │   ├── scenario_hec_sender.py            # Scenario event sender
 │   ├── quick_scenario.py                 # Quick scenario generator
+│   ├── s1_dv_api_client.py               # SentinelOne Data Visibility API client
+│   ├── comprehensive_parser_tester.py    # End-to-end parser testing framework
+│   ├── s1_config_setup.py                # Service account configuration tool
+│   ├── SERVICE_ACCOUNT_SETUP.md          # Service account setup guide
+│   ├── quick_parser_test.py              # Quick parser validation (offline)
 │   └── [vendor]_[product].py             # Individual event generators (100+ total)
 └── parsers/community/                    # Log parser configurations
     └── [vendor]_[product]_[description]-latest/  # Parser definitions (100+ total)
@@ -245,16 +252,69 @@ This project was recently expanded with 35 new OCSF-compliant parsers:
 5. Add to `JSON_PRODUCTS` set if generating JSON
 6. Update documentation
 
-### Testing
-```bash
-# Comprehensive validation (JSON parsers + event generators)
-python test_json_parsers.py
+## SentinelOne API Integration & Parser Testing
 
-# Test individual generator
+### Service Account Setup
+Set up automated parser testing with SentinelOne service account authentication:
+
+```bash
+# Set up service account configuration
+python event_python_writer/s1_config_setup.py --service-account
+
+# Validate service account permissions
+python event_python_writer/s1_config_setup.py --validate-service-account
+
+# Test basic connectivity
+python event_python_writer/s1_dv_api_client.py --test-connection
+```
+
+### End-to-End Parser Testing
+Test parser effectiveness by sending events and validating field extraction:
+
+```bash
+# Test recently fixed parsers with comprehensive validation
+python event_python_writer/comprehensive_parser_tester.py --fixed
+
+# Test specific parser groups
+python event_python_writer/comprehensive_parser_tester.py --ping
+python event_python_writer/comprehensive_parser_tester.py --cisco
+python event_python_writer/comprehensive_parser_tester.py --aws
+
+# Test individual parser with custom parameters
+python event_python_writer/comprehensive_parser_tester.py --parser pingfederate --count 5 --wait 90
+
+# Validate parser configuration only (no API calls)
+python event_python_writer/comprehensive_parser_tester.py --validate pingfederate
+```
+
+### Parser Testing Features
+- **End-to-End Validation**: Send events via HEC → Query Data Visibility → Validate parsing
+- **Service Account Authentication**: Secure automated testing with minimal required permissions
+- **OCSF Compliance**: Verify parsed events follow Open Cybersecurity Schema Framework standards
+- **Field Coverage Analysis**: Identify missing, optional, and unexpected fields
+- **Comprehensive Reporting**: Generate detailed test reports with actionable insights
+
+### Testing Environment Variables
+```bash
+# SentinelOne Service Account Configuration
+export S1_API_URL="https://your-instance.sentinelone.net"
+export S1_API_TOKEN="your-service-account-api-token"
+export S1_HEC_TOKEN="your-hec-token"
+export S1_SERVICE_USER_ID="service-user-id-optional"
+export S1_ACCOUNT_ID="account-id-optional"
+export S1_SITE_ID="site-id-optional"
+```
+
+### Legacy Testing (Without API Integration)
+```bash
+# Basic generator testing
 python event_python_writer/your_generator.py
 
-# Test via HEC sender
+# Test via HEC sender only
 python event_python_writer/hec_sender.py --product your_product --count 5
+
+# Quick parser validation
+python event_python_writer/quick_parser_test.py
 ```
 
 ## Contributing

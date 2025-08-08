@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SentinelOne Data Visibility (DV) API Client for Parser Testing
-Built from swagger 2.1 specification to test datasource delivery and parser validation
+Built from SentinelOne API documentation to test datasource delivery and parser validation
 """
 import json
 import os
@@ -79,7 +79,7 @@ class SentinelOneDVClient:
         if self.site_id:
             self.session.headers['Site-Id'] = self.site_id
         
-        # API endpoints based on swagger 2.1
+        # API endpoints based on SentinelOne API documentation
         self.dv_endpoints = {
             'init_query': '/web/api/v2.1/dv/init-query',
             'query_status': '/web/api/v2.1/dv/query-status', 
