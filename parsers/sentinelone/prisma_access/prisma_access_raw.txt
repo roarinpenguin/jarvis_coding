@@ -1,0 +1,8 @@
+{
+        "dataSource.category": "security",
+        "dataSource.name": "Prisma Access",
+        "dataSource.vendor": "Palo Alto Networks",
+        "metadata.version":"1.0.0"
+    },
+    patterns: {
+}

@@ -1,0 +1,12 @@
+{
+     "dataSource.category": "security",
+     "dataSource.name": "FortiGate",
+     "dataSource.vendor": "Fortinet",
+     "metadata.version": "1.0.0",
+     "metadata.product.vendor_name": "Fortinet",
+     "metadata.product.name": "FortiGate",
+     "severity_id": 99
+   },
+   formats: [
+     {
+}

@@ -1,0 +1,17 @@
+{
+  "attributes": {
+    "dataSource.vendor": "Unknown",
+    "dataSource.name": "FortiGate",
+    "dataSource.category": "security"
+  },
+  "formats": [
+    {
+      "format": ".*${parse=json}$",
+      "attributes": {
+        "class_uid": 6003,
+        "category_uid": 6,
+        "activity_id": 99
+      }
+    }
+  ]
+}
