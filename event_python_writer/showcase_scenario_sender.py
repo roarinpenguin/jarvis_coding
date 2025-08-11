@@ -15,31 +15,52 @@ import time
 from datetime import datetime, timezone
 from showcase_attack_scenario import generate_showcase_attack_scenario
 
-# Configuration
-HEC_TOKEN = os.environ.get('S1_HEC_TOKEN', '1FUC88b9Z4BaHtQxwIXwYGpMGEMv7UQ1JjPHEkERjDEe2U7_AS67SJJRpbIqk78h7')
-HEC_URL = "https://usea1-purple.sentinelone.net:8088/services/collector"
+# Set the HEC token first before importing from hec_sender
+os.environ['S1_HEC_TOKEN'] = os.environ.get('S1_HEC_TOKEN', '1FUC88b9Z4BaHtQxwIXwYGpMGEMv7UQ1JjPHEkERjDEe2U7_AS67SJJRpbIqk78h7')
+
+from hec_sender import send_one, SOURCETYPE_MAP, JSON_PRODUCTS
 
 def send_to_hec(event_data, source):
-    """Send event to SentinelOne HEC"""
-    hec_payload = {
-        "time": int(datetime.now(timezone.utc).timestamp()),
-        "source": source,
-        "sourcetype": "_json",
-        "index": "main", 
-        "event": event_data
+    """Send event to SentinelOne HEC using proper routing"""
+    # Map source to product name (remove underscores and special chars)
+    product = source.replace(' ', '_').lower()
+    
+    # Map some showcase sources to actual product names
+    source_to_product = {
+        'fortinet_fortigate': 'fortinet_fortigate',
+        'microsoft_windows': 'microsoft_windows_eventlog',
+        'imperva_waf': 'imperva_waf',
+        'aws_cloudtrail': 'aws_cloudtrail',
+        'okta': 'okta_authentication',
+        'azure_ad': 'microsoft_azuread',
+        'cisco_duo': 'cisco_duo',
+        'zscaler': 'zscaler',
+        'proofpoint': 'proofpoint',
+        'crowdstrike': 'crowdstrike_falcon',
+        'hashicorp_vault': 'hashicorp_vault',
+        'harness_ci': 'harness_ci',
+        'pingone_mfa': 'pingone_mfa',
+        'pingprotect': 'pingprotect'
     }
     
-    headers = {
-        "Authorization": f"Splunk {HEC_TOKEN}",
-        "Content-Type": "application/json"
+    # Get the actual product name
+    if product in source_to_product:
+        product = source_to_product[product]
+    
+    # Ensure we have proper attributes
+    attr_fields = {
+        "dataSource.vendor": source.split('_')[0].title() if '_' in source else source,
+        "dataSource.name": source.replace('_', ' ').title(),
+        "dataSource.category": "security"
     }
     
     try:
-        response = requests.post(HEC_URL, headers=headers, 
-                               data=json.dumps(hec_payload), 
-                               timeout=30, verify=False)
-        return response.status_code == 200
-    except:
+        # Use the send_one function from hec_sender which handles routing correctly
+        result = send_one(json.dumps(event_data) if isinstance(event_data, dict) else event_data, 
+                         product, attr_fields)
+        return True
+    except Exception as e:
+        print(f" Error: {str(e)}", end="")
         return False
 
 def send_showcase_scenario():

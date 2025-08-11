@@ -27,7 +27,7 @@ MESSAGES = [
     "Tests passed", "Quality gate failed", "Security scan completed", "Rollback initiated"
 ]
 
-def harness_ci_log() -> dict:
+def harness_ci_log():
     """Generate a single Harness CI/CD event log in syslog format"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -40,14 +40,18 @@ def harness_ci_log() -> dict:
     initiator = random.choice(INITIATORS)
     message = random.choice(MESSAGES)
     
-    # Generate syslog format matching the original test event
+    # Generate syslog format matching the parser's expected format
     log = (f'{timestamp} Harness pipelineId="{pipeline_id}" executionId="{execution_id}" '
            f'status="{status}" trigger="{trigger}" initiator="{initiator}" '
            f'message="{message}"')
     
-    # Return dict with raw log and ATTR_FIELDS for HEC compatibility
+    # Return just the raw log string for proper parser compatibility
+    return log
+
+def harness_ci_log_dict():
+    """Generate Harness CI/CD event as dict (for backward compatibility)"""
     return {
-        "raw": log,
+        "raw": harness_ci_log(),
         **ATTR_FIELDS
     }
 

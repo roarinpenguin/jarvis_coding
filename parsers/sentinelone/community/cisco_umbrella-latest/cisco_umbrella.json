@@ -1,0 +1,79 @@
+{
+  "attributes": {
+    "dataSource.category": "security",
+    "dataSource.name": "Cisco Umbrella",
+    "dataSource.vendor": "Cisco",
+    "metadata.product.vendor_name": "Cisco",
+    "metadata.product.name": "Cisco Umbrella",
+    "metadata.version": "1.0.0",
+    "category_uid": 4,
+    "category_name": "Network Activity",
+    "class_uid": 4003,
+    "class_name": "DNS Activity",
+    "type_uid": 400306,
+    "type_name": "DNS Activity: Traffic",
+    "activity_id": 6,
+    "activity_name": "Traffic"
+  },
+  "formats": [
+    {
+      "format": "$unmapped.{parse=gron}$",
+      "rewrites": [
+        {
+          "input": "timestamp",
+          "output": "time",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "identity",
+          "output": "device.name",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "internal_ip",
+          "output": "src_endpoint.ip",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "domain",
+          "output": "query.hostname",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "external_ip",
+          "output": "dst_endpoint.ip",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "action",
+          "output": "disposition",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "query_type",
+          "output": "query.type",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "action",
+          "output": "status_id",
+          "match": "Allowed",
+          "replace": "1"
+        },
+        {
+          "input": "action",
+          "output": "status_id",
+          "match": "Blocked",
+          "replace": "2"
+        }
+      ]
+    }
+  ]
+}

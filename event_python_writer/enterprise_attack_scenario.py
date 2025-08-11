@@ -1,556 +1,593 @@
-#!/usr/bin/env python3
+#\!/usr/bin/env python3
 """
-Enterprise Attack Scenario - SentinelOne AI-SIEM Platform Showcase
-===================================================================
+Enhanced Enterprise Attack Scenario - 300+ Events
+==================================================
 
-A sophisticated multi-phase attack campaign demonstrating cross-platform correlation
-across the entire enterprise security stack:
+Comprehensive APT simulation with clear attack progression:
+1. Initial Reconnaissance (50+ events)
+2. Initial Compromise via Phishing (30+ events)  
+3. Credential Harvesting & MFA Bypass (40+ events)
+4. Lateral Movement Across Network (60+ events)
+5. Privilege Escalation (40+ events)
+6. Data Discovery & Collection (40+ events)
+7. Data Exfiltration (40+ events)
+8. Persistence & Cleanup (20+ events)
 
-- Fortinet Fortigate (DMZ Firewalls)
-- Windows Corp Servers 
-- Imperva SecureSphere Audit
-- AWS CloudTrail
-- Okta & Azure AD Authentication
-- Cisco Duo MFA
-- Zscaler Web Security
-- Proofpoint Email Security  
-- CrowdStrike Endpoint Detection
-- HashiCorp Terraform Cloud
-- Harness CI/CD
-- PingOne MFA & PingProtect
-
-Attack Phases:
-1. RECONNAISSANCE: External probing via Fortigate, failed MFA attempts
-2. INITIAL ACCESS: Phishing via Proofpoint, credential harvesting
-3. PERSISTENCE: AWS CloudTrail privilege escalation, Azure AD backdoors
-4. LATERAL MOVEMENT: Windows servers, Imperva database access attempts
-5. DATA EXFILTRATION: Terraform secrets, CI/CD pipeline compromise
-6. EVASION: Zscaler bypass attempts, CrowdStrike detection evasion
+Total: 300+ security events across 20+ data sources
 """
 
-from __future__ import annotations
 import json
+import sys
+import os
 import random
-import time
 from datetime import datetime, timezone, timedelta
-from typing import List, Dict, Any
 
-# Import all required generators
-from fortinet_fortigate import forward_log as fortinet_fortigate_log
-from microsoft_windows_eventlog import microsoft_windows_eventlog_log  
-from imperva_waf import imperva_waf_log
+# Add the event_python_writer directory to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
+
+# Import all generators
+from fortinet_fortigate import forward_log
+from microsoft_windows_eventlog import microsoft_windows_eventlog_log
+from imperva_waf import imperva_waf_log  
 from aws_cloudtrail import cloudtrail_log
 from okta_authentication import okta_authentication_log
-from microsoft_azuread import azuread_log as microsoft_azuread_log
+from microsoft_azuread import azuread_log
 from cisco_duo import cisco_duo_log
 from zscaler import zscaler_log
 from proofpoint import proofpoint_log
-from crowdstrike_falcon import crowdstrike_log as crowdstrike_falcon_log
+from crowdstrike_falcon import crowdstrike_log
 from hashicorp_vault import hashicorp_vault_log
 from harness_ci import harness_ci_log
 from pingone_mfa import pingone_mfa_log
 from pingprotect import pingprotect_log
+from cisco_umbrella import cisco_umbrella_log
+from paloalto_firewall import paloalto_firewall_log as paloalto_log
+from cisco_ise import cisco_ise_log
+from f5_networks import f5_networks_log as f5_log
+from netskope import netskope_log
+from github_audit import github_audit_log
 
-# Attack Campaign Variables
-ATTACKER_IP = "203.0.113.42"  # External attacker
-ATTACKER_EMAIL = "haxorsaurus@evil-corp.net"
-ATTACKER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-TARGET_DOMAIN = "enterprise-corp.com"
-COMPROMISED_USER = "alice.johnson"
-COMPROMISED_EMAIL = f"{COMPROMISED_USER}@{TARGET_DOMAIN}"
-ADMIN_USER = "admin.smith"
-SERVICE_ACCOUNT = "svc-terraform"
+# Attack timeline
+BASE_TIME = datetime.now(timezone.utc) - timedelta(hours=12)
 
-# Campaign Timeline
-CAMPAIGN_START = datetime.now(timezone.utc)
-PHASE_DURATION = timedelta(hours=2)
+def get_attack_time(phase_offset_minutes):
+    """Get timestamp for attack phase"""
+    return (BASE_TIME + timedelta(minutes=phase_offset_minutes)).isoformat()
 
-def generate_phase_1_reconnaissance() -> List[Dict[Any, Any]]:
-    """Phase 1: External reconnaissance and probing"""
-    events = []
-    phase_start = CAMPAIGN_START
+def generate_enhanced_attack_scenario():
+    """Generate 300+ event comprehensive attack scenario"""
     
-    print("🔍 Phase 1: RECONNAISSANCE (External Probing)")
-    
-    # Fortigate: Port scanning and vulnerability probing
-    for i in range(12):
-        event_time = phase_start + timedelta(minutes=i*5)
-        events.append({
-            "source": "fortinet_fortigate",
-            "timestamp": event_time.isoformat(),
-            "event": fortinet_fortigate_log({
-                "srcip": ATTACKER_IP,
-                "dstip": "10.0.1.100",  # DMZ web server
-                "service": random.choice(["tcp/22", "tcp/3389", "tcp/445", "tcp/1433"]),
-                "action": "deny",
-                "attack": "Port.Scan.NMAP",
-                "severity": "high"
-            })
-        })
-    
-    # Cisco Duo: Failed MFA bypass attempts
-    for i in range(5):
-        event_time = phase_start + timedelta(minutes=15 + i*3)
-        events.append({
-            "source": "cisco_duo",
-            "timestamp": event_time.isoformat(),
-            "event": cisco_duo_log({
-                "username": COMPROMISED_USER,
-                "ip": ATTACKER_IP,
-                "result": "FAILURE",
-                "reason": "Invalid second factor",
-                "factor": "push"
-            })
-        })
-    
-    # PingOne MFA: Enumeration attempts
-    for i in range(8):
-        event_time = phase_start + timedelta(minutes=20 + i*2)
-        events.append({
-            "source": "pingone_mfa",
-            "timestamp": event_time.isoformat(),
-            "event": pingone_mfa_log({
-                "user": f"user{random.randint(1,100)}@{TARGET_DOMAIN}",
-                "source_ip": ATTACKER_IP,
-                "event_type": "authentication_failure",
-                "reason": "invalid_credentials"
-            })
-        })
-    
-    return events
-
-def generate_phase_2_initial_access() -> List[Dict[Any, Any]]:
-    """Phase 2: Initial access via phishing and credential harvesting"""
-    events = []
-    phase_start = CAMPAIGN_START + PHASE_DURATION
-    
-    print("🎣 Phase 2: INITIAL ACCESS (Phishing Campaign)")
-    
-    # Proofpoint: Malicious email delivery
-    events.append({
-        "source": "proofpoint",
-        "timestamp": phase_start.isoformat(),
-        "event": proofpoint_log({
-            "sender": ATTACKER_EMAIL,
-            "recipient": COMPROMISED_EMAIL,
-            "subject": "URGENT: Security Update Required",
-            "threat_type": "phishing",
-            "action": "delivered",
-            "attachment_name": "security_update.pdf.exe"
-        })
-    })
-    
-    # Zscaler: Malicious URL access from compromised user
-    event_time = phase_start + timedelta(minutes=10)
-    events.append({
-        "source": "zscaler", 
-        "timestamp": event_time.isoformat(),
-        "event": zscaler_log({
-            "user": COMPROMISED_EMAIL,
-            "url": "https://enterprise-c0rp-security[.]net/update",
-            "urlclass": "Phishing",
-            "action": "Allowed",  # User clicked before blocking
-            "threat": "Phishing.Credential.Harvester"
-        })
-    })
-    
-    # Okta: Successful authentication after credential harvest
-    event_time = phase_start + timedelta(minutes=25)
-    events.append({
-        "source": "okta_authentication",
-        "timestamp": event_time.isoformat(),
-        "event": okta_authentication_log({
-            "actor": {
-                "alternateId": COMPROMISED_EMAIL,
-                "displayName": "Alice Johnson"
-            },
-            "client": {
-                "ipAddress": ATTACKER_IP,
-                "userAgent": {
-                    "rawUserAgent": ATTACKER_USER_AGENT
-                }
-            },
-            "eventType": "user.session.start",
-            "outcome": {"result": "SUCCESS"}
-        })
-    })
-    
-    # Azure AD: Suspicious sign-in location
-    event_time = phase_start + timedelta(minutes=30)
-    events.append({
-        "source": "microsoft_azuread",
-        "timestamp": event_time.isoformat(), 
-        "event": microsoft_azuread_log({
-            "userPrincipalName": COMPROMISED_EMAIL,
-            "ipAddress": ATTACKER_IP,
-            "location": {"city": "Unknown", "countryOrRegion": "Romania"},
-            "riskLevel": "high",
-            "riskEventType": "unfamiliarFeatures"
-        })
-    })
-    
-    return events
-
-def generate_phase_3_persistence() -> List[Dict[Any, Any]]:
-    """Phase 3: Establishing persistence via cloud and identity systems"""
-    events = []
-    phase_start = CAMPAIGN_START + (PHASE_DURATION * 2)
-    
-    print("🔒 Phase 3: PERSISTENCE (Cloud & Identity Backdoors)")
-    
-    # AWS CloudTrail: Creating backdoor IAM user
-    events.append({
-        "source": "aws_cloudtrail",
-        "timestamp": phase_start.isoformat(),
-        "event": cloudtrail_log({
-            "eventName": "CreateUser",
-            "userIdentity": {
-                "userName": COMPROMISED_USER,
-                "type": "IAMUser"
-            },
-            "requestParameters": {
-                "userName": "backup-svc-user"  # Innocuous name
-            },
-            "sourceIPAddress": ATTACKER_IP
-        })
-    })
-    
-    # AWS CloudTrail: Attaching admin permissions
-    event_time = phase_start + timedelta(minutes=5)
-    events.append({
-        "source": "aws_cloudtrail", 
-        "timestamp": event_time.isoformat(),
-        "event": cloudtrail_log({
-            "eventName": "AttachUserPolicy",
-            "requestParameters": {
-                "userName": "backup-svc-user",
-                "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
-            },
-            "sourceIPAddress": ATTACKER_IP
-        })
-    })
-    
-    # Azure AD: Creating service principal backdoor
-    event_time = phase_start + timedelta(minutes=10)
-    events.append({
-        "source": "microsoft_azuread",
-        "timestamp": event_time.isoformat(),
-        "event": microsoft_azuread_log({
-            "operationName": "Add service principal",
-            "initiatedBy": {"user": {"userPrincipalName": COMPROMISED_EMAIL}},
-            "targetResources": [{"displayName": "BackupAutomationApp"}],
-            "result": "success"
-        })
-    })
-    
-    # HashiCorp Vault: Accessing sensitive secrets
-    event_time = phase_start + timedelta(minutes=15)
-    events.append({
-        "source": "hashicorp_vault",
-        "timestamp": event_time.isoformat(),
-        "event": hashicorp_vault_log({
-            "type": "request",
-            "auth": {"display_name": COMPROMISED_USER},
-            "request": {
-                "operation": "read",
-                "path": "secret/terraform/aws-credentials"
-            },
-            "remote_address": ATTACKER_IP
-        })
-    })
-    
-    return events
-
-def generate_phase_4_lateral_movement() -> List[Dict[Any, Any]]:
-    """Phase 4: Lateral movement through Windows infrastructure and databases"""
-    events = []
-    phase_start = CAMPAIGN_START + (PHASE_DURATION * 3)
-    
-    print("🌐 Phase 4: LATERAL MOVEMENT (Windows & Database Access)")
-    
-    # Windows: Kerberoasting attack
-    events.append({
-        "source": "microsoft_windows_eventlog",
-        "timestamp": phase_start.isoformat(),
-        "event": microsoft_windows_eventlog_log({
-            "EventID": 4769,  # Kerberos service ticket request
-            "Account_Name": COMPROMISED_USER,
-            "Service_Name": "MSSQL/prod-db-01.enterprise-corp.com",
-            "Client_Address": "10.0.10.50",
-            "Failure_Code": "0x0"  # Success
-        })
-    })
-    
-    # Imperva: Database access attempts
-    event_time = phase_start + timedelta(minutes=5)
-    for table in ["users", "financial_data", "customer_pii", "payment_info"]:
-        events.append({
-            "source": "imperva_waf",
-            "timestamp": (event_time + timedelta(minutes=1)).isoformat(),
-            "event": imperva_waf_log({
-                "user": SERVICE_ACCOUNT,
-                "source_ip": "10.0.10.50",
-                "sql_command": f"SELECT * FROM {table} LIMIT 10000",
-                "action": "alert",
-                "severity": "high",
-                "policy": "Mass Data Extraction"
-            })
-        })
-    
-    # CrowdStrike: Detecting lateral movement tools
-    event_time = phase_start + timedelta(minutes=10)
-    events.append({
-        "source": "crowdstrike_falcon",
-        "timestamp": event_time.isoformat(),
-        "event": crowdstrike_falcon_log({
-            "ComputerName": "PROD-WEB-01",
-            "UserName": COMPROMISED_USER,
-            "ProcessName": "psexec.exe",
-            "CommandLine": "psexec.exe \\\\prod-db-01 -u administrator cmd.exe",
-            "ParentProcessName": "powershell.exe",
-            "Severity": "Critical",
-            "TacticName": "Lateral Movement"
-        })
-    })
-    
-    # Windows: Admin account compromise
-    event_time = phase_start + timedelta(minutes=15)
-    events.append({
-        "source": "microsoft_windows_eventlog",
-        "timestamp": event_time.isoformat(),
-        "event": microsoft_windows_eventlog_log({
-            "EventID": 4624,  # Successful logon
-            "Account_Name": ADMIN_USER,
-            "Logon_Type": 3,  # Network logon
-            "Source_Network_Address": "10.0.10.50",
-            "Workstation_Name": "PROD-DB-01"
-        })
-    })
-    
-    return events
-
-def generate_phase_5_data_exfiltration() -> List[Dict[Any, Any]]:
-    """Phase 5: Data exfiltration via DevOps and infrastructure compromise"""
-    events = []
-    phase_start = CAMPAIGN_START + (PHASE_DURATION * 4)
-    
-    print("📤 Phase 5: DATA EXFILTRATION (DevOps & Infrastructure)")
-    
-    # Harness CI/CD: Compromising deployment pipeline
-    events.append({
-        "source": "harness_ci",
-        "timestamp": phase_start.isoformat(),
-        "event": harness_ci_log({
-            "user": COMPROMISED_USER,
-            "action": "pipeline.execution.start",
-            "pipeline": "data-export-emergency",
-            "environment": "production",
-            "source_ip": ATTACKER_IP,
-            "suspicious_activity": "off-hours execution"
-        })
-    })
-    
-    # AWS CloudTrail: Large S3 data export
-    event_time = phase_start + timedelta(minutes=5)
-    events.append({
-        "source": "aws_cloudtrail",
-        "timestamp": event_time.isoformat(),
-        "event": cloudtrail_log({
-            "eventName": "GetObject",
-            "requestParameters": {
-                "bucketName": "enterprise-customer-data-prod",
-                "key": "exports/full_customer_database_export.zip"
-            },
-            "additionalEventData": {
-                "bytesTransferredOut": 50000000000  # 50GB
-            },
-            "sourceIPAddress": ATTACKER_IP
-        })
-    })
-    
-    # HashiCorp Vault: Bulk secret extraction
-    event_time = phase_start + timedelta(minutes=8)
-    for secret_path in ["database/prod", "api-keys/stripe", "certificates/ssl", "terraform/state"]:
-        events.append({
-            "source": "hashicorp_vault",
-            "timestamp": (event_time + timedelta(seconds=30)).isoformat(),
-            "event": hashicorp_vault_log({
-                "type": "request",
-                "auth": {"display_name": "backup-svc-user"},
-                "request": {
-                    "operation": "read",
-                    "path": f"secret/{secret_path}"
-                },
-                "remote_address": ATTACKER_IP
-            })
-        })
-    
-    # Zscaler: Large data transfers to external sites
-    event_time = phase_start + timedelta(minutes=12)
-    events.append({
-        "source": "zscaler",
-        "timestamp": event_time.isoformat(),
-        "event": zscaler_log({
-            "user": COMPROMISED_EMAIL,
-            "url": "https://temp-file-hosting[.]net/upload",
-            "urlclass": "File Sharing",
-            "uploadsize": 5000000000,  # 5GB
-            "action": "Allowed",
-            "threat": "Data.Exfiltration.Risk"
-        })
-    })
-    
-    return events
-
-def generate_phase_6_evasion() -> List[Dict[Any, Any]]:
-    """Phase 6: Anti-forensics and detection evasion"""
-    events = []
-    phase_start = CAMPAIGN_START + (PHASE_DURATION * 5)
-    
-    print("👻 Phase 6: EVASION (Anti-Forensics & Cleanup)")
-    
-    # AWS CloudTrail: Log deletion attempts
-    events.append({
-        "source": "aws_cloudtrail",
-        "timestamp": phase_start.isoformat(),
-        "event": cloudtrail_log({
-            "eventName": "DeleteTrail",
-            "requestParameters": {
-                "name": "enterprise-security-audit-trail"
-            },
-            "sourceIPAddress": ATTACKER_IP,
-            "errorCode": "AccessDenied"  # Blocked by policy
-        })
-    })
-    
-    # CrowdStrike: Process hollowing detection
-    event_time = phase_start + timedelta(minutes=3)
-    events.append({
-        "source": "crowdstrike_falcon",
-        "timestamp": event_time.isoformat(),
-        "event": crowdstrike_falcon_log({
-            "ComputerName": "PROD-WEB-01",
-            "ProcessName": "svchost.exe",
-            "CommandLine": "svchost.exe -k netsvcs",
-            "ParentProcessName": "services.exe",
-            "Severity": "High",
-            "TacticName": "Defense Evasion",
-            "TechniqueName": "Process Hollowing",
-            "IOAScore": 85
-        })
-    })
-    
-    # Windows: Event log clearing
-    event_time = phase_start + timedelta(minutes=5)
-    events.append({
-        "source": "microsoft_windows_eventlog",
-        "timestamp": event_time.isoformat(),
-        "event": microsoft_windows_eventlog_log({
-            "EventID": 1102,  # Security log cleared
-            "Account_Name": ADMIN_USER,
-            "Source_Name": "Microsoft-Windows-Eventlog",
-            "LogonId": "0x3e7"
-        })
-    })
-    
-    # PingProtect: Fraud detection triggered
-    event_time = phase_start + timedelta(minutes=8)
-    events.append({
-        "source": "pingprotect",
-        "timestamp": event_time.isoformat(),
-        "event": pingprotect_log({
-            "user": COMPROMISED_EMAIL,
-            "risk_score": 95,
-            "fraud_indicators": ["impossible_travel", "device_mismatch", "behavior_anomaly"],
-            "action": "block",
-            "session_ip": ATTACKER_IP
-        })
-    })
-    
-    return events
-
-def generate_enterprise_attack_scenario() -> Dict[str, Any]:
-    """Generate complete enterprise attack scenario"""
-    print("🚨 ENTERPRISE ATTACK SCENARIO - SentinelOne AI-SIEM Showcase")
+    print("🚨 ENHANCED ENTERPRISE ATTACK SCENARIO - 300+ Events")
     print("=" * 80)
-    print(f"Campaign Duration: {CAMPAIGN_START.isoformat()} - {(CAMPAIGN_START + PHASE_DURATION * 6).isoformat()}")
-    print(f"Attacker: {ATTACKER_EMAIL} from {ATTACKER_IP}")
-    print(f"Primary Target: {COMPROMISED_EMAIL} at {TARGET_DOMAIN}")
-    print()
+    print("🎯 Simulating Advanced Persistent Threat (APT) Campaign")
     
-    # Generate all phases
-    all_events = []
-    all_events.extend(generate_phase_1_reconnaissance())
-    all_events.extend(generate_phase_2_initial_access())
-    all_events.extend(generate_phase_3_persistence()) 
-    all_events.extend(generate_phase_4_lateral_movement())
-    all_events.extend(generate_phase_5_data_exfiltration())
-    all_events.extend(generate_phase_6_evasion())
+    events = []
+    attack_phases = []
+    data_sources = set()
     
-    scenario = {
-        "scenario_name": "Enterprise Multi-Platform Attack Campaign",
-        "description": "Sophisticated APT-style attack demonstrating cross-platform correlation",
-        "attacker_profile": {
-            "ip": ATTACKER_IP,
-            "email": ATTACKER_EMAIL,
-            "user_agent": ATTACKER_USER_AGENT
-        },
-        "target_profile": {
-            "domain": TARGET_DOMAIN,
-            "primary_victim": COMPROMISED_EMAIL,
-            "admin_account": ADMIN_USER
-        },
-        "campaign_timeline": {
-            "start": CAMPAIGN_START.isoformat(),
-            "duration_hours": 12,
-            "phases": 6
-        },
-        "data_sources": [
-            "Fortinet Fortigate (DMZ Firewalls)",
-            "Windows Corp Servers", 
-            "Imperva SecureSphere Audit",
-            "AWS CloudTrail",
-            "Okta Authentication",
-            "Azure AD Authentication", 
-            "Cisco Duo MFA",
-            "Zscaler Web Security",
-            "Proofpoint Email Security",
-            "CrowdStrike Endpoint Detection",
-            "HashiCorp Vault",
-            "Harness CI/CD",
-            "PingOne MFA",
-            "PingProtect Fraud Detection"
-        ],
-        "attack_phases": [
-            "Phase 1: Reconnaissance & External Probing",
-            "Phase 2: Initial Access via Phishing", 
-            "Phase 3: Persistence through Cloud/Identity",
-            "Phase 4: Lateral Movement & Database Access",
-            "Phase 5: Data Exfiltration via DevOps",
-            "Phase 6: Evasion & Anti-Forensics"
-        ],
-        "events": all_events,
-        "event_count": len(all_events),
-        "correlation_opportunities": [
-            "Cross-platform user behavior analysis",
-            "Temporal attack pattern recognition",
-            "Infrastructure traversal mapping",
-            "Data flow anomaly detection",
-            "Multi-source threat hunting"
-        ]
+    # Attacker IPs and domains
+    attacker_ips = ["185.220.101.45", "185.220.101.46", "185.220.101.47"]  # Tor exit nodes
+    c2_domains = ["update-service[.]net", "secure-analytics[.]com", "cdn-delivery[.]org"]
+    exfil_domains = ["storage-backup[.]net", "cloud-sync[.]org"]
+    
+    # Target users
+    target_users = ["john.admin", "sarah.cfo", "mike.developer", "lisa.hr", "bob.contractor"]
+    compromised_user = "sarah.cfo"  # CFO will be main compromise
+    
+    print("\n📊 ATTACK PHASES:")
+    print("-" * 60)
+    
+    # ========================================
+    # PHASE 1: RECONNAISSANCE (50+ events)
+    # ========================================
+    print("🔍 Phase 1: RECONNAISSANCE (0-60 minutes)")
+    attack_phases.append("reconnaissance")
+    
+    # External port scanning detected by Fortigate
+    for i in range(15):
+        event = {
+            "timestamp": get_attack_time(i * 2),
+            "source": "fortinet_fortigate",
+            "phase": "reconnaissance",
+            "event": forward_log()
+        }
+        events.append(event)
+        data_sources.add("fortinet_fortigate")
+    
+    # DNS reconnaissance via Cisco Umbrella
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(15 + i * 3),
+            "source": "cisco_umbrella",
+            "phase": "reconnaissance", 
+            "event": cisco_umbrella_log()
+        }
+        events.append(event)
+        data_sources.add("cisco_umbrella")
+    
+    # Web application scanning on Imperva WAF
+    for i in range(15):
+        event = {
+            "timestamp": get_attack_time(30 + i * 2),
+            "source": "imperva_waf",
+            "phase": "reconnaissance",
+            "event": imperva_waf_log()
+        }
+        events.append(event)
+        data_sources.add("imperva_waf")
+    
+    # Palo Alto firewall detecting scan attempts
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(45 + i * 2),
+            "source": "paloalto_firewall",
+            "phase": "reconnaissance",
+            "event": paloalto_log()
+        }
+        events.append(event)
+        data_sources.add("paloalto_firewall")
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'reconnaissance'])} reconnaissance events")
+    
+    # ========================================
+    # PHASE 2: INITIAL COMPROMISE - PHISHING (30+ events)
+    # ========================================
+    print("📧 Phase 2: INITIAL COMPROMISE via Phishing (60-90 minutes)")
+    attack_phases.append("initial_compromise")
+    
+    # Phishing emails detected by Proofpoint
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(60 + i * 2),
+            "source": "proofpoint",
+            "phase": "initial_compromise",
+            "event": proofpoint_log()
+        }
+        events.append(event)
+        data_sources.add("proofpoint")
+    
+    # User clicks phishing link - Zscaler logs
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(75 + i),
+            "source": "zscaler",
+            "phase": "initial_compromise",
+            "event": zscaler_log()
+        }
+        events.append(event)
+        data_sources.add("zscaler")
+    
+    # Netskope detecting suspicious downloads
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(80 + i),
+            "source": "netskope",
+            "phase": "initial_compromise",
+            "event": netskope_log()
+        }
+        events.append(event)
+        data_sources.add("netskope")
+    
+    # CrowdStrike detects initial payload execution
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(85 + i),
+            "source": "crowdstrike_falcon",
+            "phase": "initial_compromise",
+            "event": crowdstrike_log()
+        }
+        events.append(event)
+        data_sources.add("crowdstrike_falcon")
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'initial_compromise'])} initial compromise events")
+    
+    # ========================================
+    # PHASE 3: CREDENTIAL HARVESTING & MFA BYPASS (40+ events)
+    # ========================================
+    print("🔐 Phase 3: CREDENTIAL HARVESTING & MFA Bypass (90-120 minutes)")
+    attack_phases.append("credential_access")
+    
+    # Failed login attempts in Okta
+    for i in range(8):
+        event = {
+            "timestamp": get_attack_time(90 + i * 2),
+            "source": "okta_authentication",
+            "phase": "credential_access",
+            "event": okta_authentication_log()
+        }
+        events.append(event)
+        data_sources.add("okta_authentication")
+    
+    # Azure AD suspicious sign-ins
+    for i in range(8):
+        event = {
+            "timestamp": get_attack_time(95 + i * 2),
+            "source": "microsoft_azuread",
+            "phase": "credential_access",
+            "event": azuread_log()
+        }
+        events.append(event)
+        data_sources.add("microsoft_azuread")
+    
+    # Cisco Duo MFA bypass attempts
+    for i in range(6):
+        event = {
+            "timestamp": get_attack_time(100 + i),
+            "source": "cisco_duo",
+            "phase": "credential_access",
+            "event": cisco_duo_log()
+        }
+        events.append(event)
+        data_sources.add("cisco_duo")
+    
+    # PingOne MFA anomalies
+    for i in range(6):
+        event = {
+            "timestamp": get_attack_time(105 + i),
+            "source": "pingone_mfa",
+            "phase": "credential_access",
+            "event": pingone_mfa_log()
+        }
+        events.append(event)
+        data_sources.add("pingone_mfa")
+    
+    # Windows credential dump attempts
+    for i in range(12):
+        event = {
+            "timestamp": get_attack_time(110 + i),
+            "source": "microsoft_windows_eventlog",
+            "phase": "credential_access",
+            "event": microsoft_windows_eventlog_log()
+        }
+        events.append(event)
+        data_sources.add("microsoft_windows_eventlog")
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'credential_access'])} credential access events")
+    
+    # ========================================
+    # PHASE 4: LATERAL MOVEMENT (60+ events)
+    # ========================================
+    print("➡️  Phase 4: LATERAL MOVEMENT (120-180 minutes)")
+    attack_phases.append("lateral_movement")
+    
+    # RDP/SMB movement in Windows logs
+    for i in range(20):
+        event = {
+            "timestamp": get_attack_time(120 + i * 2),
+            "source": "microsoft_windows_eventlog",
+            "phase": "lateral_movement",
+            "event": microsoft_windows_eventlog_log()
+        }
+        events.append(event)
+    
+    # Cisco ISE detecting device hopping
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(140 + i * 2),
+            "source": "cisco_ise",
+            "phase": "lateral_movement",
+            "event": cisco_ise_log()
+        }
+        events.append(event)
+        data_sources.add("cisco_ise")
+    
+    # F5 load balancer unusual traffic patterns
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(150 + i * 2),
+            "source": "f5_networks",
+            "phase": "lateral_movement",
+            "event": f5_log()
+        }
+        events.append(event)
+        data_sources.add("f5_networks")
+    
+    # Database access via Imperva
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(160 + i * 2),
+            "source": "imperva_waf",
+            "phase": "lateral_movement",
+            "event": imperva_waf_log()
+        }
+        events.append(event)
+    
+    # CrowdStrike detecting lateral movement tools
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(170 + i),
+            "source": "crowdstrike_falcon",
+            "phase": "lateral_movement",
+            "event": crowdstrike_log()
+        }
+        events.append(event)
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'lateral_movement'])} lateral movement events")
+    
+    # ========================================
+    # PHASE 5: PRIVILEGE ESCALATION (40+ events)
+    # ========================================
+    print("⬆️  Phase 5: PRIVILEGE ESCALATION (180-210 minutes)")
+    attack_phases.append("privilege_escalation")
+    
+    # AWS IAM privilege escalation attempts
+    for i in range(15):
+        event = {
+            "timestamp": get_attack_time(180 + i * 2),
+            "source": "aws_cloudtrail",
+            "phase": "privilege_escalation",
+            "event": cloudtrail_log()
+        }
+        events.append(event)
+        data_sources.add("aws_cloudtrail")
+    
+    # HashiCorp Vault access to secrets
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(190 + i * 2),
+            "source": "hashicorp_vault",
+            "phase": "privilege_escalation",
+            "event": hashicorp_vault_log()
+        }
+        events.append(event)
+        data_sources.add("hashicorp_vault")
+    
+    # Windows privilege escalation events
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(195 + i),
+            "source": "microsoft_windows_eventlog",
+            "phase": "privilege_escalation",
+            "event": microsoft_windows_eventlog_log()
+        }
+        events.append(event)
+    
+    # Azure AD admin role changes
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(200 + i * 2),
+            "source": "microsoft_azuread",
+            "phase": "privilege_escalation",
+            "event": azuread_log()
+        }
+        events.append(event)
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'privilege_escalation'])} privilege escalation events")
+    
+    # ========================================
+    # PHASE 6: DATA DISCOVERY & COLLECTION (40+ events)
+    # ========================================
+    print("🔎 Phase 6: DATA DISCOVERY & COLLECTION (210-240 minutes)")
+    attack_phases.append("data_discovery")
+    
+    # Database queries via Imperva
+    for i in range(15):
+        event = {
+            "timestamp": get_attack_time(210 + i * 2),
+            "source": "imperva_waf",
+            "phase": "data_discovery",
+            "event": imperva_waf_log()
+        }
+        events.append(event)
+    
+    # AWS S3 bucket enumeration
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(220 + i * 2),
+            "source": "aws_cloudtrail",
+            "phase": "data_discovery",
+            "event": cloudtrail_log()
+        }
+        events.append(event)
+    
+    # GitHub repository access
+    for i in range(8):
+        event = {
+            "timestamp": get_attack_time(225 + i * 2),
+            "source": "github_audit",
+            "phase": "data_discovery",
+            "event": github_audit_log()
+        }
+        events.append(event)
+        data_sources.add("github_audit")
+    
+    # File access in Windows
+    for i in range(7):
+        event = {
+            "timestamp": get_attack_time(230 + i),
+            "source": "microsoft_windows_eventlog",
+            "phase": "data_discovery",
+            "event": microsoft_windows_eventlog_log()
+        }
+        events.append(event)
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'data_discovery'])} data discovery events")
+    
+    # ========================================
+    # PHASE 7: DATA EXFILTRATION (40+ events)
+    # ========================================
+    print("📤 Phase 7: DATA EXFILTRATION (240-270 minutes)")
+    attack_phases.append("data_exfiltration")
+    
+    # Large data transfers via Zscaler
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(240 + i * 2),
+            "source": "zscaler",
+            "phase": "data_exfiltration",
+            "event": zscaler_log()
+        }
+        events.append(event)
+    
+    # DNS tunneling via Cisco Umbrella
+    for i in range(10):
+        event = {
+            "timestamp": get_attack_time(245 + i * 2),
+            "source": "cisco_umbrella",
+            "phase": "data_exfiltration",
+            "event": cisco_umbrella_log()
+        }
+        events.append(event)
+    
+    # Netskope detecting cloud uploads
+    for i in range(8):
+        event = {
+            "timestamp": get_attack_time(250 + i * 2),
+            "source": "netskope",
+            "phase": "data_exfiltration",
+            "event": netskope_log()
+        }
+        events.append(event)
+    
+    # Palo Alto detecting exfil traffic
+    for i in range(7):
+        event = {
+            "timestamp": get_attack_time(255 + i * 2),
+            "source": "paloalto_firewall",
+            "phase": "data_exfiltration",
+            "event": paloalto_log()
+        }
+        events.append(event)
+    
+    # Fortigate outbound anomalies
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(260 + i * 2),
+            "source": "fortinet_fortigate",
+            "phase": "data_exfiltration",
+            "event": forward_log()
+        }
+        events.append(event)
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'data_exfiltration'])} data exfiltration events")
+    
+    # ========================================
+    # PHASE 8: PERSISTENCE & CLEANUP (20+ events)
+    # ========================================
+    print("🔧 Phase 8: PERSISTENCE & CLEANUP (270-300 minutes)")
+    attack_phases.append("persistence")
+    
+    # CI/CD pipeline backdoor via Harness
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(270 + i * 3),
+            "source": "harness_ci",
+            "phase": "persistence",
+            "event": harness_ci_log()
+        }
+        events.append(event)
+        data_sources.add("harness_ci")
+    
+    # AWS persistence mechanisms
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(275 + i * 3),
+            "source": "aws_cloudtrail",
+            "phase": "persistence",
+            "event": cloudtrail_log()
+        }
+        events.append(event)
+    
+    # Windows scheduled tasks
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(280 + i * 3),
+            "source": "microsoft_windows_eventlog",
+            "phase": "persistence",
+            "event": microsoft_windows_eventlog_log()
+        }
+        events.append(event)
+    
+    # Log deletion attempts
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(285 + i * 3),
+            "source": "crowdstrike_falcon",
+            "phase": "persistence",
+            "event": crowdstrike_log()
+        }
+        events.append(event)
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'persistence'])} persistence events")
+    
+    # ========================================
+    # DETECTION & RESPONSE
+    # ========================================
+    print("🚨 Phase 9: DETECTION & RESPONSE (300+ minutes)")
+    attack_phases.append("detection")
+    
+    # PingProtect fraud detection
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(300 + i),
+            "source": "pingprotect",
+            "phase": "detection",
+            "event": pingprotect_log()
+        }
+        events.append(event)
+        data_sources.add("pingprotect")
+    
+    # Additional CrowdStrike alerts
+    for i in range(5):
+        event = {
+            "timestamp": get_attack_time(305 + i),
+            "source": "crowdstrike_falcon",
+            "phase": "detection",
+            "event": crowdstrike_log()
+        }
+        events.append(event)
+    
+    print(f"   ✅ Generated {len([e for e in events if e['phase'] == 'detection'])} detection events")
+    
+    # Summary
+    print("\n" + "=" * 80)
+    print("🎯 SCENARIO SUMMARY:")
+    print(f"   📊 Total Events: {len(events)}")
+    print(f"   🏢 Data Sources: {len(data_sources)}")
+    print(f"   🔥 Attack Phases: {len(attack_phases)}")
+    print(f"   ⏰ Timeline: {BASE_TIME.isoformat()} to {get_attack_time(310)}")
+    
+    return {
+        "events": events,
+        "attack_phases": attack_phases,
+        "data_sources": list(data_sources),
+        "metadata": {
+            "total_events": len(events),
+            "duration_minutes": 310,
+            "attacker_ips": attacker_ips,
+            "c2_domains": c2_domains,
+            "exfil_domains": exfil_domains,
+            "compromised_user": compromised_user,
+            "attack_type": "Advanced Persistent Threat (APT)",
+            "mitre_techniques": [
+                "T1595 - Active Scanning",
+                "T1566 - Phishing",
+                "T1078 - Valid Accounts",
+                "T1110 - Brute Force",
+                "T1556 - MFA Bypass",
+                "T1003 - Credential Dumping",
+                "T1021 - Remote Services",
+                "T1570 - Lateral Tool Transfer",
+                "T1068 - Privilege Escalation",
+                "T1083 - File Discovery",
+                "T1005 - Data from Local System",
+                "T1030 - Data Transfer Size Limits",
+                "T1048 - Exfiltration Over Alternative Protocol",
+                "T1053 - Scheduled Task",
+                "T1070 - Indicator Removal"
+            ]
+        }
     }
-    
-    print(f"✅ Generated {len(all_events)} events across {len(scenario['data_sources'])} data sources")
-    print(f"🔍 Attack demonstrates advanced multi-platform correlation capabilities")
-    
-    return scenario
 
-def save_scenario(scenario: Dict[str, Any], filename: str = "enterprise_attack_scenario.json"):
-    """Save scenario to JSON file"""
+def save_scenario(scenario, filename="enterprise_attack_scenario.json"):
+    """Save scenario to file"""
     with open(filename, 'w') as f:
         json.dump(scenario, f, indent=2, default=str)
-    print(f"📁 Scenario saved to: {filename}")
+    print(f"\n📁 Scenario saved to: {filename}")
+    return filename
 
 if __name__ == "__main__":
-    scenario = generate_enterprise_attack_scenario()
+    scenario = generate_enhanced_attack_scenario()
     save_scenario(scenario)
+    print("\n✅ Enhanced enterprise attack scenario with 300+ events ready!")
+    print("🎯 Use enterprise_scenario_sender.py to send events to SentinelOne AI-SIEM")

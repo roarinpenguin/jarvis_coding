@@ -71,3 +71,52 @@ def umbrella_audit_log():
     buf = io.StringIO()
     csv.writer(buf, quoting=csv.QUOTE_ALL).writerow(row)
     return buf.getvalue().strip()
+
+def cisco_umbrella_log():
+    """
+    Main function for JSON format compatible with parse=gron parser.
+    
+    Generates Cisco Umbrella DNS security events that represent:
+    - DNS query logs from enterprise endpoints
+    - Security policy enforcement (allowed/blocked domains)
+    - Threat detection for malware, phishing, and C2 domains
+    - Identity-based policy application
+    
+    Event Fields:
+    - timestamp: When the DNS query occurred
+    - identity: Device/computer making the DNS request
+    - identity_types: Additional identity context (department, groups)
+    - internal_ip: Internal IP of the requesting device
+    - external_ip: External DNS resolver IP
+    - action: Security disposition (Allowed/Blocked)
+    - query_type: DNS record type (A, AAAA, CNAME, TXT)
+    - response_code: DNS response (NOERROR, NXDOMAIN)
+    - domain: The domain being queried
+    - categories: Security categorization (Malware, Phishing, None)
+    - policy_identity: Applied security policy
+    - policy_identity_type: Policy context
+    - blocked_categories: Categories that triggered blocking
+    
+    Use Cases:
+    - Detecting DNS tunneling attempts
+    - Identifying C2 communication
+    - Blocking malware domains
+    - Enforcing acceptable use policies
+    - Tracking DNS-based data exfiltration
+    """
+    return {
+        "timestamp": _ts(),
+        "identity": f"ACME-Laptop{random.randint(10,99)}",
+        "identity_types": f"ACME-Laptop{random.randint(10,99)};Finance",
+        "internal_ip": f"10.0.1.{random.randint(1,254)}",
+        "external_ip": "8.8.8.8",
+        "action": random.choice(["Allowed", "Blocked"]),
+        "query_type": random.choice(["A", "AAAA", "CNAME", "TXT"]),
+        "response_code": random.choice(["NOERROR", "NXDOMAIN"]),
+        "domain": random.choice(["example.com", "malware.test", "phishing.example"]),
+        "categories": random.choice(["Malware", "Phishing;Malware", "None"]),
+        "policy_identity": "Roaming Computer",
+        "policy_identity_type": "Roaming Computer;Group", 
+        "blocked_categories": "" if random.random() < 0.8 else "Malware",
+        **ATTR_FIELDS
+    }

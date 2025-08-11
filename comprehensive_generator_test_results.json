@@ -1,17 +1,17 @@
 {
-  "timestamp": "2025-08-10T17:35:54.680251",
+  "timestamp": "2025-08-10T18:37:00.352136",
   "community": {
     "total": 102,
-    "success": 51,
-    "failed": 51,
-    "success_rate": 50.0,
+    "success": 61,
+    "failed": 41,
+    "success_rate": 59.80392156862745,
     "failures": [
       [
-        "aws_cloudtrail",
+        "fortinet_fortigate",
         "TIMEOUT"
       ],
       [
-        "aws_vpcflowlogs",
+        "aws_cloudtrail",
         "TIMEOUT"
       ],
       [
@@ -31,27 +31,19 @@
         "TIMEOUT"
       ],
       [
-        "microsoft_365_mgmt_api",
-        "TIMEOUT"
-      ],
-      [
-        "netskope",
-        "TIMEOUT"
-      ],
-      [
         "mimecast",
         "TIMEOUT"
       ],
       [
-        "microsoft_defender_email",
+        "corelight_http",
         "TIMEOUT"
       ],
       [
-        "hashicorp_vault",
+        "corelight_ssl",
         "TIMEOUT"
       ],
       [
-        "corelight_conn",
+        "vectra_ai",
         "TIMEOUT"
       ],
       [
@@ -63,35 +55,19 @@
         "TIMEOUT"
       ],
       [
-        "armis",
-        "TIMEOUT"
-      ],
-      [
-        "sentinelone_identity",
-        "TIMEOUT"
-      ],
-      [
         "apache_http",
         "TIMEOUT"
       ],
       [
-        "abnormal_security",
+        "buildkite",
         "TIMEOUT"
       ],
       [
-        "cisco_ise",
+        "teleport",
         "TIMEOUT"
       ],
       [
-        "aws_vpc_dns",
-        "TIMEOUT"
-      ],
-      [
-        "cisco_networks",
-        "TIMEOUT"
-      ],
-      [
-        "cloudflare_waf",
+        "f5_networks",
         "TIMEOUT"
       ],
       [
@@ -99,7 +75,7 @@
         "TIMEOUT"
       ],
       [
-        "ubiquiti_unifi",
+        "juniper_networks",
         "TIMEOUT"
       ],
       [
@@ -111,6 +87,10 @@
         "TIMEOUT"
       ],
       [
+        "cisco_isa3000",
+        "TIMEOUT"
+      ],
+      [
         "manageengine_general",
         "TIMEOUT"
       ],
@@ -119,15 +99,7 @@
         "TIMEOUT"
       ],
       [
-        "sap",
-        "TIMEOUT"
-      ],
-      [
-        "securelink",
-        "TIMEOUT"
-      ],
-      [
-        "cyberark_conjur",
+        "aws_waf",
         "TIMEOUT"
       ],
       [
@@ -135,15 +107,7 @@
         "TIMEOUT"
       ],
       [
-        "microsoft_365_defender",
-        "TIMEOUT"
-      ],
-      [
         "akamai_general",
-        "TIMEOUT"
-      ],
-      [
-        "akamai_sitedefender",
         "TIMEOUT"
       ],
       [
@@ -151,19 +115,11 @@
         "TIMEOUT"
       ],
       [
-        "cohesity_backup",
+        "github_audit",
         "TIMEOUT"
       ],
       [
         "harness_ci",
-        "TIMEOUT"
-      ],
-      [
-        "hypr_auth",
-        "TIMEOUT"
-      ],
-      [
-        "isc_dhcp",
         "TIMEOUT"
       ],
       [
@@ -175,6 +131,10 @@
         "TIMEOUT"
       ],
       [
+        "pingprotect",
+        "TIMEOUT"
+      ],
+      [
         "rsa_adaptive",
         "TIMEOUT"
       ],
@@ -183,19 +143,23 @@
         "TIMEOUT"
       ],
       [
+        "wiz_cloud",
+        "TIMEOUT"
+      ],
+      [
         "aws_elasticloadbalancer",
         "TIMEOUT"
       ],
       [
-        "cisco_firewall_threat_defense",
+        "microsoft_azure_ad",
         "TIMEOUT"
       ],
       [
-        "cisco_meraki_flow",
+        "microsoft_eventhub_azure_signin",
         "TIMEOUT"
       ],
       [
-        "microsoft_eventhub_defender_email",
+        "microsoft_eventhub_defender_emailforcloud",
         "TIMEOUT"
       ],
       [
@@ -204,10 +168,6 @@
       ],
       [
         "fortimanager",
-        "TIMEOUT"
-      ],
-      [
-        "infoblox_ddi",
         "TIMEOUT"
       ]
     ]
@@ -258,8 +218,8 @@
   },
   "overall": {
     "total": 111,
-    "success": 51,
-    "failed": 60,
-    "success_rate": 45.94594594594595
+    "success": 61,
+    "failed": 50,
+    "success_rate": 54.95495495495496
   }
 }
