@@ -99,7 +99,7 @@ def generate_ip() -> str:
     """Generate IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def microsoft_365_defender_log() -> str:
+def microsoft_365_defender_log() -> Dict:
     """Generate a single Microsoft 365 Defender event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -176,7 +176,7 @@ def microsoft_365_defender_log() -> str:
     # Remove None values
     event = {k: v for k, v in event.items() if v is not None}
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

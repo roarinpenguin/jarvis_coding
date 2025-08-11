@@ -8,6 +8,7 @@ import sys
 import json
 import time
 import requests
+import argparse
 from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 
@@ -17,7 +18,7 @@ SDL_API_URL = "https://xdr.us1.sentinelone.net/api/query"
 
 sys.path.insert(0, 'event_python_writer')
 os.environ['S1_HEC_TOKEN'] = '1FUC88b9Z4BaHtQxwIXwYGpMGEMv7UQ1JjPHEkERjDEe2U7_AS67SJJRpbIqk78h7'
-from hec_sender import PROD_MAP, SOURCETYPE_MAP
+from hec_sender import PROD_MAP, SOURCETYPE_MAP, MARKETPLACE_PARSER_MAP
 
 def query_parser_events(parser_name: str, hours_back: int = 4) -> list:
     """Query SDL for events processed by a specific parser"""
@@ -110,13 +111,93 @@ def analyze_field_extraction(events: list) -> dict:
         "ocsf_sample": sorted(list(ocsf_fields))[:10]
     }
 
+def validate_marketplace_parsers():
+    """Validate marketplace parsers with enhanced OCSF compliance"""
+    print("\n" + "=" * 70)
+    print("MARKETPLACE PARSER VALIDATION - ENHANCED OCSF ANALYSIS")
+    print("=" * 70)
+    print(f"Checking {len(MARKETPLACE_PARSER_MAP)} marketplace parsers")
+    print()
+    
+    results = {}
+    categories = {
+        "excellent": [],    # OCSF score >= 80 and observables
+        "good": [],        # OCSF score >= 60
+        "basic": [],       # OCSF score >= 20  
+        "poor": [],        # OCSF score < 20
+        "no_events": []    # No events found
+    }
+    
+    total_events_found = 0
+    
+    print("Querying marketplace parsers for enhanced field extraction...")
+    print("-" * 70)
+    
+    for i, (marketplace_parser, generator_name) in enumerate(MARKETPLACE_PARSER_MAP.items(), 1):
+        print(f"[{i:3d}/{len(MARKETPLACE_PARSER_MAP)}] {marketplace_parser:45s} → {generator_name:25s}", end=" ", flush=True)
+        
+        # Query events for this marketplace parser
+        events = query_parser_events(marketplace_parser)
+        
+        # Analyze field extraction
+        analysis = analyze_field_extraction(events)
+        results[marketplace_parser] = {
+            "generator": generator_name,
+            "analysis": analysis
+        }
+        
+        # Categorize result
+        score = analysis.get("ocsf_score", 0)
+        event_count = analysis.get("event_count", 0)
+        has_observables = analysis.get("has_observables", False)
+        
+        if analysis["status"] == "no_events":
+            categories["no_events"].append(marketplace_parser)
+            print("❌ NO EVENTS")
+        elif score >= 80 and has_observables:
+            categories["excellent"].append(marketplace_parser)
+            print(f"🌟 EXCELLENT ({score}% OCSF, {event_count} events, observables)")
+            total_events_found += event_count
+        elif score >= 60:
+            categories["good"].append(marketplace_parser)  
+            print(f"✅ GOOD ({score}% OCSF, {event_count} events)")
+            total_events_found += event_count
+        elif score >= 20:
+            categories["basic"].append(marketplace_parser)
+            print(f"⚠️  BASIC ({score}% OCSF, {event_count} events)")
+            total_events_found += event_count
+        else:
+            categories["poor"].append(marketplace_parser)
+            print(f"❌ POOR ({score}% OCSF, {event_count} events)")
+            total_events_found += event_count
+    
+    # Print summary
+    print("\n" + "=" * 70)
+    print("MARKETPLACE PARSER VALIDATION SUMMARY")
+    print("=" * 70)
+    print(f"Total marketplace parsers analyzed: {len(MARKETPLACE_PARSER_MAP)}")
+    print(f"Total events found: {total_events_found}")
+    print(f"🌟 Excellent (≥80% OCSF + observables): {len(categories['excellent'])}")
+    print(f"✅ Good (≥60% OCSF): {len(categories['good'])}")
+    print(f"⚠️  Basic (≥20% OCSF): {len(categories['basic'])}")
+    print(f"❌ Poor (<20% OCSF): {len(categories['poor'])}")
+    print(f"❌ No events found: {len(categories['no_events'])}")
+    
+    # Success rate calculation
+    working_parsers = len(categories["excellent"]) + len(categories["good"]) + len(categories["basic"])
+    success_rate = (working_parsers / len(MARKETPLACE_PARSER_MAP)) * 100 if MARKETPLACE_PARSER_MAP else 0
+    print(f"\n📊 **MARKETPLACE PARSER SUCCESS RATE: {working_parsers}/{len(MARKETPLACE_PARSER_MAP)} ({success_rate:.1f}%)**")
+    
+    return results, categories
+
 def main():
     print("=" * 70)
-    print("FINAL PARSER VALIDATION - SDL API ANALYSIS")
+    print("COMPREHENSIVE PARSER VALIDATION - SDL API ANALYSIS")
     print("=" * 70)
     print(f"Analysis time: {datetime.now().isoformat()}")
     print(f"SDL API: {SDL_API_URL}")
-    print(f"Checking {len(SOURCETYPE_MAP)} parser mappings")
+    print(f"Community parsers: {len(SOURCETYPE_MAP)}")
+    print(f"Marketplace parsers: {len(MARKETPLACE_PARSER_MAP)}")
     print()
     
     results = {}
@@ -226,10 +307,106 @@ def main():
     with open("final_parser_validation_results.json", "w") as f:
         json.dump(output, f, indent=2)
     
-    print(f"\n📁 Detailed results saved to: final_parser_validation_results.json")
-    print("✅ Validation complete!")
+    # Run marketplace parser validation
+    marketplace_results, marketplace_categories = validate_marketplace_parsers()
     
-    return categories
+    # Combined summary
+    print("\n" + "=" * 70)
+    print("COMBINED VALIDATION SUMMARY (COMMUNITY + MARKETPLACE)")
+    print("=" * 70)
+    
+    community_working = len(categories['excellent']) + len(categories['good'])
+    marketplace_working = len(marketplace_categories['excellent']) + len(marketplace_categories['good'])
+    total_working = community_working + marketplace_working
+    total_parsers = len(SOURCETYPE_MAP) + len(MARKETPLACE_PARSER_MAP)
+    
+    print(f"📊 Community Parsers: {community_working}/{len(SOURCETYPE_MAP)} working ({success_rate:.1f}%)")
+    print(f"🏪 Marketplace Parsers: {marketplace_working}/{len(MARKETPLACE_PARSER_MAP)} working")
+    print(f"🎯 **TOTAL SUCCESS: {total_working}/{total_parsers} parsers working**")
+    print(f"🚀 **MARKETPLACE ADVANTAGE: {len(MARKETPLACE_PARSER_MAP)} additional production-grade parsers**")
+    
+    # Save combined results
+    combined_output = {
+        "timestamp": datetime.now().isoformat(),
+        "community_parsers": {
+            "summary": {
+                "total_parsers": total,
+                "total_events": total_events_found,
+                "excellent": len(categories['excellent']),
+                "good": len(categories['good']),
+                "basic": len(categories['basic']),
+                "poor": len(categories['poor']),
+                "no_events": len(categories['no_events']),
+                "success_rate": success_rate
+            },
+            "categories": categories,
+            "detailed_results": results
+        },
+        "marketplace_parsers": {
+            "summary": {
+                "total_parsers": len(MARKETPLACE_PARSER_MAP),
+                "total_events": sum(r['analysis'].get('event_count', 0) for r in marketplace_results.values()),
+                "excellent": len(marketplace_categories['excellent']),
+                "good": len(marketplace_categories['good']),
+                "basic": len(marketplace_categories['basic']),
+                "poor": len(marketplace_categories['poor']),
+                "no_events": len(marketplace_categories['no_events']),
+                "success_rate": (marketplace_working / len(MARKETPLACE_PARSER_MAP) * 100) if MARKETPLACE_PARSER_MAP else 0
+            },
+            "categories": marketplace_categories,
+            "detailed_results": marketplace_results
+        },
+        "combined_summary": {
+            "total_parsers": total_parsers,
+            "community_working": community_working,
+            "marketplace_working": marketplace_working,
+            "total_working": total_working,
+            "overall_success_rate": (total_working / total_parsers * 100) if total_parsers > 0 else 0
+        }
+    }
+    
+    with open("comprehensive_parser_validation_results.json", "w") as f:
+        json.dump(combined_output, f, indent=2)
+    
+    print(f"\n📁 Comprehensive results saved to: comprehensive_parser_validation_results.json")
+    print("✅ Comprehensive validation complete!")
+    
+    return categories, marketplace_categories
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Comprehensive Parser Validation with SDL API")
+    parser.add_argument("--community-only", action="store_true", 
+                        help="Test only community parsers")
+    parser.add_argument("--marketplace-only", action="store_true", 
+                        help="Test only marketplace parsers")
+    parser.add_argument("--parser", type=str, 
+                        help="Test specific parser (community or marketplace)")
+    parser.add_argument("--hours-back", type=int, default=4,
+                        help="Hours back to search for events (default: 4)")
+    
+    args = parser.parse_args()
+    
+    if args.community_only:
+        print("Running community parser validation only...")
+        main()
+    elif args.marketplace_only:
+        print("Running marketplace parser validation only...")
+        validate_marketplace_parsers()
+    elif args.parser:
+        print(f"Testing specific parser: {args.parser}")
+        # Test single parser logic would go here
+        if args.parser in SOURCETYPE_MAP:
+            events = query_parser_events(SOURCETYPE_MAP[args.parser], args.hours_back)
+            analysis = analyze_field_extraction(events)
+            print(f"Parser: {args.parser} → {SOURCETYPE_MAP[args.parser]}")
+            print(f"Analysis: {json.dumps(analysis, indent=2)}")
+        elif args.parser in MARKETPLACE_PARSER_MAP:
+            events = query_parser_events(args.parser, args.hours_back)  
+            analysis = analyze_field_extraction(events)
+            print(f"Marketplace Parser: {args.parser} → {MARKETPLACE_PARSER_MAP[args.parser]}")
+            print(f"Analysis: {json.dumps(analysis, indent=2)}")
+        else:
+            print(f"Parser '{args.parser}' not found in community or marketplace parsers")
+    else:
+        print("Running comprehensive validation (community + marketplace)...")
+        main()

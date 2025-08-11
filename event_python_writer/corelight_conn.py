@@ -100,7 +100,7 @@ def _generate_uid() -> str:
     chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     return 'C' + ''.join(random.choices(chars, k=17))
 
-def corelight_conn_log(overrides: dict | None = None) -> str:
+def corelight_conn_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Corelight connection log event as JSON string.
     
@@ -199,7 +199,7 @@ def corelight_conn_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_history(conn_state: str) -> str:
     """Generate connection history string based on state"""

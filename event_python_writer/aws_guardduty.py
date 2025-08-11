@@ -95,4 +95,4 @@ def guardduty_log() -> str:
     through the /raw endpoint, so the parser receives the flattened JSON
     without the extra "message." prefix.
     """
-    return json.dumps(_sample_finding(), separators=(',', ':'), ensure_ascii=False)
+    return _sample_finding()

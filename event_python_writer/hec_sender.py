@@ -1,6 +1,108 @@
 #!/usr/bin/env python3
 """Send logs from vendor_product generators to SentinelOne AI SIEM (Splunk‑HEC) one‑by‑one."""
-import argparse, json, os, time, random, requests, importlib
+import argparse, json, os, time, random, requests, importlib, sys
+
+# Marketplace parser mappings to generators
+MARKETPLACE_PARSER_MAP = {
+    # AWS parsers
+    "marketplace-awscloudtrail-latest": "aws_cloudtrail",
+    "marketplace-awscloudtrail-1.0.0": "aws_cloudtrail",
+    "marketplace-awselasticloadbalancer-latest": "aws_elasticloadbalancer",
+    "marketplace-awsguardduty-latest": "aws_guardduty",
+    "marketplace-awsvpcflowlogs-latest": "aws_vpcflowlogs",
+    "marketplace-awsvpcflowlogs-1.0.0": "aws_vpcflowlogs",
+    
+    # Check Point
+    "marketplace-checkpointfirewall-latest": "checkpoint",
+    "marketplace-checkpointfirewall-1.0.0": "checkpoint",
+    "marketplace-checkpointfirewall-1.0.1": "checkpoint",
+    
+    # Cisco parsers
+    "marketplace-ciscofirepowerthreatdefense-latest": "cisco_firewall_threat_defense",
+    "marketplace-ciscofirepowerthreatdefense-1.0.0": "cisco_firewall_threat_defense",
+    "marketplace-ciscofirepowerthreatdefense-2.0.0": "cisco_firewall_threat_defense",
+    "marketplace-ciscofirewallthreatdefense-latest": "cisco_firewall_threat_defense",
+    "marketplace-ciscofirewallthreatdefense-1.0.0": "cisco_firewall_threat_defense",
+    "marketplace-ciscofirewallthreatdefense-1.0.1": "cisco_firewall_threat_defense",
+    "marketplace-ciscofirewallthreatdefense-1.0.2": "cisco_firewall_threat_defense",
+    "marketplace-ciscofirewallthreatdefense-1.0.3": "cisco_firewall_threat_defense",
+    "marketplace-ciscoumbrella-latest": "cisco_umbrella",
+    
+    # Corelight parsers
+    "marketplace-corelight-conn-latest": "corelight_conn",
+    "marketplace-corelight-conn-1.0.0": "corelight_conn",
+    "marketplace-corelight-conn-1.0.1": "corelight_conn",
+    "marketplace-corelight-conn-2.0.0": "corelight_conn",
+    "marketplace-corelight-http-latest": "corelight_http",
+    "marketplace-corelight-http-1.0.0": "corelight_http",
+    "marketplace-corelight-http-1.0.1": "corelight_http",
+    "marketplace-corelight-http-2.0.0": "corelight_http",
+    "marketplace-corelight-ssl-latest": "corelight_ssl",
+    "marketplace-corelight-ssl-1.0.0": "corelight_ssl",
+    "marketplace-corelight-ssl-1.0.1": "corelight_ssl",
+    "marketplace-corelight-ssl-2.0.0": "corelight_ssl",
+    "marketplace-corelight-tunnel-latest": "corelight_tunnel",
+    "marketplace-corelight-tunnel-1.0.0": "corelight_tunnel",
+    "marketplace-corelight-tunnel-2.0.0": "corelight_tunnel",
+    
+    # Fortinet parsers
+    "marketplace-fortinetfortigate-latest": "fortinet_fortigate",
+    "marketplace-fortinetfortigate-1.0.0": "fortinet_fortigate",
+    "marketplace-fortinetfortigate-1.0.1": "fortinet_fortigate",
+    "marketplace-fortinetfortigate-1.0.2": "fortinet_fortigate",
+    "marketplace-fortinetfortigate-1.0.3": "fortinet_fortigate",
+    "marketplace-fortinetfortigate-1.0.4": "fortinet_fortigate",
+    "marketplace-fortinetfortigate-1.0.5": "fortinet_fortigate",
+    "marketplace-fortinetfortigate-1.0.6": "fortinet_fortigate",
+    "marketplace-fortinetfortimanager-latest": "fortimanager",
+    "marketplace-fortinetfortimanager-1.0.0": "fortimanager",
+    "marketplace-fortinetfortimanager-1.0.1": "fortimanager",
+    "marketplace-fortinetfortimanager-2.0.0": "fortimanager",
+    
+    # Infoblox
+    "marketplace-infobloxddi-latest": "infoblox_ddi",
+    "marketplace-infobloxddi-1.0.0": "infoblox_ddi",
+    "marketplace-infobloxddi-2.0.0": "infoblox_ddi",
+    
+    # Netskope
+    "marketplace-netskopecloudlogshipper-latest": "netskope",
+    "marketplace-netskopecloudlogshipper-1.0.0": "netskope",
+    "marketplace-netskopecloudlogshipper-1.0.1": "netskope",
+    "marketplace-netskopecloudlogshipper-1.0.2": "netskope",
+    "marketplace-netskopecloudlogshipper-1.0.3": "netskope",
+    "marketplace-netskopecloudlogshipperjson-latest": "netskope",
+    "marketplace-netskopecloudlogshipperjson-1.0.0": "netskope",
+    
+    # Palo Alto Networks
+    "marketplace-paloaltonetworksfirewall-latest": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-1.0.0": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-1.0.1": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-1.0.2": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-2.0.0": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-2.0.1": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-2.0.2": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-2.0.3": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-2.0.4": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-2.0.5": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-3.0.0": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-3.0.1": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-3.0.2": "paloalto_firewall",
+    "marketplace-paloaltonetworksfirewall-3.0.3": "paloalto_firewall",
+    "marketplace-paloaltonetworksprismaaccess-latest": "paloalto_prismasase",
+    "marketplace-paloaltonetworksprismaaccess-1.0.0": "paloalto_prismasase",
+    
+    # Zscaler parsers
+    "marketplace-zscalerinternetaccess-latest": "zscaler",
+    "marketplace-zscalerinternetaccess-1.0.0": "zscaler",
+    "marketplace-zscalerinternetaccess-1.0.1": "zscaler",
+    "marketplace-zscalerinternetaccess-2.0.0": "zscaler",
+    "marketplace-zscalerinternetaccess-3.0.0": "zscaler",
+    "marketplace-zscalerprivateaccess-latest": "zscaler_private_access",
+    "marketplace-zscalerprivateaccess-1.0.0": "zscaler_private_access",
+    "marketplace-zscalerprivateaccess-2.0.0": "zscaler_private_access",
+    "marketplace-zscalerprivateaccessjson-latest": "zscaler_private_access",
+    "marketplace-zscalerprivateaccessjson-1.0.0": "zscaler_private_access",
+}
 
 # Map product → (module_name, generator function names)
 PROD_MAP = {
@@ -10,7 +112,7 @@ PROD_MAP = {
     ),
     "zscaler": (
         "zscaler",
-        ["zscaler_log"],
+        ["zscaler_log"],  # Use JSON format for gron parser compatibility
     ),
     "aws_cloudtrail": (
         "aws_cloudtrail",
@@ -23,10 +125,6 @@ PROD_MAP = {
     "aws_guardduty": (
         "aws_guardduty",
         ["guardduty_log"],
-    ),
-    "aws_elb": (
-        "aws_elb",
-        ["aws_elb_log"],
     ),
     "microsoft_azuread": (
         "microsoft_azuread",
@@ -167,6 +265,10 @@ PROD_MAP = {
     "cloudflare_general": (
         "cloudflare_general",
         ["cloudflare_general_log"],
+    ),
+    "cloudflare_waf": (
+        "cloudflare_waf",
+        ["cloudflare_waf_log"],
     ),
     "extreme_networks": (
         "extreme_networks",
@@ -356,6 +458,68 @@ PROD_MAP = {
         "wiz_cloud",
         ["wiz_cloud_log"],
     ),
+    # Newly created generators
+    "aws_elasticloadbalancer": (
+        "aws_elasticloadbalancer",
+        ["aws_elasticloadbalancer_log"],
+    ),
+    "aws_vpcflow": (
+        "aws_vpcflow", 
+        ["aws_vpcflow_log"],
+    ),
+    "beyondtrust_privilegemgmt_windows": (
+        "beyondtrust_privilegemgmt_windows",
+        ["beyondtrust_privilegemgmt_windows_log"],
+    ),
+    "cisco_firewall_threat_defense": (
+        "cisco_firewall_threat_defense",
+        ["cisco_firewall_threat_defense_log"],
+    ),
+    "cisco_meraki_flow": (
+        "cisco_meraki_flow",
+        ["cisco_meraki_flow_log"],
+    ),
+    "manageengine_adauditplus": (
+        "manageengine_adauditplus",
+        ["manageengine_adauditplus_log"],
+    ),
+    "microsoft_azure_ad": (
+        "microsoft_azure_ad",
+        ["microsoft_azure_ad_log"],
+    ),
+    "microsoft_eventhub_azure_signin": (
+        "microsoft_eventhub_azure_signin",
+        ["microsoft_eventhub_azure_signin_log"],
+    ),
+    "microsoft_eventhub_defender_email": (
+        "microsoft_eventhub_defender_email",
+        ["microsoft_eventhub_defender_email_log"],
+    ),
+    "microsoft_eventhub_defender_emailforcloud": (
+        "microsoft_eventhub_defender_emailforcloud", 
+        ["microsoft_eventhub_defender_emailforcloud_log"],
+    ),
+    # Additional generators for marketplace parsers
+    "checkpoint": (
+        "checkpoint",
+        ["checkpoint_log"],
+    ),
+    "fortimanager": (
+        "fortimanager",
+        ["fortimanager_log"],
+    ),
+    "infoblox_ddi": (
+        "infoblox_ddi",
+        ["infoblox_ddi_log"],
+    ),
+    "paloalto_firewall": (
+        "paloalto_firewall",
+        ["paloalto_firewall_log"],
+    ),
+    "zscaler_private_access": (
+        "zscaler_private_access",
+        ["zscaler_private_access_log"],
+    ),
 }
 # I need to move this down below sourcetype_map so
 #HEC_URL = os.getenv(
@@ -371,36 +535,36 @@ HEADERS = {
 }
 
 SOURCETYPE_MAP = {
+    # Marketplace parsers (official)
     "fortinet_fortigate": "marketplace-fortinetfortigate-latest",
     "zscaler": "marketplace-zscalerinternetaccess-latest",
     "aws_cloudtrail": "marketplace-awscloudtrail-latest",
     "aws_vpcflowlogs": "marketplace-awsvpcflowlogs-latest",
-    "aws_guardduty": "community-awsguarddutylogs-latest",
-    "aws_elb": "json",
+    "aws_guardduty": "marketplace-awsguardduty-latest",
     "microsoft_azuread": "azuread",
     "okta_authentication": "json",
     "cisco_asa": "CommCiscoASA",
-    "cisco_umbrella": "community-ciscoumbrella-latest",
+    "cisco_umbrella": "marketplace-ciscoumbrella-latest",
     "cisco_meraki": "CommCiscoMeraki",
     "crowdstrike_falcon": "CommCrowdstrikeEP",
     "cyberark_pas": "json",
     "darktrace": "json",
     "proofpoint": "json",
     "microsoft_365_mgmt_api": "json",
-    "netskope": "json",
+    "netskope": "marketplace-netskopecloudlogshipper-latest",
     "mimecast": "json",
     "microsoft_azure_ad_signin": "json",
     "microsoft_defender_email": "json",
     "beyondtrust_passwordsafe": "json",
     "hashicorp_vault": "json",
-    "corelight_conn": "json",
-    "corelight_http": "json",
-    "corelight_ssl": "json",
-    "corelight_tunnel": "json",
-    "vectra_ai": "syslog",
+    "corelight_conn": "marketplace-corelight-conn-latest",
+    "corelight_http": "marketplace-corelight-http-latest",
+    "corelight_ssl": "marketplace-corelight-ssl-latest",
+    "corelight_tunnel": "marketplace-corelight-tunnel-latest",
+    "vectra_ai": "vectra_ai_logs-latest",
     "tailscale": "json",
     "extrahop": "json",
-    "armis": "armis_syslog",
+    "armis": "community-armisarmislogs-latest",
     "sentinelone_endpoint": "json",
     "sentinelone_identity": "json",
     "apache_http": "community-apachehttplogs-latest",
@@ -412,6 +576,7 @@ SOURCETYPE_MAP = {
     "aws_vpc_dns": "community-awsvpcdns-latest",
     "cisco_networks": "community-cisconetworks-latest",
     "cloudflare_general": "community-cloudflaregeneral-latest",
+    "cloudflare_waf": "community-cloudflarewaflogs-latest",
     "extreme_networks": "community-extremenetworks-latest",
     "f5_networks": "community-f5networks-latest",
     "google_cloud_dns": "community-googleclouddns-latest",
@@ -426,7 +591,7 @@ SOURCETYPE_MAP = {
     "manageengine_general": "community-manageenginegeneral-latest",
     "manch_siem": "community-manchsiem-latest",
     "microsoft_windows_eventlog": "community-microsoftwindowseventlog-latest",
-    "paloalto_prismasase": "community-paloaltoprismasase-latest",
+    "paloalto_prismasase": "marketplace-paloaltonetworksprismaaccess-latest",
     "sap": "community-sap-latest",
     "securelink": "community-securelink-latest",
     "aws_waf": "community-awswaf-latest",
@@ -459,14 +624,31 @@ SOURCETYPE_MAP = {
     "rsa_adaptive": "community-rsaadaptive-latest",
     "veeam_backup": "community-veeambackup-latest",
     "wiz_cloud": "community-wizcloud-latest",
+    # Newly created generators
+    "aws_elasticloadbalancer": "marketplace-awselasticloadbalancer-latest",
+    "beyondtrust_privilegemgmt_windows": "community-beyondtrustprivilegemgmtwindowslogs-latest",
+    "cisco_firewall_threat_defense": "marketplace-ciscofirewallthreatdefense-latest",
+    "cisco_meraki_flow": "community-ciscomerkiflow-latest",
+    "manageengine_adauditplus": "community-manageengineadauditplus-latest",
+    "microsoft_azure_ad": "community-microsoftazuread-latest",
+    "microsoft_eventhub_azure_signin": "community-microsofteventhubazuresignin-latest",
+    "microsoft_eventhub_defender_email": "community-microsofteventhhubdefenderemail-latest",
+    "microsoft_eventhub_defender_emailforcloud": "community-microsofteventhubdefenderemailforcloud-latest",
+    # Additional marketplace parsers
+    "checkpoint": "marketplace-checkpointfirewall-latest",
+    "fortimanager": "marketplace-fortinetfortimanager-latest",
+    "infoblox_ddi": "marketplace-infobloxddi-latest",
+    "paloalto_firewall": "marketplace-paloaltonetworksfirewall-latest",
+    "zscaler_private_access": "marketplace-zscalerprivateaccess-latest",
 }
 
 # Generators that already emit structured JSON events; these must be sent to /event
 JSON_PRODUCTS = {
     "aws_cloudtrail",
+    "zscaler",  # JSON format for gron parser
     "microsoft_azuread",
     "okta_authentication",
-    "crowdstrike_falcon",
+    # "crowdstrike_falcon",  # Returns CEF format, not JSON
     "cyberark_pas",
     "darktrace",
     "proofpoint",
@@ -475,9 +657,8 @@ JSON_PRODUCTS = {
     "mimecast",
     "microsoft_azure_ad_signin",
     "microsoft_defender_email",
-    "beyondtrust_passwordsafe",
+    # "beyondtrust_passwordsafe",  # Returns raw syslog, not JSON
     "hashicorp_vault",
-    "aws_elb",
     "corelight_conn",
     "corelight_http",
     "corelight_ssl",
@@ -494,6 +675,7 @@ JSON_PRODUCTS = {
     "aws_vpc_dns",
     "cisco_networks",
     "cloudflare_general",
+    "cloudflare_waf",
     "extreme_networks",
     "f5_networks",
     "google_cloud_dns",
@@ -512,8 +694,8 @@ JSON_PRODUCTS = {
     "sap",
     "securelink",
     "aws_waf",
-    "aws_route53",
-    "cisco_ironport",
+    # "aws_route53",  # Returns raw log format, not JSON
+    # "cisco_ironport",  # Returns raw syslog, not JSON
     "cyberark_conjur",
     "iis_w3c",
     "linux_auth",
@@ -521,39 +703,50 @@ JSON_PRODUCTS = {
     "microsoft_365_defender",
     "pingfederate",
     "zscaler_dns_firewall",
-    "akamai_cdn",
-    "akamai_dns",
-    "akamai_general",
+    # "akamai_cdn",  # Returns raw log format, not JSON
+    # "akamai_dns",  # Returns raw log format, not JSON
+    # "akamai_general",  # Returns raw log format, not JSON
     "akamai_sitedefender",
-    "axway_sftp",
+    # "axway_sftp",  # Returns raw log format, not JSON
     "cisco_duo",
-    "cohesity_backup",
-    "f5_vpn",
-    "github_audit",
-    "harness_ci",
-    "hypr_auth",
+    # "cohesity_backup",  # Returns raw log format, not JSON
+    # "f5_vpn",  # Returns raw log format, not JSON
+    # "github_audit",  # Returns raw log format, not JSON
+    # "harness_ci",  # Returns raw log format, not JSON
+    # "hypr_auth",  # Returns raw log format, not JSON
     "imperva_sonar",
     "isc_bind",
     "isc_dhcp",
-    "jamf_protect",
+    # "jamf_protect",  # Returns raw log format, not JSON
     "pingone_mfa",
     "pingprotect",
     "rsa_adaptive",
     "veeam_backup",
     "wiz_cloud",
+    # Newly created generators (JSON output)
+    "aws_elasticloadbalancer",
+    "beyondtrust_privilegemgmt_windows",
+    "cisco_firewall_threat_defense",
+    "cisco_meraki_flow",
+    "manageengine_adauditplus",
+    "microsoft_azure_ad",
+    "microsoft_eventhub_azure_signin",
+    "microsoft_eventhub_defender_email",
+    "microsoft_eventhub_defender_emailforcloud",
+    # Additional JSON products for marketplace parsers
+    "checkpoint",
+    "fortimanager",
+    "infoblox_ddi",
+    "zscaler_private_access",
 }
 
-def _envelope(line: str, product: str, attr_fields: dict) -> str:
-    return json.dumps(
-        {
-            "time": round(time.time()),
-            "event": line,
-            "sourcetype": SOURCETYPE_MAP[product],
-            "fields": attr_fields,
-        },
-        ensure_ascii=False,
-        separators=(',', ':')
-    )
+def _envelope(line: str, product: str, attr_fields: dict) -> dict:
+    return {
+        "time": round(time.time()),
+        "event": line,
+        "sourcetype": SOURCETYPE_MAP[product],
+        "fields": attr_fields
+    }
 
 def send_one(line: str, product: str, attr_fields: dict):
     """
@@ -609,7 +802,6 @@ if __name__ == "__main__":
             "aws_cloudtrail",
             "aws_vpcflowlogs",
             "aws_guardduty",
-            "aws_elb",
             "microsoft_azuread",
             "okta_authentication",
             "cisco_asa",
@@ -645,6 +837,7 @@ if __name__ == "__main__":
             "aws_vpc_dns",
             "cisco_networks",
             "cloudflare_general",
+            "cloudflare_waf",
             "extreme_networks",
             "f5_networks",
             "google_cloud_dns",
@@ -692,13 +885,51 @@ if __name__ == "__main__":
             "rsa_adaptive",
             "veeam_backup",
             "wiz_cloud",
+            # Newly created generators
+            "aws_elasticloadbalancer",
+                    "beyondtrust_privilegemgmt_windows",
+            "cisco_firewall_threat_defense",
+            "cisco_meraki_flow", 
+            "manageengine_adauditplus",
+            "microsoft_azure_ad",
+            "microsoft_eventhub_azure_signin",
+            "microsoft_eventhub_defender_email",
+            "microsoft_eventhub_defender_emailforcloud",
+            # Marketplace parser support
+            "checkpoint",
+            "fortimanager",
+            "infoblox_ddi",
+            "paloalto_firewall",
+            "zscaler_private_access",
         ],
         default="fortinet_fortigate",
         help="Which log generator to use (default: fortinet_fortigate)",
     )
+    parser.add_argument("--marketplace-parser", type=str,
+                        help="Use a specific marketplace parser (e.g., marketplace-awscloudtrail-latest)")
     args = parser.parse_args()
 
-    mod_name, func_names = PROD_MAP[args.product]
+    # Handle marketplace parser name
+    if args.marketplace_parser:
+        if args.marketplace_parser in MARKETPLACE_PARSER_MAP:
+            product = MARKETPLACE_PARSER_MAP[args.marketplace_parser]
+            # Override sourcetype with the specific marketplace parser
+            SOURCETYPE_MAP[product] = args.marketplace_parser
+        else:
+            print(f"Error: Unknown marketplace parser: {args.marketplace_parser}")
+            print(f"Available marketplace parsers:")
+            for parser_name in sorted(MARKETPLACE_PARSER_MAP.keys()):
+                print(f"  {parser_name}")
+            sys.exit(1)
+    else:
+        product = args.product
+
+    # Check if generator exists
+    if product not in PROD_MAP:
+        print(f"Error: Generator for product '{product}' not yet implemented")
+        sys.exit(1)
+
+    mod_name, func_names = PROD_MAP[product]
     gen_mod = importlib.import_module(mod_name)
     attr_fields = getattr(gen_mod, "ATTR_FIELDS")
     generators = [getattr(gen_mod, fn) for fn in func_names]
@@ -706,10 +937,10 @@ if __name__ == "__main__":
     events = [generators[i % len(generators)]() for i in range(args.count)]
 
     if args.count == 1:
-        print("HEC response:", send_one(events[0], args.product, attr_fields))
+        print("HEC response:", send_one(events[0], product, attr_fields))
     else:
         print(f"Sending {args.count} events one-by-one "
               f"(spacing {args.min_delay}s – {args.max_delay}s)…")
         print("Responses:", send_many_with_spacing(
-            events, args.product, attr_fields, args.min_delay, args.max_delay
+            events, product, attr_fields, args.min_delay, args.max_delay
         ))

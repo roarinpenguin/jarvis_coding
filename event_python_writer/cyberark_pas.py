@@ -86,7 +86,7 @@ def _iso_timestamp():
     """Generate ISO format timestamp"""
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-def cyberark_pas_log(overrides: dict | None = None) -> str:
+def cyberark_pas_log(overrides: dict | None = None) -> Dict:
     """
     Return a single CyberArk PAS event as JSON string.
     
@@ -255,7 +255,7 @@ def cyberark_pas_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate a few sample logs

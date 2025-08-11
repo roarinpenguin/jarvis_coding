@@ -201,7 +201,7 @@ def _generate_authentication_details():
     
     return details
 
-def microsoft_azure_ad_signin_log(overrides: dict | None = None) -> str:
+def microsoft_azure_ad_signin_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Microsoft Azure AD Sign-in event as JSON string.
     
@@ -352,7 +352,7 @@ def microsoft_azure_ad_signin_log(overrides: dict | None = None) -> str:
     if overrides:
         record.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate sample logs

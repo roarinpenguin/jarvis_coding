@@ -126,7 +126,7 @@ def generate_traffic_log():
         random.choice(["aged-out", "tcp-fin", "tcp-rst", "policy-deny", ""]) if action != "allow" else "aged-out",  # session_end_reason
     ]
     
-    return ",".join(fields)
+    return {"message": ",".join(fields)}
 
 def generate_threat_log():
     """Generate a THREAT log entry."""
@@ -198,7 +198,7 @@ def generate_threat_log():
         "",  # reportid
     ]
     
-    return ",".join(fields)
+    return {"message": ",".join(fields)}
 
 def paloalto_firewall_log(overrides: dict | None = None) -> str:
     """Generate a single Palo Alto Networks firewall log entry."""

@@ -68,7 +68,7 @@ def generate_ip() -> str:
     """Generate a random IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def f5_networks_log() -> str:
+def f5_networks_log() -> Dict:
     """Generate a single F5 Networks event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -151,7 +151,7 @@ def f5_networks_log() -> str:
             "packets_out": random.randint(1, 1000)
         })
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

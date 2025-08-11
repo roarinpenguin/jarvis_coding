@@ -159,7 +159,7 @@ def armis_log(overrides: dict | None = None) -> str:
     # Parser expects: .*- - .${parse=dottedEscapedJson}
     json_data = json.dumps(event, separators=(",", ":"))
     
-    return f"<{priority}>{syslog_timestamp} {hostname} armis - - {json_data}"
+    return f"<{priority}>{syslog_timestamp} {hostname} armis - - .{json_data}"
 
 def _generate_description(event_type: str) -> str:
     """Generate description based on event type"""

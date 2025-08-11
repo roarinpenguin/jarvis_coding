@@ -237,7 +237,7 @@ def _generate_cloud_app_states():
         }
     ]
 
-def microsoft_365_mgmt_api_log(overrides: dict | None = None) -> str:
+def microsoft_365_mgmt_api_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Microsoft 365 Management API event as JSON string.
     
@@ -347,7 +347,7 @@ def microsoft_365_mgmt_api_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate a few sample logs

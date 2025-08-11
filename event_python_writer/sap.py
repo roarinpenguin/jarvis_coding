@@ -73,7 +73,7 @@ def generate_ip() -> str:
     """Generate SAP internal IP address"""
     return f"10.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def sap_log() -> str:
+def sap_log() -> Dict:
     """Generate a single SAP event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -254,7 +254,7 @@ def sap_log() -> str:
         "frontend_time": random.randint(0, 500)  # milliseconds
     })
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

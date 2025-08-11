@@ -22,7 +22,9 @@
         "type_uid": 400201,
         "activity_id": 1,
         "activity_name": "HTTP Request",
-        "severity_id": 3
+        "severity_id": 3,
+        "metadata.product.name": "AWS WAF",
+        "metadata.product.vendor_name": "Amazon Web Services"
       },
       "rewrites": [
         {
@@ -162,6 +164,42 @@
           "output": "observables",
           "match": ".*",
           "replace": "[{\"name\":\"client_ip\",\"type\":\"IP Address\",\"value\":\"$0\",\"type_id\":2},{\"name\":\"webacl_id\",\"type\":\"Other\",\"value\":\"${webaclId}\",\"type_id\":99},{\"name\":\"uri\",\"type\":\"URL\",\"value\":\"${httpRequest.uri}\",\"type_id\":23}]"
+        },
+        {
+          "input": "httpRequest.args",
+          "output": "http_request.url.query_string",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "requestId",
+          "output": "http_request.uid",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "httpRequest.headers",
+          "output": "http_request.http_headers",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "labels",
+          "output": "metadata.labels",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "ruleGroupId",
+          "output": "metadata.extension.rule_group_id",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "terminatingRuleType",
+          "output": "metadata.extension.terminating_rule_type",
+          "match": ".*",
+          "replace": "$0"
         }
       ],
       "halt": true

@@ -45,7 +45,7 @@ def generate_vpc_ip() -> str:
     """Generate VPC IP address"""
     return f"10.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def aws_vpc_dns_log() -> str:
+def aws_vpc_dns_log() -> Dict:
     """Generate a single AWS VPC DNS event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -89,7 +89,7 @@ def aws_vpc_dns_log() -> str:
         **ATTR_FIELDS
     }
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

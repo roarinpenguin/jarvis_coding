@@ -298,7 +298,7 @@ def cloudtrail_log(overrides: dict | None = None) -> str:
     record = _template()
     if overrides:
         record.update(overrides)
-    return json.dumps(record, separators=(",", ":"))  # compact
+    return record  # compact
 
 
 # ─────────────────── standalone sanity run ─────────────────

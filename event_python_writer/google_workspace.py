@@ -85,7 +85,7 @@ def generate_ip() -> str:
     else:  # 20% external
         return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def google_workspace_log() -> str:
+def google_workspace_log() -> Dict:
     """Generate a single Google Workspace event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -189,7 +189,7 @@ def google_workspace_log() -> str:
             "message": "This event may indicate a security concern"
         }
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

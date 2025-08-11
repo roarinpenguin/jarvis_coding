@@ -77,7 +77,7 @@ def generate_query_string() -> str:
         return "?" + "&".join(params)
     return "-"
 
-def iis_w3c_log() -> str:
+def iis_w3c_log() -> Dict:
     """Generate a single Microsoft IIS W3C log event"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -124,7 +124,7 @@ def iis_w3c_log() -> str:
         **ATTR_FIELDS
     }
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

@@ -47,7 +47,7 @@ def generate_ip() -> str:
     """Generate a random IP address"""
     return f"192.168.{random.randint(1, 10)}.{random.randint(1, 254)}"
 
-def ubiquiti_unifi_log() -> str:
+def ubiquiti_unifi_log() -> Dict:
     """Generate a single UniFi event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -149,7 +149,7 @@ def ubiquiti_unifi_log() -> str:
         "mem_buffer": random.randint(5, 20)   # percentage
     })
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

@@ -51,7 +51,7 @@ def generate_session_id() -> str:
     """Generate session ID"""
     return f"session-{random.randint(10000, 99999)}"
 
-def linux_auth_log() -> str:
+def linux_auth_log() -> Dict:
     """Generate a single Linux authentication event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -111,7 +111,7 @@ def linux_auth_log() -> str:
     # Remove None values
     event = {k: v for k, v in event.items() if v is not None}
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

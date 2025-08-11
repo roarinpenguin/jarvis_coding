@@ -1,7 +1,0 @@
-{
-      "dataSource.category": "security",
-      "dataSource.name": "Zscaler Private Access",
-      "dataSource.vendor": "Zscaler"
-    },
-    patterns: {
-}

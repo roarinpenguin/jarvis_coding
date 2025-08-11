@@ -51,7 +51,7 @@ def generate_ip() -> str:
     """Generate a random IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def imperva_waf_log() -> str:
+def imperva_waf_log() -> Dict:
     """Generate a single Imperva WAF event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -167,7 +167,7 @@ def imperva_waf_log() -> str:
             "challengeResult": random.choice(["Passed", "Failed", "Not Challenged"])
         })
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

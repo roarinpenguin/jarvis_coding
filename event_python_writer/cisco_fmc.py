@@ -57,7 +57,7 @@ def generate_ip() -> str:
     """Generate a random IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def cisco_fmc_log() -> str:
+def cisco_fmc_log() -> Dict:
     """Generate a single Cisco FMC event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -184,7 +184,7 @@ def cisco_fmc_log() -> str:
             "destination_longitude": round(random.uniform(-180, 180), 6)
         })
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

@@ -26,7 +26,7 @@ def generate_ip() -> str:
     """Generate IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def f5_vpn_log() -> str:
+def f5_vpn_log() -> dict:
     """Generate a single F5 VPN event log in syslog format"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -45,7 +45,11 @@ def f5_vpn_log() -> str:
            f'client_ip="{client_ip}" start_time="{start_time}" event="{event}" '
            f'device="{device}" message="{message}"')
     
-    return log
+    # Return dict with raw log and ATTR_FIELDS for HEC compatibility
+    return {
+        "raw": log,
+        **ATTR_FIELDS
+    }
 
 # ATTR_FIELDS for AI-SIEM compatibility
 ATTR_FIELDS = {

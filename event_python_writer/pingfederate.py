@@ -70,7 +70,7 @@ def generate_transaction_id() -> str:
     """Generate transaction ID"""
     return f"txn-{random.randint(1000, 9999)}"
 
-def pingfederate_log() -> str:
+def pingfederate_log() -> Dict:
     """Generate a single PingFederate authentication event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -148,7 +148,7 @@ def pingfederate_log() -> str:
     # Remove None values
     event = {k: v for k, v in event.items() if v is not None}
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

@@ -194,7 +194,7 @@ def _calculate_scores(threat_type):
     
     return scores
 
-def proofpoint_log(overrides: dict | None = None) -> str:
+def proofpoint_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Proofpoint email security event as JSON string.
     
@@ -302,7 +302,7 @@ def proofpoint_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate a few sample logs

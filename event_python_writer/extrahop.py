@@ -122,7 +122,7 @@ def _generate_detection_id() -> int:
     """Generate a detection ID"""
     return random.randint(1000000, 9999999)
 
-def extrahop_log(overrides: dict | None = None) -> str:
+def extrahop_log(overrides: dict | None = None) -> Dict:
     """
     Return a single ExtraHop event as JSON string.
     
@@ -206,7 +206,7 @@ def extrahop_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_participants(detection_type: str) -> List[Dict]:
     """Generate participants based on detection type"""

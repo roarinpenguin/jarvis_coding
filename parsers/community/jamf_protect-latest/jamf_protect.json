@@ -1,125 +1,57 @@
 {
   "attributes": {
-    "dataSource.vendor": "Jamf",
-    "dataSource.name": "Jamf Protect",
-    "dataSource.category": "endpoint_security",
-    "dataSource.technology": "endpoint_protection",
-    "source": "jamf_protect"
+    "dataSource.category": "security",
+    "dataSource.name": "Jamf Protect", 
+    "dataSource.vendor": "Jamf"
   },
-  
-  "patterns": {
-    "timestamp": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
-    "event_type": "(ProcessExecution|MalwareDetection|USBDevice|NetworkConnection|FileCreated)",
-    "computer_id": "[a-zA-Z0-9\\-_]+",
-    "username": "[a-zA-Z0-9._\\-]+",
-    "sha256": "[a-fA-F0-9]{64}",
-    "verdict": "(allowed|quarantined|blocked|denied)",
-    "quoted_string": "\"[^\"]*\"",
-    "field_value": "[^\\s]+"
-  },
-  
   "formats": [
     {
-      "id": "jamf_protect_event",
-      "format": "$timestamp$ JamfProtect eventType=$quoted_string{name=event_type}$ computerId=$quoted_string{name=computer_id}$ user=$quoted_string{name=username}$ processName=$quoted_string{name=process_name}$ sha256=$quoted_string{name=file_hash}$ verdict=$quoted_string{name=verdict}$ message=$quoted_string{name=message}$",
-      "attributes": {
-        "dataSource.app": "Jamf Protect Endpoint Security",
-        "class_uid": 2001,
-        "class_name": "Security Control",
-        "category_uid": 2,
-        "category_name": "Security",
-        "type_uid": 200101,
-        "activity_id": 1,
-        "activity_name": "Security Finding",
-        "severity_id": 3
-      },
+      "format": ".*$_=identifier$=$_=quoteOrSpace$.*",
+      "repeat": true,
       "rewrites": [
         {
-          "input": "timestamp",
-          "output": "time",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "username",
-          "output": "user.name",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "computer_id",
-          "output": "device.uid",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "event_type",
+          "input": "eventType",
           "output": "finding.title",
           "match": ".*",
           "replace": "$0"
         },
         {
-          "input": "process_name",
-          "output": "process.file.name",
+          "input": "user", 
+          "output": "actor.user.name",
           "match": ".*",
           "replace": "$0"
         },
         {
-          "input": "file_hash",
-          "output": "file.hashes.sha256",
+          "input": "computerId",
+          "output": "device.uid",
+          "match": ".*", 
+          "replace": "$0"
+        },
+        {
+          "input": "processName",
+          "output": "process.file.path",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "sha256",
+          "output": "file.hashes.sha256", 
           "match": ".*",
           "replace": "$0"
         },
         {
           "input": "verdict",
-          "output": "action",
+          "output": "disposition",
           "match": ".*",
           "replace": "$0"
         },
         {
           "input": "message",
           "output": "message",
-          "match": ".*",
+          "match": ".*", 
           "replace": "$0"
-        },
-        {
-          "input": "verdict",
-          "output": "status_id",
-          "match": "(allowed|quarantined)",
-          "replace": "1"
-        },
-        {
-          "input": "verdict",
-          "output": "status_id",
-          "match": "(blocked|denied)",
-          "replace": "2"
-        },
-        {
-          "input": "event_type",
-          "output": "severity_id",
-          "match": "MalwareDetection",
-          "replace": "4"
-        },
-        {
-          "input": "event_type",
-          "output": "severity_id",
-          "match": "(ProcessExecution|FileCreated)",
-          "replace": "2"
-        },
-        {
-          "input": "event_type",
-          "output": "severity_id",
-          "match": "(USBDevice|NetworkConnection)",
-          "replace": "3"
-        },
-        {
-          "input": "username",
-          "output": "observables",
-          "match": ".*",
-          "replace": "[{\"name\":\"user\",\"type\":\"User\",\"value\":\"$0\"},{\"name\":\"device\",\"type\":\"Device\",\"value\":\"${computer_id}\"},{\"name\":\"file_hash\",\"type\":\"File Hash\",\"value\":\"${file_hash}\"}]"
         }
-      ],
-      "halt": true
+      ]
     }
   ]
 }

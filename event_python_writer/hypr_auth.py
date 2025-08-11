@@ -31,7 +31,7 @@ MESSAGES = [
     "Authentication request processed", "Token revoked successfully"
 ]
 
-def hypr_auth_log() -> str:
+def hypr_auth_log() -> dict:
     """Generate a single HYPR authentication event log in syslog format"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -49,7 +49,11 @@ def hypr_auth_log() -> str:
            f'device="{device}" isSuccessful={str(is_successful).lower()} '
            f'authenticator="{authenticator}" message="{message}"')
     
-    return log
+    # Return dict with raw log and ATTR_FIELDS for HEC compatibility
+    return {
+        "raw": log,
+        **ATTR_FIELDS
+    }
 
 # ATTR_FIELDS for AI-SIEM compatibility
 ATTR_FIELDS = {

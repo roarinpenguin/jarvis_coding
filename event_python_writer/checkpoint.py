@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
-"""Generate synthetic Check Point Firewall logs."""
+"""Generate synthetic Check Point Firewall logs in JSON format for marketplace parser."""
 import json
 import random
 from datetime import datetime, timezone
 import time
+import uuid
+
+# SentinelOne AI-SIEM specific field attributes
+ATTR_FIELDS = {
+    "vendor": "Check Point",
+    "product": "Next Generation Firewall",
+    "version": "1.0",
+    "category": "network_security"
+}
 
 # Check Point log fields and values
 ACTIONS = ["Accept", "Drop", "Reject", "Encrypt", "Decrypt", "Monitor", "Block", "Allow"]
@@ -13,6 +22,7 @@ RULES = ["Clean_Traffic", "Block_Malware", "Allow_VPN", "Monitor_Suspicious", "D
 PRODUCTS = ["VPN-1 & FireWall-1", "Threat Prevention", "URL Filtering", "Application Control", "IPS", "Anti-Bot", "Anti-Virus"]
 BLADES = ["fw", "ips", "urlf", "appi", "av", "ab", "dlp", "vpn"]
 ORIGINS = ["fw01", "fw02", "cluster-1", "sg80", "sg5000", "mgmt-server"]
+THREAT_TYPES = ["Malware", "Trojan", "Botnet", "Phishing", "SQL Injection", "XSS", "DDoS", "Ransomware"]
 
 def get_random_ip(internal_probability=0.5):
     """Generate a random IP address."""
@@ -36,8 +46,8 @@ def get_port_for_service(service):
     }
     return port_map.get(service, random.randint(1024, 65535))
 
-def checkpoint_log(overrides: dict | None = None) -> str:
-    """Generate a single Check Point Firewall log entry."""
+def checkpoint_log(overrides: dict | None = None) -> dict:
+    """Generate a single Check Point Firewall log entry in JSON format."""
     now = datetime.now(timezone.utc)
     
     # Determine action and related fields
@@ -60,92 +70,70 @@ def checkpoint_log(overrides: dict | None = None) -> str:
         dst_port = 0
         src_port = 0
     
-    # Build the log entry with key="value" format
-    fields = {
-        "time": now.strftime("%b %d %H:%M:%S"),
+    # Build the JSON log entry for marketplace parser
+    log_entry = {
+        "time": now.isoformat(),
+        "timestamp": int(now.timestamp() * 1000),  # milliseconds
         "orig": src_ip,
         "origin": random.choice(ORIGINS),
         "action": action,
         "src": src_ip,
         "dst": dst_ip,
         "proto": proto,
-        "service": str(dst_port) if dst_port else service,
-        "s_port": str(src_port),
-        "d_port": str(dst_port) if dst_port else "",
+        "service": service,
+        "service_id": str(dst_port) if dst_port else "",
+        "s_port": src_port,
+        "d_port": dst_port if dst_port else 0,
         "rule": random.choice(RULES),
-        "rule_uid": f"{{{random.randint(10000000, 99999999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}-{random.randint(100000000000, 999999999999)}}}",
+        "rule_uid": f"{uuid.uuid4()}",
+        "rule_name": random.choice(RULES),
         "product": random.choice(PRODUCTS),
         "blade": random.choice(BLADES),
         "ifdir": random.choice(["inbound", "outbound"]),
         "ifname": random.choice(["eth0", "eth1", "eth2", "bond0", "Internal", "External"]),
-        "loguid": f"{{{random.randint(0, 9)}{random.choice(['a', 'b', 'c', 'd', 'e', 'f'])}{random.randint(100000, 999999)}}}",
+        "loguid": f"{uuid.uuid4()}",
         "version": "5",
         "fw_subproduct": "VPN-1",
-        "__policy_id_tag": "Standard",
-        "nat_rulenum": str(random.randint(1, 100)) if random.random() < 0.3 else "0",
-        "nat_addtnl_rulenum": "0",
-        "bytes": str(random.randint(100, 1000000)) if is_allowed else str(random.randint(40, 1500)),
-        "packets": str(random.randint(1, 1000)) if is_allowed else str(random.randint(1, 10)),
-        "elapsed": str(random.randint(0, 300)) if is_allowed else "0",
+        "policy_id_tag": "Standard",
+        "nat_rulenum": random.randint(1, 100) if random.random() < 0.3 else 0,
+        "nat_addtnl_rulenum": 0,
+        "bytes": random.randint(100, 1000000) if is_allowed else random.randint(40, 1500),
+        "packets": random.randint(1, 1000) if is_allowed else random.randint(1, 10),
+        "elapsed": random.randint(0, 300) if is_allowed else 0,
         "hostname": f"checkpoint-{random.randint(1, 5)}.company.com",
-        "sequencenum": str(random.randint(1, 1000000)),
-        "dataSource": {
-            "category": "security",
-            "name": "Check Point Firewall",
-            "vendor": "Check Point"
-        }
+        "sequencenum": random.randint(1, 1000000),
+        "type": "log",
+        "vendor": "Check Point",
+        "product_family": "Network Security"
     }
     
     # Add threat-specific fields for certain actions
     if action in ["Drop", "Block", "Reject"] and random.random() < 0.5:
-        fields.update({
+        log_entry.update({
             "attack": random.choice([
                 "Malformed Packet", "Port Scan", "SQL Injection", 
                 "Cross Site Scripting", "Buffer Overflow", "Malware",
                 "Trojan", "Botnet Communication", "Brute Force"
             ]),
             "severity": random.choice(["Critical", "High", "Medium", "Low"]),
-            "confidence_level": str(random.randint(1, 5)),
+            "confidence_level": random.randint(1, 5),
             "protection_type": "IPS",
-            "malware_action": "Blocked"
+            "malware_action": "Blocked",
+            "threat_prevention": True,
+            "threat_name": random.choice(THREAT_TYPES)
         })
     
-    # Format as key="value" pairs
-    log_parts = []
-    for key, value in fields.items():
-        if key == "dataSource":
-            continue  # Skip dataSource in the log string format
-        if value:  # Only include non-empty values
-            log_parts.append(f'{key}="{value}"')
-    
-    # Add timestamp prefix
-    timestamp = now.strftime("%b %-d %H:%M:%S")
-    hostname = fields["hostname"]
-    
-    # Apply overrides
+    # Apply overrides if provided
     if overrides:
-        for key, value in overrides.items():
-            # Find and replace the key="value" pair in log_parts
-            for i, part in enumerate(log_parts):
-                if part.startswith(f'{key}="'):
-                    log_parts[i] = f'{key}="{value}"'
-                    break
-            else:
-                log_parts.append(f'{key}="{value}"')
+        log_entry.update(overrides)
     
-    # Construct the final log string
-    log_string = f"{timestamp} {hostname} " + " ".join(log_parts)
-    
-    return log_string
-
-# OCSF-style attributes for HEC
-ATTR_FIELDS = {
-    "dataSource.category": "security",
-    "dataSource.name": "Check Point Firewall",
-    "dataSource.vendor": "Check Point"
-}
+    return log_entry
 
 if __name__ == "__main__":
-    # Generate sample logs
-    for _ in range(5):
-        print(checkpoint_log())
+    # Generate sample logs in JSON format
+    print("Check Point NGFW JSON Format Examples:")
+    print("=" * 60)
+    for i in range(5):
+        log = checkpoint_log()
+        print(f"\nEvent {i+1}:")
+        print(json.dumps(log, indent=2))

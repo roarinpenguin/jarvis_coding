@@ -217,7 +217,7 @@ def _generate_triggered_components(breach_type):
     
     return components
 
-def darktrace_log(overrides: dict | None = None) -> str:
+def darktrace_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Darktrace event as JSON string.
     
@@ -282,7 +282,7 @@ def _generate_model_breach(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_ai_analyst(overrides: dict | None = None) -> str:
     """Generate a Darktrace AI Analyst incident"""
@@ -367,7 +367,7 @@ def _generate_ai_analyst(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _get_mitre_tactics(category: str) -> List[str]:
     """Get MITRE ATT&CK tactics for a category"""

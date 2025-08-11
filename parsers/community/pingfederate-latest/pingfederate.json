@@ -127,6 +127,48 @@
                             "from": "unmapped.message",
                             "to": "message"
                         }
+                    },
+                    {
+                        "rename": {
+                            "from": "unmapped.session_id",
+                            "to": "session.uid"
+                        }
+                    },
+                    {
+                        "rename": {
+                            "from": "unmapped.client_id",
+                            "to": "actor.application.name"
+                        }
+                    },
+                    {
+                        "rename": {
+                            "from": "unmapped.scope",
+                            "to": "authorization.scope"
+                        }
+                    },
+                    {
+                        "rename": {
+                            "from": "unmapped.target_application",
+                            "to": "dst_application.name"
+                        }
+                    },
+                    {
+                        "rename": {
+                            "from": "unmapped.adapter_id",
+                            "to": "metadata.extension.adapter_id"
+                        }
+                    },
+                    {
+                        "rename": {
+                            "from": "unmapped.token_type",
+                            "to": "metadata.extension.token_type"
+                        }
+                    },
+                    {
+                        "rename": {
+                            "from": "unmapped.transaction_id",
+                            "to": "metadata.extension.transaction_id"
+                        }
                     }
                 ]
             }

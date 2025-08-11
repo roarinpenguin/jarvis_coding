@@ -15,10 +15,10 @@ from typing import Dict, List
 
 ATTR_FIELDS: Dict[str, str] = {
     "dataSource.vendor": "SentinelOne",
-    "dataSource.name": "SentinelOne",
+    "dataSource.name": "SentinelOne Identity",
     "dataSource.category": "security",
     "metadata.product.vendor_name": "SentinelOne",
-    "metadata.product.name": "SentinelOne",
+    "metadata.product.name": "SentinelOne Identity",
     "metadata.version": "1.0.0",
 }
 
@@ -139,7 +139,7 @@ def format_timestamp(dt: datetime) -> int:
     """Convert datetime to epoch timestamp (milliseconds) for SentinelOne events"""
     return int(dt.timestamp() * 1000)
 
-def sentinelone_identity_log(custom_fields: Dict = None) -> str:
+def sentinelone_identity_log(custom_fields: Dict = None) -> Dict:
     """Generate a SentinelOne Ranger AD identity event"""
     
     # Select random configurations
@@ -268,7 +268,7 @@ def sentinelone_identity_log(custom_fields: Dict = None) -> str:
     if custom_fields:
         event.update(custom_fields)
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

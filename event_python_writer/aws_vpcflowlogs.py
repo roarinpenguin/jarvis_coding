@@ -53,9 +53,7 @@ def _flow_record() -> str:
 
 def vpcflow_log() -> str:
     """
-    Wrap a raw flow‑log line in the dotted JSON envelope expected by the replay harness.
+    Generate a VPC Flow Log record in space-separated format for marketplace parser.
+    Returns the raw space-separated string format expected by marketplace-awsvpcflowlogs-latest.
     """
-    return json.dumps({
-        "event.type": "network_flow",
-        "message": _flow_record(),
-    })
+    return _flow_record()

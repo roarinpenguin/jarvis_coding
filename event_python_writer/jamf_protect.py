@@ -13,8 +13,8 @@ ATTR_FIELDS = {
     "dataSource.category": "security"
 }
 
-# Event types
-EVENT_TYPES = ["ProcessExecution", "MalwareDetection", "USBDevice", "FileAccess", "NetworkConnection"]
+# Event types (matching parser expectations)
+EVENT_TYPES = ["ProcessExecution", "MalwareDetection", "USBDevice", "NetworkConnection", "FileCreated"]
 
 # Computer IDs
 COMPUTER_IDS = ["mac-001", "mac-002", "mac-003", "mac-004", "mac-005"]
@@ -47,7 +47,7 @@ def jamf_protect_log() -> str:
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
     
-    timestamp = event_time.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-3] + "Z"  # Include milliseconds
+    timestamp = event_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # No milliseconds to match parser pattern
     event_type = random.choice(EVENT_TYPES)
     computer_id = random.choice(COMPUTER_IDS)
     user = random.choice(USERS)

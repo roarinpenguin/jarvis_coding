@@ -1,171 +1,260 @@
 {
-  attributes: {
-    "dataSource.category": "system",
+  "attributes": {
+    "dataSource.vendor": "Harness",
     "dataSource.name": "Harness CI/CD",
-    "dataSource.vendor": "Harness"
+    "dataSource.category": "security",
+    "metadata.product.vendor_name": "Harness",
+    "metadata.product.name": "Harness CI/CD",
+    "metadata.version": "1.0.0"
   },
-  patterns: {
-    timestampPattern: "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
-    logPattern: "Harness\\s+pipelineId=\"([^\"]+)\"\\s+executionId=\"([^\"]+)\"(?:\\s+stage=\"([^\"]+)\")?(?:\\s+step=\"([^\"]+)\")?\\s+status=\"([^\"]+)\"(?:\\s+trigger=\"([^\"]+)\")?(?:\\s+initiator=\"([^\"]+)\")?(?:\\s+duration=\"([^\"]+)\")?(?:\\s+error=\"([^\"]+)\")?\\s+message=\"([^\"]+)\""
-  },
-  formats: [
+  "formats": [
     {
-      id: "harness_format",
-      format: "$timestamp=timestampPattern$ $logPattern$"
+      "format": "$timestamp$ Harness pipelineId=\"$pipeline_id$\" executionId=\"$execution_id$\" status=\"$status$\" trigger=\"$trigger$\" initiator=\"$initiator$\" message=\"$message$\"",
+      "rewrites": [
+        {
+          "input": "timestamp",
+          "output": "timestamp",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "pipeline_id",
+          "output": "job.name",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "execution_id",
+          "output": "job.uid",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "status",
+          "output": "status_detail",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "trigger",
+          "output": "job.run_type",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "initiator",
+          "output": "actor.user.name",
+          "match": ".*",
+          "replace": "$0"
+        },
+        {
+          "input": "message",
+          "output": "message",
+          "match": ".*",
+          "replace": "$0"
+        }
+      ]
     }
   ],
-  mappings: {
-    version: 1,
-    mappings: [
+  "mappings": {
+    "version": 1,
+    "mappings": [
       {
-        predicate: "status = *",
-        transformations: [
+        "predicate": "status_detail = *",
+        "transformations": [
           {
-            constant: {
-              value: "8001",
-              field: "class_uid"
+            "constant": {
+              "value": 6003,
+              "field": "class_uid"
             }
           },
           {
-            constant: {
-              value: "DevOps Activity",
-              field: "class_name"
+            "constant": {
+              "value": "Job Activity",
+              "field": "class_name"
             }
           },
           {
-            regex: {
-              field: "job.name",
-              pattern: "logPattern",
-              group: 1
+            "constant": {
+              "value": 6,
+              "field": "category_uid"
             }
           },
           {
-            regex: {
-              field: "job.uid",
-              pattern: "logPattern",
-              group: 2
+            "constant": {
+              "value": "Application Activity",
+              "field": "category_name"
             }
           },
           {
-            regex: {
-              field: "stage",
-              pattern: "logPattern",
-              group: 3
+            "constant": {
+              "value": 1,
+              "field": "activity_id",
+              "predicate": "status_detail = 'STARTED' OR status_detail = 'RUNNING'"
             }
           },
           {
-            regex: {
-              field: "step",
-              pattern: "logPattern",
-              group: 4
+            "constant": {
+              "value": "Start",
+              "field": "activity_name",
+              "predicate": "status_detail = 'STARTED' OR status_detail = 'RUNNING'"
             }
           },
           {
-            regex: {
-              field: "status",
-              pattern: "logPattern",
-              group: 5
+            "constant": {
+              "value": 2,
+              "field": "activity_id",
+              "predicate": "status_detail = 'SUCCEEDED'"
             }
           },
           {
-            regex: {
-              field: "trigger_type",
-              pattern: "logPattern",
-              group: 6
+            "constant": {
+              "value": "Complete",
+              "field": "activity_name",
+              "predicate": "status_detail = 'SUCCEEDED'"
             }
           },
           {
-            regex: {
-              field: "actor.user.name",
-              pattern: "logPattern",
-              group: 7
+            "constant": {
+              "value": 3,
+              "field": "activity_id",
+              "predicate": "status_detail = 'CANCELLED' OR status_detail = 'PAUSED'"
             }
           },
           {
-            regex: {
-              field: "duration",
-              pattern: "logPattern",
-              group: 8
+            "constant": {
+              "value": "Cancel",
+              "field": "activity_name",
+              "predicate": "status_detail = 'CANCELLED' OR status_detail = 'PAUSED'"
             }
           },
           {
-            regex: {
-              field: "status_detail",
-              pattern: "logPattern",
-              group: 9
+            "constant": {
+              "value": 99,
+              "field": "activity_id",
+              "predicate": "status_detail = 'FAILED'"
             }
           },
           {
-            regex: {
-              field: "message",
-              pattern: "logPattern",
-              group: 10
+            "constant": {
+              "value": "Other",
+              "field": "activity_name",
+              "predicate": "status_detail = 'FAILED'"
             }
           },
           {
-            constant: {
-              value: "1",
-              field: "activity_id",
-              predicate: "status = 'STARTED'"
+            "constant": {
+              "value": 1,
+              "field": "status_id",
+              "predicate": "status_detail = 'SUCCEEDED' OR status_detail = 'STARTED' OR status_detail = 'RUNNING'"
             }
           },
           {
-            constant: {
-              value: "2",
-              field: "activity_id",
-              predicate: "status = 'SUCCEEDED'"
+            "constant": {
+              "value": "Success",
+              "field": "status",
+              "predicate": "status_detail = 'SUCCEEDED' OR status_detail = 'STARTED' OR status_detail = 'RUNNING'"
             }
           },
           {
-            constant: {
-              value: "3",
-              field: "activity_id",
-              predicate: "status = 'FAILED'"
+            "constant": {
+              "value": 2,
+              "field": "status_id",
+              "predicate": "status_detail = 'FAILED'"
             }
           },
           {
-            constant: {
-              value: "Deploy",
-              field: "activity_name",
-              predicate: "activity_id = '1'"
+            "constant": {
+              "value": "Failure",
+              "field": "status",
+              "predicate": "status_detail = 'FAILED'"
             }
           },
           {
-            constant: {
-              value: "Deploy",
-              field: "activity_name",
-              predicate: "activity_id = '2'"
+            "constant": {
+              "value": 99,
+              "field": "status_id",
+              "predicate": "status_detail = 'CANCELLED' OR status_detail = 'PAUSED'"
             }
           },
           {
-            constant: {
-              value: "Deploy",
-              field: "activity_name",
-              predicate: "activity_id = '3'"
+            "constant": {
+              "value": "Other",
+              "field": "status",
+              "predicate": "status_detail = 'CANCELLED' OR status_detail = 'PAUSED'"
             }
           },
           {
-            constant: {
-              value: "1",
-              field: "severity_id",
-              predicate: "status = 'SUCCEEDED'"
+            "constant": {
+              "value": 1,
+              "field": "severity_id"
             }
           },
           {
-            constant: {
-              value: "3",
-              field: "severity_id",
-              predicate: "status = 'FAILED'"
+            "constant": {
+              "value": "Informational",
+              "field": "severity"
             }
           },
           {
-            constant: {
-              value: "1",
-              field: "severity_id",
-              predicate: "status = 'STARTED'"
+            "constant": {
+              "value": 600301,
+              "field": "type_uid"
+            }
+          },
+          {
+            "copy": {
+              "from": "job.name",
+              "to": "job.name"
+            }
+          },
+          {
+            "copy": {
+              "from": "job.uid",
+              "to": "job.uid"
+            }
+          },
+          {
+            "copy": {
+              "from": "job.run_type",
+              "to": "job.run_type"
+            }
+          },
+          {
+            "copy": {
+              "from": "actor.user.name",
+              "to": "actor.user.name"
+            }
+          },
+          {
+            "copy": {
+              "from": "status_detail",
+              "to": "status_detail"
+            }
+          },
+          {
+            "copy": {
+              "from": "message",
+              "to": "message"
             }
           }
         ]
+      }
+    ]
+  },
+  "observables": {
+    "fields": [
+      {
+        "name": "actor.user.name",
+        "type": "User"
+      },
+      {
+        "name": "job.name",
+        "type": "Other"
+      },
+      {
+        "name": "job.uid",
+        "type": "Other"
       }
     ]
   }

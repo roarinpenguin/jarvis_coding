@@ -138,7 +138,7 @@ def _generate_file_info(malicious=False):
         "fileSize": random.randint(1024, 50000000)  # 1KB to 50MB
     }
 
-def mimecast_log(overrides: dict | None = None) -> str:
+def mimecast_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Mimecast event as JSON string.
     
@@ -188,7 +188,7 @@ def _generate_audit_log(overrides: dict | None = None) -> str:
     if overrides:
         event["mimecastEvent"].update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_dlp_log(overrides: dict | None = None) -> str:
     """Generate Mimecast DLP log"""
@@ -231,7 +231,7 @@ def _generate_dlp_log(overrides: dict | None = None) -> str:
     if overrides:
         event["mimecastEvent"].update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_ttp_attachment_log(overrides: dict | None = None) -> str:
     """Generate Mimecast TTP Attachment Protection log"""
@@ -273,7 +273,7 @@ def _generate_ttp_attachment_log(overrides: dict | None = None) -> str:
     if overrides:
         event["mimecastEvent"].update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_ttp_url_log(overrides: dict | None = None) -> str:
     """Generate Mimecast TTP URL Protection log"""
@@ -322,7 +322,7 @@ def _generate_ttp_url_log(overrides: dict | None = None) -> str:
     if overrides:
         event["mimecastEvent"].update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_ttp_impersonation_log(overrides: dict | None = None) -> str:
     """Generate Mimecast TTP Impersonation Protection log"""
@@ -368,7 +368,7 @@ def _generate_ttp_impersonation_log(overrides: dict | None = None) -> str:
     if overrides:
         event["mimecastEvent"].update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_siem_log(overrides: dict | None = None) -> str:
     """Generate Mimecast SIEM log"""
@@ -398,7 +398,7 @@ def _generate_siem_log(overrides: dict | None = None) -> str:
     if overrides:
         event["mimecastEvent"].update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate sample logs for different types

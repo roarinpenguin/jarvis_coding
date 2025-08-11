@@ -130,7 +130,7 @@ def _random_client() -> Dict[str, Any]:
     }
 
 
-def okta_authentication_log() -> str:
+def okta_authentication_log() -> Dict:
     """
     Return a single synthetic Okta event that mirrors the flattened
     field layout used by the SentinelOne Okta parser (dot‑separated keys).
@@ -206,7 +206,7 @@ def okta_authentication_log() -> str:
         "unmapped.transaction.type": "WEB",
         "unmapped.version": "0",
     }
-    return json.dumps(event)
+    return event
 
 
 if __name__ == "__main__":  # pragma: no cover

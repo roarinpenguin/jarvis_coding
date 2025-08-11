@@ -81,7 +81,7 @@ def _generate_email_address(internal=True, suspicious=False):
         domain = random.choice(EXTERNAL_DOMAINS)
     return f"{user}@{domain}"
 
-def microsoft_defender_email_log(overrides: dict | None = None) -> str:
+def microsoft_defender_email_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Microsoft Defender for Email event as JSON string.
     
@@ -221,7 +221,7 @@ def microsoft_defender_email_log(overrides: dict | None = None) -> str:
     if overrides:
         record["properties"].update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate sample logs

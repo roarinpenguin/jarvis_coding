@@ -205,7 +205,7 @@ def format_timestamp(dt: datetime) -> int:
     """Convert datetime to epoch timestamp (milliseconds) for SentinelOne events"""
     return int(dt.timestamp() * 1000)
 
-def sentinelone_endpoint_log(custom_fields: Dict = None) -> str:
+def sentinelone_endpoint_log(custom_fields: Dict = None) -> Dict:
     """Generate a SentinelOne Deep Visibility endpoint event matching actual field structure"""
     
     # Select random configurations
@@ -482,7 +482,7 @@ def sentinelone_endpoint_log(custom_fields: Dict = None) -> str:
     if custom_fields:
         event.update(custom_fields)
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

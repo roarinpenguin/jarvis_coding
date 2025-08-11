@@ -43,7 +43,7 @@ def get_random_ip():
     else:  # Normal IPs
         return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def akamai_sitedefender_log() -> str:
+def akamai_sitedefender_log() -> Dict:
     """Generate a single Akamai SiteDefender WAF event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 60))
@@ -108,7 +108,7 @@ def akamai_sitedefender_log() -> str:
         **ATTR_FIELDS
     }
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

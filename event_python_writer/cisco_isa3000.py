@@ -59,7 +59,7 @@ def generate_ip() -> str:
     else:
         return f"192.168.{random.randint(1, 10)}.{random.randint(1, 254)}"
 
-def cisco_isa3000_log() -> str:
+def cisco_isa3000_log() -> Dict:
     """Generate a single Cisco ISA3000 event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -213,7 +213,7 @@ def cisco_isa3000_log() -> str:
         ])
     })
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

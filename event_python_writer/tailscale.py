@@ -118,7 +118,7 @@ def _generate_tailnet() -> str:
     domains = ["company.com", "example.org", "corp.net", "internal.io"]
     return f"tailnet-{random.choice(domains)}"
 
-def tailscale_log(overrides: dict | None = None) -> str:
+def tailscale_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Tailscale event as JSON string.
     
@@ -137,7 +137,7 @@ def tailscale_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_config_event() -> Dict:
     """Generate a configuration/audit event"""

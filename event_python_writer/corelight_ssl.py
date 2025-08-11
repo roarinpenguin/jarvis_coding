@@ -122,7 +122,7 @@ def _generate_cert_chain_fuids() -> List[str]:
     num_certs = random.choices([1, 2, 3], weights=[0.3, 0.6, 0.1])[0]
     return [f"F{_generate_uid()[1:]}" for _ in range(num_certs)]
 
-def corelight_ssl_log(overrides: dict | None = None) -> str:
+def corelight_ssl_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Corelight SSL/TLS log event as JSON string.
     
@@ -234,7 +234,7 @@ def corelight_ssl_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate sample logs

@@ -95,7 +95,7 @@ def _generate_lease_id():
     """Generate a lease ID"""
     return f"{random.choice(SECRET_ENGINES)}/creds/{uuid.uuid4().hex[:8]}/{uuid.uuid4().hex}"
 
-def hashicorp_vault_log(overrides: dict | None = None) -> str:
+def hashicorp_vault_log(overrides: dict | None = None) -> Dict:
     """
     Return a single HashiCorp Vault audit log event as JSON string.
     
@@ -230,7 +230,7 @@ def hashicorp_vault_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _generate_request_data(operation: str, path: str) -> Dict:
     """Generate request data based on operation"""

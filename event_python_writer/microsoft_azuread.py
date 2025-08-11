@@ -204,7 +204,7 @@ def azure_ad_log(overrides: dict | None = None) -> str:
         ev.update(overrides)
 
     # Return JSON string instead of complex HEC wrapper
-    return json.dumps(ev, separators=(",", ":"))
+    return ev
 
 
 # Sent inside the "fields" object of the HEC wrapper

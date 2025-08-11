@@ -122,7 +122,27 @@
       "Bash(else)",
       "Bash(fi)",
       "Bash(/dev/null)",
-      "Bash(do python3:*)"
+      "Bash(do python3:*)",
+      "Bash(export S1_API_URL=\"https://usea1-purple.sentinelone.net\")",
+      "Bash(export:*)",
+      "Bash(export S1_HEC_TOKEN=\"1FUC88b9Z4BaHtQxwIXwYGqFPaVQO7jzXDuYxDuMD2q1s57bX4MvgEMxUCLaH7pbO\")",
+      "Bash(source:*)",
+      "Bash(PYTHONPATH=/Users/nathanial.smalley/projects/jarvis_coding/event_python_writer python3 /Users/nathanial.smalley/projects/jarvis_coding/event_python_writer/hec_sender.py --product pingfederate --count 5)",
+      "Bash(PYTHONPATH=/Users/nathanial.smalley/projects/jarvis_coding/event_python_writer python3 /Users/nathanial.smalley/projects/jarvis_coding/event_python_writer/hec_sender.py --product pingone_mfa --count 3)",
+      "Bash(PYTHONPATH=/Users/nathanial.smalley/projects/jarvis_coding/event_python_writer python3 /Users/nathanial.smalley/projects/jarvis_coding/event_python_writer/hec_sender.py --product aws_waf --count 3)",
+      "Bash(PYTHONPATH=/Users/nathanial.smalley/projects/jarvis_coding/event_python_writer python3 /Users/nathanial.smalley/projects/jarvis_coding/event_python_writer/hec_sender.py --product pingone_mfa --count 2)",
+      "Bash(pip install:*)",
+      "Bash(env)",
+      "Bash(.venv/bin/python:*)",
+      "Bash(__NEW_LINE__ echo \"Testing fixed generators one by one:\")",
+      "Bash(__NEW_LINE__ echo \"1. microsoft_azuread:\")",
+      "Bash(__NEW_LINE__ echo \"2. extrahop:\")",
+      "Bash(__NEW_LINE__ echo \"3. cisco_ise:\")",
+      "Bash(__NEW_LINE__ echo \"4. extreme_networks:\")",
+      "Bash(__NEW_LINE__ echo \"5. ubiquiti_unifi:\")",
+      "Bash(./fix_generators.sh)",
+      "Bash(touch:*)",
+      "Bash(PYTHONPATH=event_python_writer python3 event_python_writer/enterprise_attack_scenario.py)"
     ],
     "deny": []
   }

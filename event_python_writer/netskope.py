@@ -152,7 +152,7 @@ def _generate_location_info():
         "zipcode": str(random.randint(10000, 99999)) if country == "United States" else ""
     }
 
-def netskope_log(overrides: dict | None = None) -> str:
+def netskope_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Netskope event as JSON string.
     
@@ -309,7 +309,7 @@ def netskope_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 if __name__ == "__main__":
     # Generate sample logs for different event types

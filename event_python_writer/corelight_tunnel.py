@@ -75,7 +75,7 @@ def _generate_uid() -> str:
     chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     return 'C' + ''.join(random.choices(chars, k=17))
 
-def corelight_tunnel_log(overrides: dict | None = None) -> str:
+def corelight_tunnel_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Corelight tunnel log event as JSON string.
     
@@ -164,7 +164,7 @@ def corelight_tunnel_log(overrides: dict | None = None) -> str:
     if overrides:
         event.update(overrides)
     
-    return json.dumps(event, separators=(",", ":"))
+    return event
 
 def _get_service_from_port(port: int) -> str:
     """Get service name from port number"""

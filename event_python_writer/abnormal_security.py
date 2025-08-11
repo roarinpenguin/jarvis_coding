@@ -50,7 +50,7 @@ ATTACK_STRATEGIES = [
     "Authority Impersonation"
 ]
 
-def abnormal_security_log() -> str:
+def abnormal_security_log() -> Dict:
     """Generate a single Abnormal Security event log"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 1440))
@@ -87,7 +87,7 @@ def abnormal_security_log() -> str:
         **ATTR_FIELDS
     }
     
-    return json.dumps(event, separators=(',', ':'))
+    return event
 
 if __name__ == "__main__":
     # Generate sample events

@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from ipaddress import IPv4Address
 import json
 import random
+from typing import Dict
 
 # ────────────────── threat & auxiliary lookup tables ────────────────────
 _THREATS = [
@@ -126,7 +127,7 @@ _BAD_URLS = [
 ]
 
 # ───────────────────── public factory ──────────────────────
-def zscaler_log(overrides: dict | None = None) -> str:
+def zscaler_log(overrides: dict | None = None) -> Dict:
     """
     Return a single Zscaler NSS‑Web event as a JSON string.
 
@@ -182,7 +183,30 @@ def zscaler_log(overrides: dict | None = None) -> str:
     if random.random() < 0.10:
         record["bwthrottle"] = "Throttled"
 
-    return json.dumps(record)
+    return record
+
+
+def zscaler_nss_log(overrides: dict | None = None) -> str:
+    """
+    Return a single Zscaler NSS-Web event in URL-encoded format for marketplace parser.
+    This format is required by marketplace-zscalerinternetaccess-latest parser.
+    """
+    # Get the base record
+    record = zscaler_log(overrides)
+    
+    # Convert to URL-encoded format as expected by marketplace parser
+    import urllib.parse
+    
+    # Build the URL-encoded string
+    params = []
+    for key, value in record.items():
+        if value is not None and value != "":
+            # URL encode both key and value
+            encoded_key = urllib.parse.quote_plus(str(key))
+            encoded_value = urllib.parse.quote_plus(str(value))
+            params.append(f"{encoded_key}={encoded_value}")
+    
+    return "&".join(params)
 
 
 # ─────────────────── standalone sanity run ──────────────────
