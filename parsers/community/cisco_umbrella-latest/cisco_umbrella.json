@@ -1,79 +1,25 @@
 {
-  "attributes": {
-    "dataSource.category": "security",
-    "dataSource.name": "Cisco Umbrella",
-    "dataSource.vendor": "Cisco",
-    "metadata.product.vendor_name": "Cisco",
-    "metadata.product.name": "Cisco Umbrella",
-    "metadata.version": "1.0.0",
-    "category_uid": 4,
-    "category_name": "Network Activity",
-    "class_uid": 4003,
-    "class_name": "DNS Activity",
-    "type_uid": 400306,
-    "type_name": "DNS Activity: Traffic",
-    "activity_id": 6,
-    "activity_name": "Traffic"
+  // specify a time zone if the timestamps in your log are not in GMT
+  // timezone: "GMT-0800"
+  
+   patterns: {
+    tsPattern: "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"
   },
-  "formats": [
+  formats: [
     {
-      "format": "$unmapped.{parse=gron}$",
-      "rewrites": [
-        {
-          "input": "timestamp",
-          "output": "time",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "identity",
-          "output": "device.name",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "internal_ip",
-          "output": "src_endpoint.ip",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "domain",
-          "output": "query.hostname",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "external_ip",
-          "output": "dst_endpoint.ip",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "action",
-          "output": "disposition",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "query_type",
-          "output": "query.type",
-          "match": ".*",
-          "replace": "$0"
-        },
-        {
-          "input": "action",
-          "output": "status_id",
-          "match": "Allowed",
-          "replace": "1"
-        },
-        {
-          "input": "action",
-          "output": "status_id",
-          "match": "Blocked",
-          "replace": "2"
-        }
-      ]
+      format: "\"$timestamp=tsPattern$\",\"$PolicyIdentityLabel$\",\"$InternalClientIP$\",\"$ExternalClientIP$\",\"$DestinationIP$\",\"$ContentType$\",\"$Action$\",\"$url$\",\"$Referer$\",\"$UserAgent$\",\"$StatusCode$\",\"$RequestSize$\",\"$ResponseSize$\",\"$ResponseBodySize$\",\"$SHA-SHA256$\",\"$Categories$\",\"$AVDetections$\",\"$PUAs$\",\"$AMPDisposition$\",\"$AMPMalwareName$\",\"$AMPScore$\",\"$PolicyIdentityType$\",\"$BlockedCategories$\",\"$Identities$\",\"$IdentityTypes$\",\"$RequestMethod$\",\"$DLPStatus$\",\"$CertificateErrors$\",\"$Filename$\",\"$RulesetID$\",\"$RuleID$\",\"$DestinationsListIDs$\"",
+      attributes: {"dataSource.vendor": "Cisco", "dataSource.name": "Cisco Umbrella", "LogType": "proxylogs"},
+      halt: true
+    },
+    {
+      format: "\"$timestamp=tsPattern$\",\"$MostGranularIdentity$\",\"$Identities$\",\"$InternalIP$\",\"$ExternalIP$\",\"$Action$\",\"$QueryType$\",\"$ResponseCode$\",\"$Domain$\",\"$Categories$\",\"$MostGranularIdentityType$\",\"$IdentityTypes$\",\"$BlockedCategories$\"",
+      attributes: {"dataSource.vendor": "Cisco", "dataSource.name": "Cisco Umbrella", "LogType": "dnslogs"},
+      halt: true
+    },
+    {
+      format: "\"$ID$\",\"$timestamp=tsPattern$\",\"$Email$\",\"$User$\",\"$Type$\",\"$Action$\",\"$LoggedInFrom$\",\"$Before$\",\"$After$\"",
+      attributes: {"dataSource.vendor": "Cisco", "dataSource.name": "Cisco Umbrella", "LogType": "auditlogs"},
+      halt: true
     }
   ]
 }

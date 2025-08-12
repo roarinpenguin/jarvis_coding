@@ -157,7 +157,7 @@
              output:  "email.subject",
              match:   ".*",
              replace: "$0"
-           },,
+           },
            {
              input:   "toAddresses",
              output:  "email.delivered_to",

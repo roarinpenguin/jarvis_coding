@@ -4,10 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a security event generation and parsing project with two main components:
+This is a security event generation and parsing project with the following organized structure:
 
-1. **event_python_writer/**: Python generators that create synthetic security log events for 100+ vendors (AWS, Cisco, Microsoft, etc.)
-2. **parsers/community/**: JSON-based log parser configurations for 100+ security products
+1. **event_generators/**: Categorized Python generators for 100+ security vendors
+2. **parsers/community/**: JSON-based log parser configurations for 100+ security products  
+3. **scenarios/**: Attack scenario generators and configuration files
+4. **testing/**: Validation tools, bulk testing utilities, and test results
+5. **utilities/**: Standalone utility scripts and tools
 
 ## Development Commands
 
@@ -17,35 +20,112 @@ This is a security event generation and parsing project with two main components
 python -m venv .venv && source .venv/bin/activate
 
 # Install dependencies
-pip install -r event_python_writer/requirements.txt
+pip install -r event_generators/shared/requirements.txt
 
-# Run a specific generator
-python event_python_writer/<vendor>_<product>.py
+# Run generators by category
+python event_generators/cloud_infrastructure/<vendor>_<product>.py
+python event_generators/network_security/<vendor>_<product>.py
+python event_generators/endpoint_security/<vendor>_<product>.py
+python event_generators/identity_access/<vendor>_<product>.py
+python event_generators/email_security/<vendor>_<product>.py
+python event_generators/web_security/<vendor>_<product>.py
+python event_generators/infrastructure/<vendor>_<product>.py
 
 # Send logs to SentinelOne AI SIEM via HEC
-python event_python_writer/hec_sender.py --product <product_name> --count <number>
+python event_generators/shared/hec_sender.py --product <product_name> --count <number>
 
 # Send logs using specific marketplace parsers (RECOMMENDED for better OCSF compliance)
-python event_python_writer/hec_sender.py --marketplace-parser marketplace-awscloudtrail-latest --count <number>
+python event_generators/shared/hec_sender.py --marketplace-parser marketplace-awscloudtrail-latest --count <number>
 ```
 
 ### End-to-End Parser Testing & Validation
 ```bash
 # COMPREHENSIVE PARSER VALIDATION (RECOMMENDED)
 # Validates all 100 parsers using SDL API with field extraction analysis
-python final_parser_validation.py
+python testing/validation/final_parser_validation.py
 
 # Send events from all 100 generators to HEC for testing
-python event_python_writer/hec_sender.py --product <product_name> --count 5
+python event_generators/shared/hec_sender.py --product <product_name> --count 5
 
 # Test specific marketplace parsers with enhanced field extraction
-python event_python_writer/hec_sender.py --marketplace-parser marketplace-ciscofirewallthreatdefense-latest --count 5
-python event_python_writer/hec_sender.py --marketplace-parser marketplace-checkpointfirewall-latest --count 5
+python event_generators/shared/hec_sender.py --marketplace-parser marketplace-ciscofirewallthreatdefense-latest --count 5
+python event_generators/shared/hec_sender.py --marketplace-parser marketplace-checkpointfirewall-latest --count 5
 
-# Legacy testing tools (deprecated in favor of final_parser_validation.py)
-python event_python_writer/end_to_end_pipeline_tester.py
-python event_python_writer/comprehensive_field_matcher.py
-python event_python_writer/comprehensive_parser_effectiveness_tester.py
+# Bulk testing tools
+python testing/bulk_testing/bulk_event_sender.py
+python testing/bulk_testing/test_all_generators.py
+```
+
+## Directory Structure
+
+### Event Generators (Organized by Category)
+```
+event_generators/
+├── cloud_infrastructure/       # AWS, Google Cloud, Azure
+│   ├── aws_cloudtrail.py
+│   ├── aws_guardduty.py
+│   ├── aws_vpcflowlogs.py
+│   ├── google_cloud_dns.py
+│   └── google_workspace.py
+├── network_security/           # Firewalls, Network devices, NDR
+│   ├── cisco_firewall_threat_defense.py
+│   ├── paloalto_firewall.py
+│   ├── fortinet_fortigate.py
+│   ├── corelight_conn.py
+│   └── extrahop.py
+├── endpoint_security/          # Endpoint protection, EDR
+│   ├── crowdstrike_falcon.py
+│   ├── sentinelone_endpoint.py
+│   ├── microsoft_windows_eventlog.py
+│   └── jamf_protect.py
+├── identity_access/            # IAM, Authentication, PAM
+│   ├── okta_authentication.py
+│   ├── microsoft_azuread.py
+│   ├── cyberark_pas.py
+│   └── beyondtrust_passwordsafe.py
+├── email_security/             # Email security platforms
+│   ├── mimecast.py
+│   ├── proofpoint.py
+│   └── abnormal_security.py
+├── web_security/               # WAF, Web proxies, CDN
+│   ├── cloudflare_waf.py
+│   ├── zscaler.py
+│   ├── imperva_waf.py
+│   └── akamai_sitedefender.py
+├── infrastructure/             # IT management, Backup, DevOps
+│   ├── veeam_backup.py
+│   ├── github_audit.py
+│   └── buildkite.py
+└── shared/                     # Common utilities
+    ├── hec_sender.py
+    ├── s1_api_client.py
+    └── requirements.txt
+```
+
+### Testing & Validation
+```
+testing/
+├── validation/                 # Parser effectiveness testing
+│   ├── final_parser_validation.py
+│   └── final_parser_validation_results.json
+├── bulk_testing/              # Bulk event sending and testing
+│   ├── bulk_event_sender.py
+│   ├── test_all_generators.py
+│   └── systematic_event_sender.sh
+└── utilities/                 # Testing utilities and fixes
+    ├── fix_json_generators.py
+    └── validate_timestamps.py
+```
+
+### Attack Scenarios
+```
+scenarios/                      # Attack simulation scenarios
+├── enterprise_attack_scenario.py
+├── enterprise_attack_scenario_10min.py
+├── quick_scenario.py
+└── configs/                   # Scenario configuration files
+    ├── enterprise_attack_scenario.json
+    └── showcase_attack_scenario.json
 ```
 
 ## Available Event Generators (100+ Total)
