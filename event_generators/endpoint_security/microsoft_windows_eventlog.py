@@ -7,7 +7,7 @@ import json
 import random
 import time
 from datetime import datetime, timezone, timedelta
-from typing import Dict
+from typing import Dict, Any
 
 ATTR_FIELDS: Dict[str, str] = {
     "dataSource.vendor": "Microsoft",
@@ -87,7 +87,7 @@ def generate_ip() -> str:
     """Generate a random IP address"""
     return f"10.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def microsoft_windows_eventlog_log() -> str:
+def microsoft_windows_eventlog_log() -> Dict[str, Any]:
     """Generate a single Windows Event Log entry that matches parser patterns exactly"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 10))  # Last 10 minutes only
@@ -105,46 +105,58 @@ def microsoft_windows_eventlog_log() -> str:
     security_id = f"S-1-5-21-{random.randint(1000000000, 9999999999)}-{random.randint(1000000000, 9999999999)}-{random.randint(1000000000, 9999999999)}-{random.randint(1000, 9999)}"
     logon_type = random.choice(list(LOGON_TYPES.keys()))
     
-    # Build the EXACT format that matches the parser patterns as a single line with escaped sequences
+    # Build the EXACT format that matches the parser patterns using ACTUAL CR/LF and TAB characters
     # Based on parser regex: ".*Subject.*Account Name:\\\\t\\\\t$Account_Name$\\\\r\\\\n"  
-    # The \\\\t\\\\t means literal \t\t and \\\\r\\\\n means literal \r\n
+    # The parser expects real \r\n and \t characters, not escaped string literals
     
-    event_text = "An account was successfully logged on.\\r\\n\\r\\n"
-    event_text += "Subject:\\r\\n"
-    event_text += f"\\tSecurity ID:\\t\\t{security_id}\\r\\n"
-    event_text += f"\\tAccount Name:\\t\\t{user}\\r\\n"
-    event_text += f"\\tAccount Domain:\\t\\t{domain}\\r\\n"
-    event_text += f"\\tLogon ID:\\t\\t{logon_id}\\r\\n\\r\\n"
-    event_text += "Logon Information:\\r\\n"
-    event_text += f"\\tLogon Type:\\t\\t{logon_type}\\r\\n"
-    event_text += "\\tRestricted Admin Mode:\\t-\\r\\n"
-    event_text += "\\tVirtual Account:\\t\\tNo\\r\\n"
-    event_text += "\\tElevated Token:\\t\\tYes\\r\\n\\r\\n"
-    event_text += "Impersonation Level:\\t\\tImpersonation\\r\\n\\r\\n"
-    event_text += "New Logon:\\r\\n"
-    event_text += f"\\tSecurity ID:\\t\\t{security_id}\\r\\n"
-    event_text += f"\\tAccount Name:\\t\\t{user}\\r\\n"
-    event_text += f"\\tAccount Domain:\\t\\t{domain}\\r\\n"
-    event_text += f"\\tLogon ID:\\t\\t{logon_id}\\r\\n"
-    event_text += f"\\tLinked Logon ID:\\t\\t{logon_id}\\r\\n"
-    event_text += "\\tNetwork Account Name:\\t-\\r\\n"
-    event_text += "\\tNetwork Account Domain:\\t-\\r\\n"
-    event_text += f"\\tLogon GUID:\\t\\t{{{random.randint(10000000, 99999999):08x}-{random.randint(1000, 9999):04x}-{random.randint(1000, 9999):04x}-{random.randint(1000, 9999):04x}-{random.randint(100000000000, 999999999999):012x}}}\\r\\n\\r\\n"
-    event_text += "Process Information:\\r\\n"
-    event_text += f"\\tProcess ID:\\t\\t0x{random.randint(1000, 8000):x}\\r\\n"
-    event_text += "\\tProcess Name:\\t\\tC:\\\\Windows\\\\System32\\\\winlogon.exe\\r\\n\\r\\n"
-    event_text += "Network Information:\\r\\n"
-    event_text += f"\\tWorkstation Name:\\t{computer_name}\\r\\n"
-    event_text += f"\\tSource Network Address:\\t{generate_ip()}\\r\\n"
-    event_text += f"\\tSource Port:\\t\\t{random.randint(49152, 65535)}\\r\\n\\r\\n"
-    event_text += "Detailed Authentication Information:\\r\\n"
-    event_text += f"\\tLogon Process:\\t\\t{random.choice(['Advapi', 'User32', 'Kerberos'])}\\r\\n"
-    event_text += f"\\tAuthentication Package:\\t{random.choice(AUTH_PACKAGES)}\\r\\n"
-    event_text += "\\tTransited Services:\\t-\\r\\n"
-    event_text += "\\tPackage Name (NTLM only):\\t-\\r\\n"
-    event_text += f"\\tKey Length:\\t\\t{random.choice([0, 128, 256])}"
+    event_text = "An account was successfully logged on.\r\n\r\n"
+    event_text += "Subject:\r\n"
+    event_text += f"\tSecurity ID:\t\t{security_id}\r\n"
+    event_text += f"\tAccount Name:\t\t{user}\r\n"
+    event_text += f"\tAccount Domain:\t\t{domain}\r\n"
+    event_text += f"\tLogon ID:\t\t{logon_id}\r\n\r\n"
+    event_text += "Logon Information:\r\n"
+    event_text += f"\tLogon Type:\t\t{logon_type}\r\n"
+    event_text += "\tRestricted Admin Mode:\t-\r\n"
+    event_text += "\tVirtual Account:\t\tNo\r\n"
+    event_text += "\tElevated Token:\t\tYes\r\n\r\n"
+    event_text += "Impersonation Level:\t\tImpersonation\r\n\r\n"
+    event_text += "New Logon:\r\n"
+    event_text += f"\tSecurity ID:\t\t{security_id}\r\n"
+    event_text += f"\tAccount Name:\t\t{user}\r\n"
+    event_text += f"\tAccount Domain:\t\t{domain}\r\n"
+    event_text += f"\tLogon ID:\t\t{logon_id}\r\n"
+    event_text += f"\tLinked Logon ID:\t\t{logon_id}\r\n"
+    event_text += "\tNetwork Account Name:\t-\r\n"
+    event_text += "\tNetwork Account Domain:\t-\r\n"
+    event_text += f"\tLogon GUID:\t\t{{{random.randint(10000000, 99999999):08x}-{random.randint(1000, 9999):04x}-{random.randint(1000, 9999):04x}-{random.randint(1000, 9999):04x}-{random.randint(100000000000, 999999999999):012x}}}\r\n\r\n"
+    event_text += "Process Information:\r\n"
+    event_text += f"\tProcess ID:\t\t0x{random.randint(1000, 8000):x}\r\n"
+    event_text += "\tProcess Name:\t\tC:\\Windows\\System32\\winlogon.exe\r\n\r\n"
+    event_text += "Network Information:\r\n"
+    event_text += f"\tWorkstation Name:\t{computer_name}\r\n"
+    event_text += f"\tSource Network Address:\t{generate_ip()}\r\n"
+    event_text += f"\tSource Port:\t\t{random.randint(49152, 65535)}\r\n\r\n"
+    event_text += "Detailed Authentication Information:\r\n"
+    event_text += f"\tLogon Process:\t\t{random.choice(['Advapi', 'User32', 'Kerberos'])}\r\n"
+    event_text += f"\tAuthentication Package:\t{random.choice(AUTH_PACKAGES)}\r\n"
+    event_text += "\tTransited Services:\t-\r\n"
+    event_text += "\tPackage Name (NTLM only):\t-\r\n"
+    event_text += f"\tKey Length:\t\t{random.choice([0, 128, 256])}"
     
-    return event_text
+    # Return as JSON structure with the Windows Event Log content in a field
+    # This allows the parser to access the structured content as winEventLog.description
+    return {
+        "timestamp": event_time.isoformat(),
+        "eventSource": "Security",
+        "eventID": 4624,
+        "level": "Information",
+        "computer": computer_name,
+        "winEventLog": {
+            "id": 4624,
+            "description": event_text
+        }
+    }
 
 if __name__ == "__main__":
     # Generate sample events

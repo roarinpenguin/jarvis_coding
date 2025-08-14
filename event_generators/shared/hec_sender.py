@@ -664,6 +664,7 @@ JSON_PRODUCTS = {
     "proofpoint",
     "microsoft_365_mgmt_api",
     "netskope",
+    "microsoft_windows_eventlog",  # JSON wrapper to prevent line splitting
     "mimecast",
     "microsoft_azure_ad_signin",
     "microsoft_defender_email",
