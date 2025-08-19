@@ -257,6 +257,12 @@ site/
 
 # Claude Code Settings
 .claude/
+.claude*
+*.claude
+*claude.json
+claude_*
+.claudecode/
+.claudecode*
 
 # Keep important example files
 !README.md

@@ -6,7 +6,7 @@ from __future__ import annotations
 import random
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Dict
 
 ATTR_FIELDS: Dict[str, str] = {
@@ -98,40 +98,49 @@ def wiz_cloud_log() -> Dict:
         {"name": "FAILED", "status_id": 2, "severity_modifier": 1, "weight": 3}
     ]
     
-    # Service accounts
+    # Service accounts - Star Trek themed
     service_accounts = [
-        {"id": "xNgww7tONKtQK6zw", "name": "ax-us"},
-        {"id": "service_account_id", "name": "Integration"},
-        {"id": "yBhxz8uPOLrRL7xz", "name": "security-scanner"},
-        {"id": "zChyz9vQPMsRM8yz", "name": "backup-service"},
-        {"id": "aDizA0wRQNtRN9zA", "name": "monitoring"}
+        {"id": "xNgww7tONKtQK6zw", "name": "lcars-integration"},
+        {"id": "service_account_id", "name": "starfleet-scanner"},
+        {"id": "yBhxz8uPOLrRL7xz", "name": "transporter-backup"},
+        {"id": "zChyz9vQPMsRM8yz", "name": "holodeck-service"},
+        {"id": "aDizA0wRQNtRN9zA", "name": "bridge-monitoring"}
     ]
     
-    # Users (nullable)
+    # Users - Star Trek characters
     users = [
         None, None, None,  # Most events are service account based
-        {"id": "user123", "email": "john.doe@example.com"},
-        {"id": "user456", "email": "jane.smith@example.com"},
-        {"id": "admin789", "email": "admin@example.com"}
+        {"id": "user-picard", "email": "jean.picard@starfleet.corp"},
+        {"id": "user-laforge", "email": "jordy.laforge@starfleet.corp"},
+        {"id": "user-worf", "email": "worf.security@starfleet.corp"},
+        {"id": "user-data", "email": "data.android@starfleet.corp"},
+        {"id": "user-crusher", "email": "beverly.crusher@starfleet.corp"},
+        {"id": "user-troi", "email": "deanna.troi@starfleet.corp"},
+        {"id": "user-riker", "email": "william.riker@starfleet.corp"},
+        {"id": "user-wesley", "email": "wesley.crusher@starfleet.corp"}
     ]
     
-    # Source IPs
+    # Source IPs - Enterprise network ranges
     source_ips = [
-        "1.2.3.4", "5.6.7.8", "9.10.11.12",
-        "198.51.100.50", "203.0.113.75", "192.0.2.100"
+        "10.1.70.101", "10.1.70.102", "10.1.70.103",  # Bridge network
+        "10.2.70.201", "10.2.70.202", "10.2.70.203",  # Engineering
+        "172.16.50.100", "172.16.50.101", "192.168.1.150"  # Various departments
     ]
     
     # User agents
     user_agents = [
-        "node", "python-requests/2.31.0", "curl/7.88.1",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        "WizCLI/1.2.3", "terraform/1.5.0"
+        "LCARS/4.7.2", "python-requests/2.31.0", "curl/7.88.1",
+        "Mozilla/5.0 (Starfleet OS 2380; Win64; x64)",
+        "WizCLI/1.2.3", "terraform/1.5.0", "StarfleetAPI/2.0"
     ]
     
     # Generate event data
     event_id = str(uuid.uuid4())
     request_id = str(uuid.uuid4())
-    timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%fZ')[:-3] + 'Z'
+    # Generate events from last 10 minutes for recent timestamps
+    now = datetime.now(timezone.utc)
+    event_time = now - timedelta(seconds=random.randint(0, 600))
+    timestamp = event_time.strftime('%Y-%m-%dT%H:%M:%S.%fZ')[:-3] + 'Z'
     action_info = random.choice(actions)
     status = random.choices(statuses, weights=[s["weight"] for s in statuses], k=1)[0]
     service_account = random.choice(service_accounts)
@@ -157,9 +166,15 @@ def wiz_cloud_log() -> Dict:
             "userpoolID": f"us-east-2_{random.randint(1000000000, 9999999999)}"
         }
     elif "User" in action_info["action"]:
+        new_user = random.choice([
+            "guinan.tenforward@starfleet.corp",
+            "q.continuum@starfleet.corp",
+            "borg.collective@starfleet.corp",
+            "spot.cat@starfleet.corp"
+        ])
         action_parameters = {
-            "userEmail": f"user{random.randint(100, 999)}@example.com",
-            "role": random.choice(["admin", "user", "readonly"]),
+            "userEmail": new_user,
+            "role": random.choice(["captain", "commander", "ensign", "readonly"]),
             "permissions": random.choice([["read"], ["read", "write"], ["admin"]])
         }
     
@@ -176,8 +191,8 @@ def wiz_cloud_log() -> Dict:
     # Adjust severity based on status
     final_severity = min(6, action_info["severity"] + status["severity_modifier"])
     
-    # Create OCSF-compliant event
-    event = {
+    # Create the body content with OCSF-compliant event
+    body_content = {
         "timestamp": timestamp,
         "time": int(time.time() * 1000),
         "class_uid": 8002,
@@ -209,7 +224,8 @@ def wiz_cloud_log() -> Dict:
         
         "cloud": {
             "provider": "Wiz",
-            "region": "us-east-1"
+            "region": "alpha-quadrant-1",
+            "account": "starfleet-command"
         },
         
         "status": status["name"],
@@ -252,8 +268,34 @@ def wiz_cloud_log() -> Dict:
         **ATTR_FIELDS
     }
     
+    # Wrap in Record and body structure as expected by parser
+    event = {
+        "Record": {
+            "eventTime": timestamp,
+            "eventName": action_info["action"],
+            "eventType": action_info["activity_name"],
+            "eventID": event_id,
+            "requestID": request_id,
+            "userIdentity": {
+                "type": "Service" if not user else "User",
+                "principalId": service_account["id"] if not user else user["id"],
+                "accountId": "starfleet-command",
+                "userName": service_account["name"] if not user else user["email"].split("@")[0]
+            },
+            "sourceIPAddress": source_ip,
+            "userAgent": user_agent,
+            "requestParameters": action_parameters,
+            "responseElements": {
+                "status": status["name"],
+                "message": action_info["desc"]
+            } if status["name"] == "FAILED" else None
+        },
+        "body": body_content
+    }
+    
     return event
 
 
 if __name__ == "__main__":
-    print(wiz_cloud_log())
+    import json
+    print(json.dumps(wiz_cloud_log()))

@@ -1,45 +1,22 @@
 {
   "attributes": {
-    "dataSource.category": "security",
-    "dataSource.name": "Cloud Security",
     "dataSource.vendor": "Wiz",
-    "metadata.product.name": "Cloud Security",
-    "metadata.product.vendor_name": "Wiz",
-    "metadata.version": "1.0.0"
+    "dataSource.name": "Wiz Cloud Security",
+    "dataSource.category": "security",
+    "dataSource.technology": "cloud_security",
+    "source": "wiz_cloud"
   },
-  "formats": [
+  // specify a time zone if the timestamps in your log are not in GMT
+  // timezone: "GMT-0800"
+  
+  formats: [
     {
-      "format": "$unmapped.{parse=gron}$",
-      "rewrites": [
-        {
-          "input": "unmapped.timestamp",
-          "output": "timestamp",
-          "match": ".*",
-          "replace": "$0"
-        }
-      ]
+      id: "wiz",
+      format: "\\{\"Records\":\\[$=json{parse=dottedJson}{attrBlacklist=body}$"
+    },
+    {
+      id: "wiz",
+      format: ".*\"body\":\"$body.{parse=escapedJson}$"
     }
-  ],
-  "mappings": {
-    "version": 1,
-    "mappings": [
-      {
-        "predicate": "true",
-        "transformations": [
-          {
-            "copy": {
-              "from": "unmapped.timestamp",
-              "to": "time"
-            }
-          },
-          {
-            "cast": {
-              "field": "time",
-              "type": "iso8601TimestampToEpochSec"
-            }
-          }
-        ]
-      }
-    ]
-  }
+  ]
 }

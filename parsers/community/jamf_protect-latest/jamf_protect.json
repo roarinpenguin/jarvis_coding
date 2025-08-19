@@ -54,4 +54,4 @@
       ]
     }
   ]
-}
+  eventType="GatekeeperAlert" computerId="ENTERPRISE-BRIDGE-01" user="deanna.troi" processName="/usr/bin/ssh" sha256="6d6f0cf130381c869d5d4d508c3426690d81a46522cf1575f3d812b5c48e33ca" verdict="quarantined" message="Unsigned application blocked" pid="50499" parentPid="50027" domain="starfleet.corp" timestamp="2025-08-13T20:56:27Z"}

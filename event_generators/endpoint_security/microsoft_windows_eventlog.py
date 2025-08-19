@@ -87,7 +87,7 @@ def generate_ip() -> str:
     """Generate a random IP address"""
     return f"10.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def microsoft_windows_eventlog_log() -> Dict[str, Any]:
+def microsoft_windows_eventlog_log() -> str:
     """Generate a single Windows Event Log entry that matches parser patterns exactly"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 10))  # Last 10 minutes only
@@ -144,19 +144,11 @@ def microsoft_windows_eventlog_log() -> Dict[str, Any]:
     event_text += "\tPackage Name (NTLM only):\t-\r\n"
     event_text += f"\tKey Length:\t\t{random.choice([0, 128, 256])}"
     
-    # Return as JSON structure with the Windows Event Log content in a field
-    # This allows the parser to access the structured content as winEventLog.description
-    return {
-        "timestamp": event_time.isoformat(),
-        "eventSource": "Security",
-        "eventID": 4624,
-        "level": "Information",
-        "computer": computer_name,
-        "winEventLog": {
-            "id": 4624,
-            "description": event_text
-        }
-    }
+    # Convert \r\n to literal \\r\\n for single-line transmission to /raw endpoint
+    # This prevents line splitting while preserving the format the parser expects
+    event_text_escaped = event_text.replace('\r\n', '\\r\\n').replace('\t', '\\t')
+    
+    return event_text_escaped
 
 if __name__ == "__main__":
     # Generate sample events
