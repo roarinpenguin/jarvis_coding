@@ -76,7 +76,14 @@ EXTERNAL_DOMAINS = [
     "suspicious-domain.com", "phishing-site.net", "malware-host.org"
 ]
 
-USERS = ["john.doe", "jane.smith", "bob.jones", "alice.williams", "charlie.brown", "admin"]
+USERS = [
+    "jean.picard", "william.riker", "data.android", "geordi.laforge", "worf.security", 
+    "deanna.troi", "beverly.crusher", "wesley.crusher", "tasha.yar", "guinan.bartender",
+    "james.kirk", "spock.science", "leonard.mccoy", "montgomery.scott", "nyota.uhura",
+    "pavel.chekov", "hikaru.sulu", "benjamin.sisko", "kira.nerys", "julian.bashir",
+    "jadzia.dax", "miles.obrien", "odo.security", "kathryn.janeway", "chakotay.commander",
+    "tuvok.security", "tom.paris", "belanna.torres", "harry.kim", "seven.of.nine", "admin"
+]
 
 # Subject lines by category
 SUBJECT_TEMPLATES = {

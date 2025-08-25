@@ -212,9 +212,18 @@ def microsoft_azure_ad_signin_log(overrides: dict | None = None) -> Dict:
     now = datetime.now(timezone.utc)
     created_time = now - timedelta(seconds=random.randint(0, 300))
     
-    # Select user and application
+    # Select user and application (allow override of user)
     user_display_name, user_email, user_id = random.choice(USERS)
     app_id, app_name = random.choice(AZURE_APPLICATIONS)
+    
+    # Check for user overrides
+    if overrides and "properties" in overrides:
+        if "userPrincipalName" in overrides["properties"]:
+            user_email = overrides["properties"]["userPrincipalName"]
+        if "userDisplayName" in overrides["properties"]:
+            user_display_name = overrides["properties"]["userDisplayName"]
+    elif overrides and "userPrincipalName" in overrides:
+        user_email = overrides["userPrincipalName"]
     
     # Generate result (success/failure)
     result_type = random.choice(RESULT_TYPES)

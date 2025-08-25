@@ -49,9 +49,20 @@ EVENT_TYPES = [
 SOURCE_TYPES = ["Application", "Service", "Process", "User", "System", "Network"]
 
 # Users and computers
-USERS = ["john.doe", "jane.smith", "admin", "bob.jones", "alice.williams", "service_account", "charlie.brown"]
-COMPUTERS = ["DESKTOP-ABC123", "LAPTOP-XYZ789", "SERVER-DC01", "WORKSTATION-005", "DEV-MACHINE-02"]
-DOMAINS = ["CORP", "INTERNAL", "LOCAL"]
+USERS = [
+    "jean.picard", "william.riker", "data.android", "geordi.laforge", "worf.security", 
+    "deanna.troi", "beverly.crusher", "wesley.crusher", "tasha.yar", "guinan.bartender",
+    "james.kirk", "spock.science", "leonard.mccoy", "montgomery.scott", "nyota.uhura",
+    "pavel.chekov", "hikaru.sulu", "benjamin.sisko", "kira.nerys", "julian.bashir",
+    "jadzia.dax", "miles.obrien", "odo.security", "kathryn.janeway", "chakotay.commander",
+    "tuvok.security", "tom.paris", "belanna.torres", "harry.kim", "seven.of.nine", "admin"
+]
+COMPUTERS = [
+    "ENTERPRISE-NCC1701", "DEFIANT-NX74205", "VOYAGER-NCC74656", "DISCOVERY-NCC1031", 
+    "BRIDGE-01", "ENGINEERING-CORE", "SICKBAY-TERMINAL", "HOLODECK-02", "TRANSPORTER-ROOM1",
+    "READY-ROOM", "TEN-FORWARD", "STELLAR-CARTOGRAPHY", "ASTROMETRICS-LAB"
+]
+DOMAINS = ["STARFLEET", "FEDERATION", "CORP"]
 
 # Common applications and processes
 APPLICATIONS = [
@@ -93,7 +104,7 @@ def cyberark_pas_log(overrides: dict | None = None) -> str:
     Pass `overrides` to force any field to a specific value:
         cyberark_pas_log({"userName": "specific_user"})
     """
-    # Select random attributes
+    # Select random attributes (allow overrides)
     policy_name, policy_category = random.choice(POLICIES)
     event_type = random.choice(EVENT_TYPES)
     source_type = random.choice(SOURCE_TYPES)
@@ -101,6 +112,12 @@ def cyberark_pas_log(overrides: dict | None = None) -> str:
     computer = random.choice(COMPUTERS)
     domain = random.choice(DOMAINS)
     app_info = random.choice(APPLICATIONS)
+    
+    # Apply user override if provided
+    if overrides and "user" in overrides:
+        user = overrides["user"]
+    elif overrides and "userName" in overrides:
+        user = overrides["userName"]
     
     # Generate timestamps
     now = datetime.now(timezone.utc)

@@ -65,7 +65,7 @@ def abnormal_security_log() -> Dict:
         "threat_type": threat_type,
         "severity": severity,
         "sender_email": f"{random.choice(['john', 'admin', 'noreply', 'support', 'finance'])}@{random.choice(['suspicious-domain.com', 'company-lookalike.com', 'legitcompany.com'])}",
-        "recipient_email": f"user{random.randint(1, 100)}@company.com",
+        "recipient_email": f"user{random.randint(1, 100)}@starfleet.corp",
         "subject": random.choice([
             "Urgent: Verify Your Account",
             "Invoice #" + str(random.randint(10000, 99999)) + " - Payment Required",

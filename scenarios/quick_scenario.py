@@ -276,9 +276,12 @@ class QuickScenarioGenerator:
             },
             "identity": {
                 "resultType": "50126",  # Failed login
-                "ipAddress": "185.220.101.42",  # Suspicious IP
-                "userPrincipalName": self.compromised_user,
-                "riskLevelAggregated": "high",
+                "callerIpAddress": "185.220.101.42",  # Suspicious IP
+                "properties": {
+                    "userPrincipalName": self.compromised_user,
+                    "userDisplayName": "Jean Picard",
+                    "riskLevelAggregated": "high"
+                },
                 "location": "Romulus"
             },
             "endpoint": {
@@ -315,7 +318,7 @@ class QuickScenarioGenerator:
             "privileged": {
                 "action": "access_granted",
                 "vault": "starfleet_classified",
-                "user": self.compromised_user,
+                "user": get_username_from_email(self.compromised_user),
                 "safe": "warp_core_codes",
                 "risk_score": 85
             },

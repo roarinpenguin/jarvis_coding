@@ -96,7 +96,14 @@ REGIONS = {
 }
 
 # Users and devices
-USERS = ["john.doe", "jane.smith", "bob.jones", "alice.williams", "charlie.brown", "diana.prince"]
+USERS = [
+    "jean.picard", "william.riker", "data.android", "geordi.laforge", "worf.security", 
+    "deanna.troi", "beverly.crusher", "wesley.crusher", "tasha.yar", "guinan.bartender",
+    "james.kirk", "spock.science", "leonard.mccoy", "montgomery.scott", "nyota.uhura",
+    "pavel.chekov", "hikaru.sulu", "benjamin.sisko", "kira.nerys", "julian.bashir",
+    "jadzia.dax", "miles.obrien", "odo.security", "kathryn.janeway", "chakotay.commander",
+    "tuvok.security", "tom.paris", "belanna.torres", "harry.kim", "seven.of.nine"
+]
 DEVICE_TYPES = ["Windows", "Mac", "iOS", "Android", "Linux", "ChromeOS"]
 BROWSERS = ["Chrome", "Firefox", "Safari", "Edge", "Internet Explorer"]
 
