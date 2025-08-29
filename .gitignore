@@ -255,7 +255,9 @@ site/
 # ======================
 # Add project-specific patterns here
 
-# Claude Code Settings
+# Claude Code Settings and AI-related files
+# ==========================================
+# IMPORTANT: Keep all AI-related data local only
 .claude/
 .claude*
 *.claude
@@ -263,10 +265,28 @@ site/
 claude_*
 .claudecode/
 .claudecode*
+CLAUDE.md
+.claude.md
+claude.md
+*_claude.md
+*claude*.md
+ai_instructions.md
+ai_context.md
+.ai/
+.anthropic/
+anthropic_*
+.openai/
+openai_*
+.gemini/
+gemini_*
+.llm/
+llm_*
+ai_*
+assistant_*
+copilot_*
 
 # Keep important example files
 !README.md
-!CLAUDE.md
 !requirements.txt
 !detections.conf
 

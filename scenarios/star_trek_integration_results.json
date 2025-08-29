@@ -1,0 +1,72 @@
+[
+  {
+    "generator": "aws_route53",
+    "category": "cloud_infrastructure",
+    "format_correct": true,
+    "star_trek_integrated": true,
+    "recent_timestamp": true,
+    "override_support": false,
+    "sample_output": "2025-08-25T17:59:39Z Route53 queryName=\"sickbay.enterprise.starfleet.corp\" queryType=\"NS\" clientIp=\"28.89.159.44\" edgeLocation=\"SFO53-P1\" responseCode=\"NOERROR\" resolverEndpointId=\"rslvr-endpt-5258\"",
+    "errors": []
+  },
+  {
+    "generator": "aws_vpc_dns",
+    "category": "cloud_infrastructure",
+    "format_correct": true,
+    "star_trek_integrated": true,
+    "recent_timestamp": false,
+    "override_support": false,
+    "sample_output": "{'version': '1.100000', 'account-id': '624568752495', 'interface-id': 'eni-0105e2c8', 'srcaddr': '10.91.132.115', 'dstaddr': '169.254.169.253', 'srcport': 64712, 'dstport': 53, 'protocol': 17, 'packets': 1, 'bytes': 225, 'windowstart': 1756136139, 'windowend': 1756136199, 'action': 'ACCEPT', 'flowlogstatus': 'OK', 'query_name': 'sickbay.starfleet.corp', 'query_type': 'TXT', 'query_class': 'IN', 'rcode': 'TIMEOUT', 'rdata': '', 'answers': 0, 'transport': 'UDP', 'vpc-id': 'vpc-04e7f2d7', 'subnet-i",
+    "errors": []
+  },
+  {
+    "generator": "microsoft_365_collaboration",
+    "category": "identity_access",
+    "format_correct": true,
+    "star_trek_integrated": true,
+    "recent_timestamp": true,
+    "override_support": true,
+    "sample_output": "{'TimeStamp': '2025-08-25T18:01:39Z', 'UserId': 'geordi.laforge@starfleet.corp', 'Operation': 'AccessRequestApproved', 'SiteUrl': 'https://starfleet-my.sharepoint.com/sites/Engineering', 'ObjectId': '/Personal Logs/FirstContact.pdf', 'FileName': 'FirstContact.pdf', 'Details': 'User geordi.laforge@starfleet.corp accessrequestapproved for FirstContact.pdf', 'UserAgent': 'Microsoft SharePoint Online', 'ClientIP': '43.212.197.31', 'Workload': 'SharePoint', 'RecordType': 6, 'Version': '1', 'dataSourc",
+    "errors": []
+  },
+  {
+    "generator": "microsoft_365_defender",
+    "category": "identity_access",
+    "format_correct": true,
+    "star_trek_integrated": true,
+    "recent_timestamp": true,
+    "override_support": true,
+    "sample_output": "{'Timestamp': '2025-08-25T17:59:39Z', 'DeviceName': 'ENTERPRISE-ENG-01', 'DeviceId': '001B6B6DB7AB9CC7', 'AccountName': 'service', 'AccountDomain': 'FEDERATION', 'ActionType': 'FileDeleted', 'dataSource.vendor': 'Microsoft', 'dataSource.name': 'Microsoft 365 Defender', 'dataSource.category': 'security', 'FileName': 'tricorder.exe', 'FolderPath': 'C:\\\\Users\\\\picard\\\\Downloads', 'SHA1': 'ae92ae94df4de29efde1188fd09101a0cf3b4e78', 'MD5': '4b22970e71199c1ba140e091ff50b993'}",
+    "errors": []
+  },
+  {
+    "generator": "cisco_duo",
+    "category": "network_security",
+    "format_correct": true,
+    "star_trek_integrated": true,
+    "recent_timestamp": true,
+    "override_support": false,
+    "sample_output": "{'timestamp': '2025-08-25T18:02:39Z', 'time': 1756144959311, 'class_uid': '3002', 'class_name': 'Authentication', 'category_uid': '3', 'category_name': 'Identity & Access Management', 'activity_id': '1', 'activity_name': 'Logon', 'type_uid': '300201', 'severity_id': 3, 'status_id': 2, 'user': {'name': 'bob', 'account_uid': 'bob', 'account_type': 'User'}, 'src_endpoint': {'ip': '203.0.113.180', 'location': {'desc': 'Chicago, US', 'city': 'Chicago', 'country': 'US'}}, 'auth_protocol': 'passcode', ",
+    "errors": []
+  },
+  {
+    "generator": "cisco_fmc",
+    "category": "network_security",
+    "format_correct": true,
+    "star_trek_integrated": true,
+    "recent_timestamp": true,
+    "override_support": true,
+    "sample_output": "{'timestamp': '2025-08-25T17:57:39.313516+00:00', 'event_id': 6317570, 'event_type': 'Connection', 'event_subtype': 'CONNECTION_EVENT', 'severity': 'Info', 'action': 'Allow', 'device_name': 'ENTERPRISE-FTD-MEDICAL-1', 'device_ip': '144.206.255.116', 'policy_name': 'StarfleetSecurityPolicy_4', 'rule_name': 'Directive_90', 'source_ip': '192.170.140.83', 'destination_ip': '223.235.220.165', 'source_port': 9744, 'destination_port': 80, 'protocol': 'ESP', 'source_country': 'JP', 'destination_country'",
+    "errors": []
+  },
+  {
+    "generator": "google_workspace",
+    "category": "cloud_infrastructure",
+    "format_correct": true,
+    "star_trek_integrated": true,
+    "recent_timestamp": false,
+    "override_support": false,
+    "sample_output": "{'kind': 'admin#reports#activity', 'id': {'time': '2025-08-24T18:38:39.316491+00:00', 'uniqueQualifier': '8439701097154030417', 'applicationName': 'gmail', 'customerId': 'C01abc123'}, 'etag': '\"9f286e21a18f424d9a1da59ea0339e9d\"', 'actor': {'email': 'alice.williams@company.com', 'profileId': '456029745837919904'}, 'ipAddress': '10.114.140.130', 'events': [{'type': 'email_security', 'name': 'suspicious_email_attachment', 'parameters': [{'name': 'setting_name', 'value': 'forwarding'}, {'name': 'set",
+    "errors": []
+  }
+]

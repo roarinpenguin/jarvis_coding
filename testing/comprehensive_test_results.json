@@ -1,0 +1,3902 @@
+{
+  "timestamp": "2025-08-26T00:02:09.326711+00:00",
+  "summary": {
+    "total_generators": 106,
+    "successful": 106,
+    "failed": 0,
+    "success_rate": 100.0,
+    "star_trek_integration_rate": 59.43396226415094,
+    "recent_timestamp_rate": 17.92452830188679,
+    "parser_coverage_rate": 72.64150943396226,
+    "test_timestamp": "2025-08-26T00:02:09.353975+00:00"
+  },
+  "generators": {
+    "aws_cloudtrail": {
+      "name": "aws_cloudtrail",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/aws_cloudtrail.py",
+      "status": "excellent",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 23
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "enterprise",
+          "data",
+          "troi"
+        ]
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09Z"
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'eventCategory': 'Insight', 'eventName': 'DescribeInstances', 'eventSource': 'ec2.amazonaws.com', 'eventTime': '2025-08-26T00:02:09Z', 'eventVersion': '1.09', 'eventID': '03dd2438-06d7-45f1-9fc0-11692cc730ca', 'eventType': 'AwsApiCall', 'awsRegion': 'beta-quadrant-2', 'readOnly': True, 'managementEvent': True, 'recipientAccountId': '123456789012', 'sourceIPAddress': '113.121.226.230', 'userAgent': 'Starfleet-Console/1.0 LCARS/2.4.7', 'tlsDetails': {'tlsVersion': 'TLSv1.3', 'cipherSuite': 'ECDHE-RSA-AES128-GCM-SHA256', 'clientProvidedHostHeader': 'ec2.amazonaws.com'}, 'userIdentity': {'type': 'IAMUser', 'principalId': 'AIDAENTERPRISED8433', 'arn': 'arn:aws:iam::123456789012:user/deanna.troi', 'accountId': '123456789012', 'accessKeyId': 'AKIA122E33EFD26A42D2', 'userName': 'deanna.troi', 'sessionContext': {'sessionIssuer': {'type': 'Role', 'principalId': 'AROACOUNSELO', 'arn': 'arn:aws:iam::123456789012:role/counselor', 'userName': 'counselor', 'accountId': '123456789012'}, 'attributes':",
+      "issues": [],
+      "recommendations": [
+        "Create parser configuration"
+      ]
+    },
+    "aws_elasticloadbalancer": {
+      "name": "aws_elasticloadbalancer",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/aws_elasticloadbalancer.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 17
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.331010Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/aws_elasticloadbalancer_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09.331010Z', 'vendor': 'Aws', 'product': 'Elasticloadbalancer Logs', 'version': '1.0', 'event_type': 'security_event', 'message': 'Sample Aws Elasticloadbalancer Logs event at 2025-08-26T00:02:09.331010Z', 'severity': 'medium', 'category': 'security', 'source_ip': '192.168.162.74', 'user': 'user3530', 'device': 'device-509', 'log_level': 'INFO', 'event_id': 92956, 'session_id': 'sess_550616', 'class_name': 'Security Event', 'activity_name': 'Log Generated', 'risk_score': 3}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "aws_guardduty": {
+      "name": "aws_guardduty",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/aws_guardduty.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 14
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/aws_guardduty_logs-latest"
+      },
+      "sample_output": "{'schemaVersion': '2.0', 'accountId': '458043710881', 'region': 'ap-south-1', 'partition': 'aws', 'id': '555cb63f-13cb-4833-9ee4-7d83a3126a1b', 'arn': 'arn:aws:guardduty:ap-south-1::4f959285ef044862b13df59c5f68310b:detector/4f959285ef044862b13df59c5f68310b/finding/555cb63f-13cb-4833-9ee4-7d83a3126a1b', 'type': 'Recon:EC2/PortProbeUnprotectedPort', 'title': 'EC2 instance attempting connection to a blackholed IP address.', 'description': 'EC2 instance is attempting to communicate with a blackholed IP on port 80.', 'severity': 3.3, 'createdAt': '2025-08-26T00:02:09Z', 'updatedAt': '2025-08-26T00:02:09Z', 'resource': {'resourceType': 'Instance', 'instanceDetails': {'instanceId': 'i-f973fcbb', 'instanceType': 'm5.large', 'platform': None, 'networkInterfaces': [{'networkInterfaceId': 'eni-9b3518e7', 'privateIpAddress': '138.23.232.164', 'publicIp': '235.138.195.9', 'ipv6Addresses': []}], 'tags': []}}, 'service': {'serviceName': 'guardduty', 'detectorId': '4f959285ef044862b13df59c5f68310b', '",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "aws_route53": {
+      "name": "aws_route53",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/aws_route53.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/aws_route53-latest"
+      },
+      "sample_output": "2025-08-26T00:01:09Z Route53 queryName=\"microsoft.com\" queryType=\"CNAME\" clientIp=\"185.140.131.214\" edgeLocation=\"SFO53-P1\" responseCode=\"NOERROR\" resolverEndpointId=\"rslvr-endpt-8612\"",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "aws_vpc_dns": {
+      "name": "aws_vpc_dns",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/aws_vpc_dns.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 31
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25 21:56:09+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/aws_vpc_dns_logs-latest"
+      },
+      "sample_output": "{'version': '1.100000', 'account-id': '194970616793', 'interface-id': 'eni-00b1911d', 'srcaddr': '10.6.66.131', 'dstaddr': '169.254.169.253', 'srcport': 65054, 'dstport': 53, 'protocol': 17, 'packets': 1, 'bytes': 233, 'windowstart': 1756158969, 'windowend': 1756159029, 'action': 'ACCEPT', 'flowlogstatus': 'OK', 'query_name': 'starfleet.corp', 'query_type': 'CNAME', 'query_class': 'IN', 'rcode': 'NXDOMAIN', 'rdata': '', 'answers': 0, 'transport': 'UDP', 'vpc-id': 'vpc-04072f7b', 'subnet-id': 'subnet-043aa035', 'instance-id': 'i-04ddecdf', 'firewall_subnet_id': 'subnet-04b7018d', 'firewall_rule_action': 'PASS', 'threat_list_name': '', 'threat_list_id': '', 'dataSource.vendor': 'AWS', 'dataSource.name': 'AWS VPC DNS', 'dataSource.category': 'network'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "aws_vpcflowlogs": {
+      "name": "aws_vpcflowlogs",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/aws_vpcflowlogs.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Plain Text",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "2 944825074601 eni-eed6177987a6427ab 10.66.83.156 203.0.113.212 51816 3389 6 300 31119 1756166502 1756166529 ACCEPT OK",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "aws_waf": {
+      "name": "aws_waf",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/aws_waf.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 7
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/aws_waf-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09Z', 'formatVersion': '1.0', 'webaclId': 'arn:aws:wafv2:us-east-1:364342064304:regional/webacl/ExampleWebACL-1102', 'ruleGroupId': 'BotControlRules', 'terminatingRuleType': '', 'action': 'ALLOW', 'httpRequest': {'clientIp': '53.160.136.230', 'country': 'CN', 'uri': '/checkout', 'args': 'file=../../../../etc/passwd', 'httpVersion': 'HTTP/1.1', 'httpMethod': 'GET', 'headers': [{'name': 'Host', 'value': 'example7.com'}, {'name': 'User-Agent', 'value': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'}, {'name': 'X-Forwarded-For', 'value': '196.59.218.144'}]}}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "google_cloud_dns": {
+      "name": "google_cloud_dns",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/google_cloud_dns.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 11
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/google_cloud_dns_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T03:24:09.331864+00:00Z', 'insertId': 'dns_6507756607540378', 'resource': {'type': 'gce_instance', 'labels': {'project_id': 'staging-api-789012', 'instance_id': '8935340815211393477', 'zone': 'us-east1-a'}}, 'logName': 'projects/dev-analytics-345678/logs/dns.googleapis.com%2Fdns_queries', 'severity': 'INFO', 'jsonPayload': {'queryName': 'gmail.com', 'queryType': 'AAAA', 'queryClass': 'IN', 'responseCode': 'NXDOMAIN', 'sourceIP': '64.200.128.53', 'protocol': 'TCP', 'ednsClientSubnet': '35.163.214.214/24', 'serverIP': '8.8.8.8', 'querySize': 122, 'responseSize': 75, 'latency': '358ms', 'cached': False, 'dnssecValidated': True, 'recursionAvailable': True, 'recursionDesired': True, 'authenticatedData': True, 'checkingDisabled': False, 'answersReturned': 0, 'authoritativeAnswer': True, 'geoLocation': {'country': 'US', 'region': 'Tokyo', 'city': 'Tokyo', 'latitude': -52.947862, 'longitude': 0.425581}}, 'httpRequest': {'requestMethod': 'POST', 'requestUrl': 'https://d",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "google_workspace": {
+      "name": "google_workspace",
+      "category": "cloud_infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/cloud_infrastructure/google_workspace.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 10
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/google_workspace_logs-latest"
+      },
+      "sample_output": "{'kind': 'admin#reports#activity', 'id': {'time': '2025-08-25T00:26:09.332049+00:00', 'uniqueQualifier': '1366318244709399939', 'applicationName': 'drive', 'customerId': 'C01abc123'}, 'etag': '\"c4edebbcbc504488894fa4b21cb8f3bb\"', 'actor': {'email': 'jane.smith@company.com', 'profileId': '214472969104657247'}, 'ipAddress': '136.164.28.99', 'events': [{'type': 'access', 'name': 'view', 'parameters': [{'name': 'doc_id', 'value': '98552281d1c0444f862b8585c1a16b5c'}, {'name': 'doc_title', 'value': 'Presentation.pptx'}, {'name': 'doc_type', 'value': 'document'}, {'name': 'visibility', 'value': 'people_with_link'}, {'name': 'owner', 'value': 'jane.smith@company.com'}, {'name': 'primary_event', 'boolValue': True}]}], 'dataSource.vendor': 'Google', 'dataSource.name': 'Google Workspace', 'dataSource.category': 'security', 'ownerDomain': 'company.com'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "abnormal_security": {
+      "name": "abnormal_security",
+      "category": "email_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/email_security/abnormal_security.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 20
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T18:45:09.332201+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/abnormal_security_logs-latest"
+      },
+      "sample_output": "{'event_id': 'abn-357817', 'timestamp': '2025-08-25T18:45:09.332201+00:00', 'threat_type': 'Credential Phishing', 'severity': 'high', 'sender_email': 'john@legitcompany.com', 'recipient_email': 'user57@starfleet.corp', 'subject': 'Updated Benefits Information', 'attack_strategy': ['Domain Impersonation', 'Name Impersonation'], 'remediation_action': 'Moved to Junk', 'confidence_score': 0.93, 'impersonated_party': 'IT Department', 'attack_vector': 'link', 'is_internal': True, 'messages_delivered': 6, 'messages_remediated': 7, 'first_seen': '2025-08-24T22:45:09.332201+00:00', 'last_seen': '2025-08-25T18:45:09.332201+00:00', 'dataSource.vendor': 'Abnormal', 'dataSource.name': 'Abnormal Security', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "microsoft_defender_email": {
+      "name": "microsoft_defender_email",
+      "category": "email_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/email_security/microsoft_defender_email.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 1
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "enterprise"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'records': [{'time': '2025-08-26T00:02:09.332391Z', 'resourceId': '/subscriptions/91095ef2-c6ed-4773-837f-de49f1bf6808/resourcegroups/rg-security/providers/microsoft.operationalinsights/workspaces/security-workspace', 'operationName': 'EmailEvents', 'operationVersion': '1.0', 'category': 'EmailEvents', 'tenantId': '0e24fe40-5fa2-4f57-93e1-f33b463e4446', 'resultType': 'Success', 'resultSignature': 'EmailProcessed', 'callerIpAddress': '10.114.96.200', 'correlationId': '4148e3a4-d46c-4d5d-a079-37bf6819c999', 'identity': 'System', 'Level': 4, 'location': 'Global', 'Tenant': 'company.onmicrosoft.com', 'properties': {'ReportId': '2f00ff86-37b1-4c42-bfaf-62566c2f0d25', 'NetworkMessageId': '<78ad3a98-c075-4762-9073-a5197f579c05@outlook.com>', 'InternetMessageId': '<e636bb94-3f4c-4824-87af-e163e77dce89@mail.protection.outlook.com>', 'Timestamp': '2025-08-26T00:00:02.332391Z', 'EmailClusterId': '87863cd2-3381-4b94-8df4-efd5dac9670f', 'SenderIPv4': '207.248.32.189', 'SenderIPv6': None, 'SenderMa",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "mimecast": {
+      "name": "mimecast",
+      "category": "email_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/email_security/mimecast.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 2
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'identifier': 'SIEM', 'mimecastEvent': {'eventTime': '2025-08-26T00:02:09+0000', 'eventType': 'User Activity', 'severity': 'Medium', 'source': 'Mimecast Email Security', 'description': 'SIEM alert: User Activity detected', 'affectedUsers': 9, 'emailsProcessed': 938, 'threatsBlocked': 4, 'policies': ['Financial Data Protection', 'SSN Protection'], 'timeWindow': '1 hour', 'ingestType': 'siem'}}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "proofpoint": {
+      "name": "proofpoint",
+      "category": "email_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/email_security/proofpoint.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 32
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "spock"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'GUID': 'de0938a7-7add-4a2b-93c9-a77ad636f17d', 'QID': 'Q772752', 'id': '25bb7e9f-51a6-4f3c-bdda-f55cf822f382', 'messageID': '<08152975-2d43-453e-9047-492a2018e4b2@suspicious-domain-57.org>', 'messageTime': '2025-08-26T00:01:52.334Z', 'messageSize': 911575, 'subject': 'Scan from printer', 'sender': 'noreply113@suspicious-domain-57.org', 'fromAddress': ['noreply113@suspicious-domain-57.org'], 'headerFrom': '\"Spock Security\" <noreply113@suspicious-domain-57.org>', 'senderIP': '10.217.243.15', 'recipient': ['service@outlook.com'], 'toAddresses': ['service@outlook.com'], 'ccAddresses': [], 'replyToAddress': ['noreply113@suspicious-domain-57.org'], 'headerReplyTo': 'noreply113@suspicious-domain-57.org', 'completelyRewritten': 'false', 'cluster': 'proofpoint-cluster-9', 'policyRoutes': ['quarantine'], 'modulesRun': ['impostor', 'urldefense', 'spf', 'av', 'spam', 'dkimv', 'attachment_defense', 'dmarc'], 'spamScore': 76, 'phishScore': 0, 'malwareScore': 93, 'impostorScore': 0, 'threatsInfo': ",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "crowdstrike_falcon": {
+      "name": "crowdstrike_falcon",
+      "category": "endpoint_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/endpoint_security/crowdstrike_falcon.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "CEF:0|CrowdStrike|Falcon|6.35.15406.0|2313|Suspicious Process Activity|8|rt=1756166529337 start=1756163228249 end=0 dvchost=READY-ROOM-PC duser=service_account suid=S-1-5-21-819138312-920315860-6737-4911 externalId=ldt:67d4b15170e3197c:750103246141 msg=Suspicious_activity_detected:_Suspicious_Process_Activity fname=certutil.exe filePath=C:\\\\ProgramData\\\\ cs1=cscript.exe_-Command_b58d29f6 cs1Label=CommandLine fileHash=d5506a5d374915303813bce3ba8aec2a9b1f0f59bb8c7920ff26b8e4b9988ec4 oldFileHash=3297450a4186752c78f87db526bd7e8b1439bd49 fileHashMd5=cf78283d3baaea2194725d5107779eac dntdom=STARFLEET src=10.73.213.214 dst=10.161.78.192 dpt=443 proto=TCP spt=52149 deviceDirection=1 cs2=SuspiciousActivity cs2Label=EventSimpleName deviceProcessId=9154 deviceProcessName=powershell.exe act=detected",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "jamf_protect": {
+      "name": "jamf_protect",
+      "category": "endpoint_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/endpoint_security/jamf_protect.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "troi"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/jamf_protect-latest"
+      },
+      "sample_output": "eventType=\"SystemExtension\" computerId=\"ENGINEERING-MAC-02\" user=\"deanna.troi\" processName=\"/usr/bin/python3\" sha256=\"dcb47d4ca977b7c0f238d867a0526389b500659301238bc939269094346ae102\" verdict=\"quarantined\" message=\"Kernel extension activity detected\" pid=\"36163\" parentPid=\"30278\" domain=\"starfleet.corp\" timestamp=\"2025-08-25T23:58:43Z\"",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "linux_auth": {
+      "name": "linux_auth",
+      "category": "endpoint_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/endpoint_security/linux_auth.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 16
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T19:05:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/linux_auth-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T19:05:09Z', 'hostname': 'server', 'facility': 'auth', 'severity': 'info', 'process_name': 'polkit', 'process_id': 27980, 'username': 'admin', 'src_ip': '58.212.173.36', 'src_port': 59832, 'auth_method': 'keyboard-interactive', 'status': 'unknown', 'status_detail': 'Session event', 'message': 'sudo: admin : TTY=pts/6 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/ls', 'dataSource.vendor': 'Linux', 'dataSource.name': 'Linux Auth', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "microsoft_windows_eventlog": {
+      "name": "microsoft_windows_eventlog",
+      "category": "endpoint_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/endpoint_security/microsoft_windows_eventlog.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Plain Text",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_windows_eventlog-latest"
+      },
+      "sample_output": "An account was successfully logged on.\\r\\n\\r\\nSubject:\\r\\n\\tSecurity ID:\\t\\tS-1-5-21-2944956100-9196471433-7497111815-5947\\r\\n\\tAccount Name:\\t\\tdata.android\\r\\n\\tAccount Domain:\\t\\tSTARFLEET\\r\\n\\tLogon ID:\\t\\t0xd312e\\r\\n\\r\\nLogon Information:\\r\\n\\tLogon Type:\\t\\t10\\r\\n\\tRestricted Admin Mode:\\t-\\r\\n\\tVirtual Account:\\t\\tNo\\r\\n\\tElevated Token:\\t\\tYes\\r\\n\\r\\nImpersonation Level:\\t\\tImpersonation\\r\\n\\r\\nNew Logon:\\r\\n\\tSecurity ID:\\t\\tS-1-5-21-2944956100-9196471433-7497111815-5947\\r\\n\\tAccount Name:\\t\\tdata.android\\r\\n\\tAccount Domain:\\t\\tSTARFLEET\\r\\n\\tLogon ID:\\t\\t0xd312e\\r\\n\\tLinked Logon ID:\\t\\t0xd312e\\r\\n\\tNetwork Account Name:\\t-\\r\\n\\tNetwork Account Domain:\\t-\\r\\n\\tLogon GUID:\\t\\t{026c01b1-0b38-2257-2588-003f566016b7}\\r\\n\\r\\nProcess Information:\\r\\n\\tProcess ID:\\t\\t0x12fd\\r\\n\\tProcess Name:\\t\\tC:\\Windows\\System32\\winlogon.exe\\r\\n\\r\\nNetwork Information:\\r\\n\\tWorkstation Name:\\tWKS-9126\\r\\n\\tSource Network Address:\\t10.212.170.104\\r\\n\\tSource Port:\\t\\t51473\\r\\n\\r\\nDetailed Authent",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "sentinelone_endpoint": {
+      "name": "sentinelone_endpoint",
+      "category": "endpoint_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/endpoint_security/sentinelone_endpoint.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 95
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data",
+          "spock"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'event.id': '6f3e512c-dd2c-4855-b458-fb54039d4e8b', 'event.time': 1756106409337, 'event.category': 'ScheduledTask', 'event.type': 'Scheduled Task Delete', 'meta.event.name': 'SCHEDTASKDELETE', 'endpoint.name': 'WEB-596', 'endpoint.os': 'Windows 10', 'endpoint.type': 'server', 'agent.uuid': 'd9320b55-adad-498f-a87a-50ae59271202', 'agent.version': '22.3.3.651', 'site.id': '0ad2bf66-e67a-48b7-af7c-2ddf04fe451c', 'site.name': 'FinanceCorp Main Site', 'account.id': 'fab1cc07-4ce9-4f10-9ae7-0f778f6dc533', 'account.name': 'FinanceCorp', 'dataSource.category': 'security', 'dataSource.vendor': 'SentinelOne', 'os.name': 'Windows', 'session': 52, 'process.unique.key': '7273091447', 'src.process.name': 'kubectl', 'src.process.pid': 36395, 'src.process.uid': 'c34c704d-cd48-4af8-9d57-5da9dfae504f', 'src.process.user': 'spock.science', 'src.process.cmdline': 'kubectl get pods', 'src.process.displayName': 'kubectl', 'src.process.startTime': 1756104611337, 'src.process.integrityLevel': 'Medium', 'src.",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "sentinelone_identity": {
+      "name": "sentinelone_identity",
+      "category": "endpoint_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/endpoint_security/sentinelone_identity.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 38
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'event.id': '78e23015-f339-4cac-b1d5-07f623d4d9f6', 'event.time': 1756104249338, 'event.category': 'Service Accounts', 'event.type': 'Service Account Activity', 'event.login.type': 'Network', 'event.login.userName': 'alice.williams', 'event.login.loginIsSuccessful': True, 'endpoint.name': 'WS-703', 'endpoint.os': 'Windows Server 2022', 'endpoint.type': 'server', 'src.process.name': 'svchost.exe', 'src.process.pid': 53288, 'src.process.user': 'alice.williams', 'src.process.cmdline': '', 'src.process.uid': '37ce37c0-4466-4a0d-8ef6-3f249dd43d9b', 'src.process.parent.uid': '79e3f562-2d09-4563-ac98-fe78d34db674', 'src.ip.address': '10.56.149.219', 'src.port.number': 29396, 'dst.ip.address': '10.9.184.111', 'dst.port.number': 445, 'agent.uuid': '4148dba1-ed47-4dc6-b052-90aa2d862119', 'agent.version': '22.2.6.887', 'site.id': '88ee0bb9-91ed-4ead-8eae-7171aa743435', 'site.name': 'FinanceCorp Main Site', 'account.id': '8a00c71a-b8d0-4f38-84c6-51409bfbb6c2', 'account.name': 'FinanceCorp', 'data",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "beyondtrust_passwordsafe": {
+      "name": "beyondtrust_passwordsafe",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/beyondtrust_passwordsafe.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Plain Text",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/beyondtrust_passwordsafe_logs-latest"
+      },
+      "sample_output": "2025-08-25 23:57:25 10.0.0.150 {\"EventTime\":\"2025-08-25T23:57:25.338392Z\",\"EventType\":\"PolicyViolation\",\"EventId\":\"daae1cca-ad6f-450c-b69d-0deb8bffeac2\",\"UserId\":\"jdoe\",\"UserName\":\"John Doe\",\"UserDisplayName\":\"John Doe\",\"UserRole\":\"IT Administrator\",\"UserDomain\":\"CORP\",\"SourceIP\":\"10.215.36.147\",\"UserAgent\":\"BeyondTrust Mobile App 3.1\",\"SessionId\":\"sess_45cbbe7b79e14830\",\"AccountId\":\"a51410b9-b71c-4081-a843-0c782921246e\",\"AccountName\":\"postgres\",\"AccountType\":\"Database\",\"AccountDescription\":\"PostgreSQL Admin\",\"SystemId\":\"014d4011-b1eb-4ef9-bd70-e11365c08991\",\"SystemName\":\"SWITCH01\",\"SystemDescription\":\"Network Switch\",\"SystemType\":\"Cisco Catalyst\",\"SystemAddress\":\"10.154.241.34\",\"Action\":\"deny\",\"Result\":\"Success\",\"Severity\":\"Low\",\"Category\":\"Audit\",\"RequestId\":\"req_535537\",\"WorkflowId\":null,\"Duration\":592,\"BytesTransferred\":0,\"RecordsAffected\":1,\"PolicyName\":\"Emergency Access Policy\",\"RuleName\":\"IP Restriction\",\"ComplianceState\":\"Non-Compliant\",\"RiskScore\":99,\"Tags\":[\"domain_admin\"],\"V",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "beyondtrust_privilegemgmt_windows": {
+      "name": "beyondtrust_privilegemgmt_windows",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/beyondtrust_privilegemgmt_windows.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "2025-08-26 00:01:06.338,[INFO]:,EPM_ELEVATE,,Application execution blocked by policy,jdoe,SERVER-WEB01,Standard Users,Custom Applications,Compliance audit activity,CORP\\Domain,ac6257b0c3a36b8c33ec54d2bc1536a6,CN=LAPTOP-XYZ789, OU=Computers, DC=corp, DC=local,9896,485,,powershell.exe,Script,Microsoft PowerShell,POWERSHELL,7.2.1,7.2.1.0,10.157.209.221,DESKTOP-ABC123,CORP\\contractor,cmd.exe,Token_1123,Allow,contractor,3,{11066147-9496-8467-1555-568211400453},{42950435-9488-3442-4557-904589665911},C:\\Windows\\System32\\powershell.exe,Microsoft PowerShell Application,,,,,,,,Denied",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "cyberark_conjur": {
+      "name": "cyberark_conjur",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/cyberark_conjur.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 15
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T05:44:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cyberark_conjur-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T05:44:09Z', 'hostname': 'conjur-standby', 'facility': 'local0', 'severity': 'warn', 'priority': 130, 'process_id': 1493, 'operation': 'create', 'result': 'error', 'role': 'service:user:app2', 'authenticator': 'authn', 'user': 'service:user:app2', 'message': 'service:user:app2 error create on prod:policy:application', 'dataSource.vendor': 'CyberArk', 'dataSource.name': 'CyberArk Conjur', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "cyberark_pas": {
+      "name": "cyberark_pas",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/cyberark_pas.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON String",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "federation"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cyberark_pas_logs-latest"
+      },
+      "sample_output": "{\"policyName\": \"Registry Protection\", \"policyCategory\": \"system_protection\", \"eventType\": \"Configuration Changed\", \"sourceType\": \"Service\", \"sourceName\": \"powershell.exe\", \"userName\": \"tom.paris\", \"computerName\": \"ENGINEERING-CORE\", \"agentId\": \"a06e100efdd469de\", \"eventCount\": 27, \"agentEventCount\": 8, \"skippedCount\": 2, \"firstEventDate\": \"2025-08-25T17:02:09.338972Z\", \"lastEventDate\": \"2025-08-26T00:02:09.338972Z\", \"arrivalTime\": \"2025-08-26T00:02:09.338983Z\", \"modificationTime\": \"2025-08-26T00:02:09.338986Z\", \"operatingSystemType\": \"Windows\", \"userIsAdmin\": \"true\", \"originUserUID\": \"S-1-5-21-852389561-345820729-1080-5041\", \"displayName\": \"Tom Paris\", \"owner\": \"FEDERATION\\\\tom.paris\"}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "hashicorp_vault": {
+      "name": "hashicorp_vault",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/hashicorp_vault.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON String",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{\"time\": \"2025-08-25T23:57:50.339220Z\", \"type\": \"request\", \"auth\": {\"client_token\": \"hvs.67c38869a068456ba529872ed3e40efd\", \"accessor\": \"acc_6bf59cbf2e614aff\", \"display_name\": \"monitoring\", \"policies\": [\"secret-writer\"], \"token_policies\": [\"database-admin\", \"monitoring\"], \"metadata\": {\"username\": null, \"service\": \"monitoring\"}, \"entity_id\": \"e984038c-2d4f-4fae-b35f-38e43742391f\", \"token_type\": \"service\", \"token_ttl\": 42124, \"token_issue_time\": \"2025-08-25T23:57:50.339220Z\"}, \"request\": {\"id\": \"c5ab435a-4519-4b26-a854-978466fbd92c\", \"operation\": \"list\", \"mount_type\": \"database\", \"client_token\": \"hvs.bf5180b961254aeeb928d6cf812230a9\", \"client_token_accessor\": \"acc_5570ad6a12984842\", \"namespace\": {\"id\": \"root\", \"path\": \"\"}, \"path\": \"sys/auth\", \"data\": {}, \"policy_override\": false, \"remote_address\": \"10.104.207.222\", \"wrap_ttl\": 0, \"headers\": {\"user-agent\": [\"vault-k8s/1.1.0\"], \"content-type\": [\"application/json\"], \"x-forwarded-for\": [\"10.166.212.210\"]}}, \"response\": null, \"error\": \"\", \"cl",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "hypr_auth": {
+      "name": "hypr_auth",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/hypr_auth.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 4
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/hypr_auth-latest"
+      },
+      "sample_output": "{'raw': '2025-08-25T20:27:09Z HYPR eventType=\"REVOCATION\" user=\"user@domain.com\" device=\"Google-Pixel\" isSuccessful=true authenticator=\"Email\" message=\"Authentication request processed\"', 'vendor': 'hypr', 'product': 'auth', 'log_type': 'authentication'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "microsoft_365_collaboration": {
+      "name": "microsoft_365_collaboration",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_365_collaboration.py",
+      "status": "excellent",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 16
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "data",
+          "vulcan"
+        ]
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:00:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_365_collaboration-latest"
+      },
+      "sample_output": "{'TimeStamp': '2025-08-26T00:00:09Z', 'UserId': 'external.vulcan@embassy.vulcan', 'Operation': 'SharingLinkCreated', 'SiteUrl': 'https://starfleet-my.sharepoint.com/sites/Science', 'ObjectId': '/Starfleet Templates/SecurityProtocols.docx', 'FileName': 'SecurityProtocols.docx', 'Details': 'Sharing link created for SecurityProtocols.docx', 'UserAgent': 'Microsoft Office/16.0 (Microsoft OneDrive for Business)', 'ClientIP': '121.127.242.148', 'Workload': 'SharePoint', 'RecordType': 25, 'Version': '1', 'dataSource.vendor': 'Microsoft', 'dataSource.name': 'Microsoft 365 Collaboration', 'dataSource.category': 'security', 'ThreatIndicator': 'Suspicious file or user activity detected'}",
+      "issues": [],
+      "recommendations": []
+    },
+    "microsoft_365_defender": {
+      "name": "microsoft_365_defender",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_365_defender.py",
+      "status": "excellent",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 9
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "enterprise",
+          "data",
+          "troi",
+          "federation"
+        ]
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-25T23:57:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_365_defender-latest"
+      },
+      "sample_output": "{'Timestamp': '2025-08-25T23:57:09Z', 'DeviceName': 'ENTERPRISE-SEC-01', 'DeviceId': '000E9A0F29C85A93', 'AccountName': 'deanna.troi', 'AccountDomain': 'FEDERATION', 'ActionType': 'RegistryValueSet', 'dataSource.vendor': 'Microsoft', 'dataSource.name': 'Microsoft 365 Defender', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": []
+    },
+    "microsoft_365_mgmt_api": {
+      "name": "microsoft_365_mgmt_api",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_365_mgmt_api.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 33
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_365_mgmt_api_logs-latest"
+      },
+      "sample_output": "{'id': 'c994528f-14ac-4897-b3c7-f922abe3c941', 'azureSubscriptionId': '71bbf918-e3fd-4ffb-a451-0577edd9b861', 'azureTenantId': '8b7cc3e5-8510-4dcf-8c5e-a1ad53990dd2', 'activityGroupName': 'Suspicious SharePoint file activity', 'assignedTo': 'soc_analyst', 'category': 'PrivilegeEscalation', 'closedDateTime': None, 'cloudAppStates': [{'destinationServiceIp': '90.215.111.223', 'destinationServiceName': 'Azure Active Directory', 'riskScore': '70'}], 'comments': ['Alert generated at 2025-08-25 23:04:09', 'Escalated to security team'], 'confidence': 56, 'createdDateTime': '2025-08-25T23:04:09.339954Z', 'description': 'Microsoft 365 security alert: Suspicious SharePoint file activity. This alert indicates potential privilegeescalation activity detected in your environment.', 'detectionIds': ['ddc4eb6e-0e4f-41b7-b174-4039c609784c', 'd1253508-db2d-4046-8153-8dfc499c9f96'], 'eventDateTime': '2025-08-25T23:10:09.339954Z', 'feedback': 'truePositive', 'incidentIds': [], 'lastEventDateTime': '2025-0",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "microsoft_azure_ad": {
+      "name": "microsoft_azure_ad",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_azure_ad.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 17
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.340268Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_azure_ad_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09.340268Z', 'vendor': 'Microsoft', 'product': 'Azure Ad Logs', 'version': '1.0', 'event_type': 'security_event', 'message': 'Sample Microsoft Azure Ad Logs event at 2025-08-26T00:02:09.340268Z', 'severity': 'high', 'category': 'security', 'source_ip': '192.168.166.236', 'user': 'user2648', 'device': 'device-393', 'log_level': 'INFO', 'event_id': 64271, 'session_id': 'sess_912552', 'class_name': 'Security Event', 'activity_name': 'Log Generated', 'risk_score': 96}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "microsoft_azure_ad_signin": {
+      "name": "microsoft_azure_ad_signin",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_azure_ad_signin.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 1
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'records': [{'time': '2025-08-26T00:02:09.340453Z', 'resourceId': '/tenants/1c861d8d-7064-4982-a593-f0fe6dbd50e9/providers/Microsoft.aadiam', 'operationName': 'Sign-in activity', 'operationVersion': '1.0', 'category': 'SignInLogs', 'tenantId': '0c02fbbb-1f81-4fb9-ac41-adaf641919f0', 'resultType': '50126', 'resultSignature': 'Error_50126', 'resultDescription': 'Sign-in failure: 50126', 'durationMs': 3797, 'callerIpAddress': '13.95.47.137', 'correlationId': '97e8a64b-6300-4fc9-bd55-60fc23a4cd16', 'identity': 'john.doe@company.com', 'Level': 3, 'location': 'United States', 'properties': {'id': '106cbe74-c80d-49fe-b19c-2b8bb15499d1', 'createdDateTime': '2025-08-25T23:57:19.340453Z', 'userDisplayName': 'John Doe', 'userPrincipalName': 'john.doe@company.com', 'userId': '7d8eeaaf-80e9-4098-9c7b-dd8df8260b2a', 'appId': '00000003-0000-0000-c000-000000000000', 'appDisplayName': 'Microsoft Graph', 'resourceDisplayName': 'Microsoft Graph', 'resourceId': '00000003-0000-0000-c000-000000000000', 'cl",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "microsoft_azuread": {
+      "name": "microsoft_azuread",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_azuread.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 14
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'activityDateTime': '2025-08-25T15:32:35+00:00', 'correlationId': '016e16ee-6ba3-41ed-92d8-4f5ed5991bcb', 'id': 'b130bd6c-1349-413b-8161-2b384b9d4616', 'initiatedBy': {}, 'targetResources': [{'displayName': 'Jordy LaForge', 'id': '51d16dbe-317e-4d43-918f-ccd678c68319', 'type': 'User', 'modifiedProperties': [], 'userPrincipalName': None}], 'activityDisplayName': 'Changed user password', 'category': 'UserManagement', 'operationType': 'Update', 'result': 'success', 'resultReason': 'PasswordChange', 'initiatedByUserId': '4231c2dc-53bc-4428-83fd-38a9f7e3e415', 'initiatedByUserIpAddress': '10.0.1.101', 'initiatedByUserUserPrincipalName': 'jordy.laforge@starfleet.corp', 'eventCategory': 'Audit'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "microsoft_eventhub_azure_signin": {
+      "name": "microsoft_eventhub_azure_signin",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_eventhub_azure_signin.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 18
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.340885Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_eventhub_azure_signin_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09.340885Z', 'vendor': 'Microsoft', 'product': 'Eventhub Azure Signin Logs', 'version': '1.0', 'event_type': 'security_event', 'message': 'Sample Microsoft Eventhub Azure Signin Logs event at 2025-08-26T00:02:09.340885Z', 'severity': 'high', 'category': 'security', 'source_ip': '192.168.45.173', 'user': 'user3279', 'device': 'device-969', 'log_level': 'ERROR', 'event_id': 80185, 'session_id': 'sess_695377', 'class_name': 'Security Event', 'activity_name': 'Log Generated', 'location': 'London', 'risk_score': 75}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "microsoft_eventhub_defender_email": {
+      "name": "microsoft_eventhub_defender_email",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_eventhub_defender_email.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 16
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.341010Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_eventhub_defender_email_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09.341010Z', 'vendor': 'Microsoft', 'product': 'Eventhub Defender Email Logs', 'version': '1.0', 'event_type': 'security_event', 'message': 'Sample Microsoft Eventhub Defender Email Logs event at 2025-08-26T00:02:09.341010Z', 'severity': 'low', 'category': 'security', 'source_ip': '192.168.222.24', 'user': 'user8998', 'device': 'device-771', 'log_level': 'INFO', 'event_id': 20478, 'session_id': 'sess_923741', 'class_name': 'Security Event', 'activity_name': 'Log Generated'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "microsoft_eventhub_defender_emailforcloud": {
+      "name": "microsoft_eventhub_defender_emailforcloud",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/microsoft_eventhub_defender_emailforcloud.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 17
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.341124Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/microsoft_eventhub_defender_emailforcloud_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09.341124Z', 'vendor': 'Microsoft', 'product': 'Eventhub Defender Emailforcloud Logs', 'version': '1.0', 'event_type': 'security_event', 'message': 'Sample Microsoft Eventhub Defender Emailforcloud Logs event at 2025-08-26T00:02:09.341124Z', 'severity': 'critical', 'category': 'security', 'source_ip': '192.168.124.252', 'user': 'user9051', 'device': 'device-725', 'log_level': 'ERROR', 'event_id': 10591, 'session_id': 'sess_365677', 'class_name': 'Security Event', 'activity_name': 'Log Generated', 'location': 'Sydney'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "okta_authentication": {
+      "name": "okta_authentication",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/okta_authentication.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON String",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{\"uuid\": \"c521fe69-8941-4d89-bc46-9c8d6ba944fe\", \"published\": \"2025-08-26T00:02:09.341273Z\", \"eventType\": \"user.authentication.sso\", \"version\": \"0\", \"severity\": \"WARN\", \"legacyEventType\": \"user.authentication.sso_success\", \"displayMessage\": \"User logged in successfully\", \"actor\": {\"id\": \"799cc402-01cf-4481-b4dd-40123a763099\", \"type\": \"User\", \"alternateId\": \"it-support@starfleet.corp\", \"displayName\": \"It-Support\"}, \"client\": {\"userAgent\": {\"rawUserAgent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36\", \"os\": {\"family\": \"macOS\"}, \"browser\": {\"family\": \"Edge\"}}, \"zone\": \"PUBLIC\", \"device\": \"Computer\", \"ipAddress\": \"153.132.218.236\", \"geographicalContext\": {\"city\": \"New York\", \"state\": \"California\", \"country\": \"United States\", \"postalCode\": \"79553\", \"geolocation\": {\"lat\": 35.1515, \"lon\": -70.3614}}}, \"outcome\": {\"result\": \"SUCCESS\", \"reason\": \"User logged in successfully\"}, \"transaction\": {\"type\": \"API\", \"id\": \"9c3fc37b-ccd",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "pingfederate": {
+      "name": "pingfederate",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/pingfederate.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 14
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T16:32:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/pingfederate-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T16:32:09Z', 'log_level': 'DEBUG', 'logger_name': 'com.pingidentity.pf.oauth', 'operation': 'authenticate', 'username': 'service', 'client_ip': '221.185.216.3', 'status': 'pending', 'dataSource.vendor': 'Ping Identity', 'dataSource.name': 'PingFederate', 'dataSource.category': 'security', 'adapter_id': 'SAMLAdapter', 'session_id': 'c6914af38c0de7e6dfca2ca4f2bf880e', 'token_type': 'REFRESH_TOKEN', 'message': 'Authentication pending for user service; ClientIP=221.185.216.3; AdapterId=SAMLAdapter'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "pingone_mfa": {
+      "name": "pingone_mfa",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/pingone_mfa.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 13
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T23:08:09.341878Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/pingone_mfa-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T23:08:09.341878Z', 'dataSource': 'PingOneMFA', 'recordedAt': '2025-08-25T23:08:09.341878Z', 'user': 'john.doe@example.com', 'source.ip': '198.51.100.24', 'action.type': 'MFA.ENROLL', 'factor': 'PUSH', 'result.status': 'SUCCESS', 'description': 'User enrolled new PUSH factor', 'sessionId': 'd94a007e-9e80-4c2c-8799-cce7123bee87', 'dataSource.vendor': 'Ping Identity', 'dataSource.name': 'PingOne MFA', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "pingprotect": {
+      "name": "pingprotect",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/pingprotect.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 14
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T23:13:09.342034Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/pingprotect-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T23:13:09.342034Z', 'dataSource': 'PingProtect', 'recordedAt': '2025-08-25T23:13:09.342034.000Z', 'actors.client.id': 'auth-service', 'actors.user.id': '87b39816-2786-4b6a-bc28-1ae8c8d2933c', 'source.ip': '203.0.113.198', 'action.type': 'ROLE_ASSIGNMENT.DELETED', 'dataSource.vendor': 'Ping Identity', 'dataSource.name': 'PingProtect', 'dataSource.category': 'security', 'action.description': 'Role Assignment Deleted', 'resources.application.id': '08dbe5fe-ee2b-4906-a193-264cb0c9d723', 'result.status': 'SUCCESS', 'result.description': 'Deleted role assignment 08dbe5fe-ee2b-4906-a193-264cb0c9d723'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "rsa_adaptive": {
+      "name": "rsa_adaptive",
+      "category": "identity_access",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/identity_access/rsa_adaptive.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 13
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T23:38:09.342181Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/rsa_adaptive-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T23:38:09.342181Z', 'dataSource': 'RSAAdaptiveAuth', 'user': 'dan@example.com', 'ip': '198.51.100.67', 'device': 'Android', 'riskScore': 23, 'decision': 'APPROVE', 'factor': 'sms', 'result': 'SUCCESS', 'message': 'Login approved with low risk', 'dataSource.vendor': 'RSA Security', 'dataSource.name': 'RSA Adaptive Authentication', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "axway_sftp": {
+      "name": "axway_sftp",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/axway_sftp.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/axway_sftp-latest"
+      },
+      "sample_output": "2025-08-25T07:24:09Z AxwaySFTP session_id=\"sftp-9635\" user=\"service_account\" event=\"LOGIN\" remote_ip=\"138.142.138.4\" result=\"SUCCESS\" message=\"Directory listing requested\"",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "buildkite": {
+      "name": "buildkite",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/buildkite.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 12
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'id': 'f82fae88-2674-405f-baae-94550a9f7bb1', 'type': 'team.member.added', 'occurredAt': '2025-08-25T19:36:09.342458+00:00', 'organizationUuid': 'org_f3c56a7d', 'organizationSlug': 'acme-corp', 'actorUuid': 'user_44e03713', 'actorName': 'evan.engineer', 'actorType': 'User', 'dataSource.vendor': 'Buildkite', 'dataSource.name': 'Buildkite Audit', 'dataSource.category': 'security', 'context': {'requestId': '78413178-e704-45ce-8f69-efea22fdb73a', 'userAgent': 'buildkite-webhook/1.0'}}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "cohesity_backup": {
+      "name": "cohesity_backup",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/cohesity_backup.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cohesity_backup-latest"
+      },
+      "sample_output": "2025-08-25T21:44:09Z Cohesity runId=\"r-8379\" jobName=\"Compliance_Archive\" objectName=\"vm-Prod01\" status=\"WARNING\" initiatedBy=\"user\" message=\"Backup completed successfully\"",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "github_audit": {
+      "name": "github_audit",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/github_audit.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 11
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "enterprise",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T22:47:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/github_audit-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T22:47:09Z', 'actor': 'security-scanner', 'org': 'enterprise-co', 'repository': 'enterprise-co/documentation', 'action': 'repo.change_collaborator_permission', 'outcome': 'failure', 'description': 'Repository enterprise-co/documentation change_collaborator_permission', 'source_ip': '21.110.20.119', 'dataSource.vendor': 'GitHub', 'dataSource.name': 'GitHub Audit', 'dataSource.category': 'audit'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "harness_ci": {
+      "name": "harness_ci",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/harness_ci.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/harness_ci-latest"
+      },
+      "sample_output": "2025-08-25T08:10:09Z Harness pipelineId=\"frontend-build\" executionId=\"exec-202\" status=\"RUNNING\" trigger=\"pull_request\" initiator=\"ci-bot\" message=\"Security scan completed\"",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "iis_w3c": {
+      "name": "iis_w3c",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/iis_w3c.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 22
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T18:53:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/iis_w3c-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T18:53:09Z', 'date': '2025-08-25', 'time': '18:53:09', 'client_ip': '122.250.61.34', 'username': 'charlie', 'sitename': 'intranet.contoso.com', 'computername': 'IIS-TEST', 'server_ip': '192.0.2.61', 'server_port': 80, 'method': 'PATCH', 'uri_stem': '/uploads', 'uri_query': '?filter=active&sort=active&id=123', 'status_code': 200, 'bytes_sent': 1196, 'bytes_received': 2349, 'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'referer': 'https://google.com', 'cookie': '-', 'time_taken': 4703, 'dataSource.vendor': 'Microsoft', 'dataSource.name': 'Microsoft IIS', 'dataSource.category': 'network'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "isc_bind": {
+      "name": "isc_bind",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/isc_bind.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 15
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T23:21:53.343Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/isc_bind-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T23:21:53.343Z', 'log_level': 'info', 'log_type': 'queries', 'client_uid': '0x7f030a3766', 'client_ip': '203.0.113.88', 'client_port': 35105, 'query_hostname': 'download.mozilla.org', 'query_name': 'download.mozilla.org', 'query_class': 'IN', 'query_type': 'MX', 'query_opcode': 'U', 'message': 'client @0x7f030a3766 203.0.113.88#35105 (download.mozilla.org): query: download.mozilla.org IN MX + (U)', 'dataSource.vendor': 'ISC', 'dataSource.name': 'ISC BIND', 'dataSource.category': 'network'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "isc_dhcp": {
+      "name": "isc_dhcp",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/isc_dhcp.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 12
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T23:07:44Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/isc_dhcp-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T23:07:44Z', 'process': 'dhcpd', 'process_id': 777, 'dhcp_message_type': 'DHCPOFFER', 'client_mac': 'c5:9a:88:c4:e7:17', 'client_ip': '192.168.1.177', 'interface': 'eth1', 'client_hostname': None, 'dataSource.vendor': 'ISC', 'dataSource.name': 'ISC DHCP', 'dataSource.category': 'network', 'message': 'DHCPOFFER on 192.168.1.177 to c5:9a:88:c4:e7:17 via eth1'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "manageengine_adauditplus": {
+      "name": "manageengine_adauditplus",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/manageengine_adauditplus.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 17
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.343424Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/manageengine_adauditplus_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09.343424Z', 'vendor': 'Manageengine', 'product': 'Adauditplus Logs', 'version': '1.0', 'event_type': 'security_event', 'message': 'Sample Manageengine Adauditplus Logs event at 2025-08-26T00:02:09.343424Z', 'severity': 'high', 'category': 'security', 'source_ip': '192.168.135.236', 'user': 'user9230', 'device': 'device-503', 'log_level': 'WARN', 'event_id': 96433, 'session_id': 'sess_997408', 'class_name': 'Security Event', 'activity_name': 'Log Generated', 'location': 'London'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "manageengine_general": {
+      "name": "manageengine_general",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/manageengine_general.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 23
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T14:26:09.343600+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/manageengine_general_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T14:26:09.343600+00:00', 'event_id': 'ME-852532', 'product': 'Key Manager Plus', 'event_category': 'SYSTEM_MANAGEMENT', 'action': 'SYSTEM_REBOOT', 'severity': 'WARNING', 'description': 'System Reboot event occurred', 'source_ip': '10.39.92.203', 'user_name': 'user2', 'domain': 'company.local', 'workstation': 'WS-4411', 'computer_name': 'PC-160', 'operating_system': 'Ubuntu 20.04', 'agent_version': '14.1.2.1995', 'location': 'Data Center', 'department': 'Operations', 'dataSource.vendor': 'ManageEngine', 'dataSource.name': 'ManageEngine', 'dataSource.category': 'security', 'reboot_required': False, 'compliance_status': 'Non-Compliant', 'audit_trail': 'audit_2079086', 'change_request_id': 'CR-62591'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "sap": {
+      "name": "sap",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/sap.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 38
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T20:25:09.343802+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/sap_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T20:25:09.343802+00:00', 'date': '20250825', 'time': '202509', 'event_type': 'DEBUG_SESSION', 'severity': 'WARNING', 'message': 'Debug session started', 'system_id': 'SBX', 'client': '500', 'user': 'USER569', 'session_id': '590565', 'terminal': 'WS6525', 'server': 'sapsbx6', 'instance': '95', 'ip_address': '10.254.64.186', 'program': 'SAPLRFBU235', 'transaction_code': '', 'language': 'EN', 'dataSource.vendor': 'SAP', 'dataSource.name': 'SAP', 'dataSource.category': 'application', 'debug_type': 'ABAP Debugger', 'breakpoints': 17, 'session_duration': 5746, 'debugged_user': 'USER844', 'production_system': False, 'risk_assessment': 'MEDIUM', 'audit_class': 'RUF', 'audit_subclass': 'SEC', 'retention_period': 1083, 'gdpr_relevant': True, 'sox_relevant': False, 'pci_relevant': False, 'work_process': 'DIA_19', 'memory_usage': 27827, 'database': 'SQL Server', 'database_time': 619, 'network_time': 32, 'frontend_time': 435}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "securelink": {
+      "name": "securelink",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/securelink.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 43
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T20:22:09.344008+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/securelink_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T20:22:09.344008+00:00', 'event_id': 'SL-1403537', 'session_id': 'session_912407767', 'event_type': 'EMERGENCY_ACCESS', 'severity': 'CRITICAL', 'category': 'Emergency', 'vendor_name': 'Vendor_38', 'vendor_type': 'Software Vendor', 'vendor_email': 'vendor17@contractor.com', 'vendor_organization': 'Solutions Inc', 'technician_name': 'Tech_48', 'technician_id': 'TECH40197', 'source_ip': '48.242.132.52', 'source_country': 'FR', 'target_system': 'Development Server', 'target_ip': '10.8.217.77', 'target_hostname': 'srv-844.company.local', 'access_method': 'FTP', 'protocol': 'UDP', 'port': 3306, 'business_justification': 'Emergency system maintenance', 'risk_level': 'Medium', 'approval_status': 'Emergency Override', 'approver': 'manager19@company.com', 'dataSource.vendor': 'SecureLink', 'dataSource.name': 'SecureLink', 'dataSource.category': 'security', 'emergency_type': 'Network Failure', 'incident_ticket': 'INC-351224', 'emergency_contact': 'oncall8@company.com', 'p",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "tailscale": {
+      "name": "tailscale",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/tailscale.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 7
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'eventGroupID': '0d11b721-4d40-428b-a109-3666197368a5', 'tailnet': 'tailnet-internal.io', 'action': 'APPROVE', 'actor': {'id': 'na7c6cd6dead1493aCNTRL', 'loginName': 'tag:server', 'displayName': 'server-18', 'type': 'tagged-device'}, 'target': {'id': '4f0961c2-6081-47c1-b5a9-44cafe6ab76a', 'name': 'user14@company.com', 'type': 'user'}, 'new': '2025-08-25T23:58:32.344222+00:00Z', 'origin': 'admin-console'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "teleport": {
+      "name": "teleport",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/teleport.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 20
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/teleport_logs-latest"
+      },
+      "sample_output": "{'event': 'session.end', 'uid': 'e78efb12-a4f4-4a0b-bcb3-ea0f707ce2f7', 'time': '2025-08-25T08:44:09.344400+00:00Z', 'user': 'charlie', 'cluster_name': 'teleport.company.com', 'dataSource.vendor': 'Teleport', 'dataSource.name': 'Teleport', 'dataSource.category': 'security', 'sid': '7cbbd50a-cb00-4cc5-ae14-9242737d0bd8', 'namespace': 'default', 'server_id': 'a6f35afd-cd6a-4fad-849f-bae83bbde94e', 'server_hostname': 'app-server-01', 'server_addr': '10.0.4.70:22', 'session_recording': 'node', 'interactive': True, 'session_start': '2025-08-25T06:50:09.344400+00:00Z', 'session_stop': '2025-08-25T08:44:09.344400+00:00Z', 'bytes_transmitted': 149329, 'bytes_received': 948104, 'metadata': {'origin': 'cli', 'session_id': '7cbbd50a-cb00-4cc5-ae14-9242737d0bd8'}}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "ubiquiti_unifi": {
+      "name": "ubiquiti_unifi",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/ubiquiti_unifi.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 35
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25 19:52:09+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/ubiquiti_unifi_logs-latest"
+      },
+      "sample_output": "{'datetime': '2025-08-25T19:52:09.344578+00:00', 'timestamp': 1756151529, 'key': 'EVT_WU_Connected', 'subsystem': 'lan', 'site_id': 'site_762936', 'time': 1756151529344, 'msg': 'EVT_WU_Connected event occurred', 'category': 'wireless', 'severity': 'info', 'admin': 'admin@unifi.local', 'is_negative': False, 'dataSource.vendor': 'Ubiquiti', 'dataSource.name': 'UniFi', 'dataSource.category': 'network', 'ap': 'UAP-nanoHD', 'ap_name': 'AP-4', 'ap_mac': '7a:d3:10:2b:d9:e1', 'channel': 1, 'radio': 'ng', 'ssid': 'Office', 'bssid': 'a9:fe:45:fd:ac:3d', 'user': '6c:36:e1:f0:ac:9c', 'hostname': 'device-96', 'ip': '192.168.7.74', 'user_agent': 'Windows', 'duration': 0, 'bytes': 0, 'version': '7.3.83', 'model': 'USG-Lite', 'uptime': 1216019, 'loadavg_1': 0.48, 'loadavg_5': 0.63, 'loadavg_15': 1.6, 'mem_used': 77, 'mem_buffer': 12}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "veeam_backup": {
+      "name": "veeam_backup",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/veeam_backup.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 16
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T20:16:09.344759Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/veeam_backup-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T20:16:09.344759Z', 'dataSource': 'veeam-backup', 'severity': 'Warning', 'JobID': 8, 'JobName': 'DR_Replication', 'JobSessionID': '0589f68d-d8df-47c2-bcb7-c3dded50c014', 'JobResult': 1, 'Description': \"Backup job 'DR_Replication' finished with warnings\", 'Duration': '02:58:44', 'ObjectsProcessed': 23, 'TotalSize': '949TB', 'dataSource.vendor': 'Veeam', 'dataSource.name': 'Veeam Backup', 'dataSource.category': 'system', 'WarningCount': 3, 'AffectedObjects': 'SQLServer01, SQLServer02'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "vmware_vcenter": {
+      "name": "vmware_vcenter",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/vmware_vcenter.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Syslog/CEF",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/vmware_vcenter_logs-latest"
+      },
+      "sample_output": "<134>1 Aug 26 00:02:09 vcenter01.corp.local vpxd 9443 - - [event-40878] [1] [2025-08-26T00:02:09.345138+00:00Z] [VmRemovedEvent] [verbose] [root] [infra-ntp-01] [3534725] [Virtual machine removed on host esx01.corp.local]",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "windows_dhcp": {
+      "name": "windows_dhcp",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/windows_dhcp.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Plain Text",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/windows_dhcp_logs-latest"
+      },
+      "sample_output": "33,08/25/25,17:01:10,Packet Drop,192.168.4.213,WORKSTATION-001,76:c3:d7:5c:48:a3,CORP\\user58,3b172b71,5,2625,113576,dhcid_3948,436973636F2053797374656D73,Cisco Systems",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "wiz_cloud": {
+      "name": "wiz_cloud",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/wiz_cloud.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 2
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/wiz_cloud-latest"
+      },
+      "sample_output": "{'Record': {'eventTime': '2025-08-26T00:00:09.3454Z', 'eventName': 'Login', 'eventType': 'Login', 'eventID': '9be350eb-11eb-44d3-a5a2-aef81c04741b', 'requestID': 'e8385c78-3e0a-4441-861b-a45396a17194', 'userIdentity': {'type': 'Service', 'principalId': 'service_account_id', 'accountId': 'starfleet-command', 'userName': 'starfleet-scanner'}, 'sourceIPAddress': '10.1.70.101', 'userAgent': 'Mozilla/5.0 (Starfleet OS 2380; Win64; x64)', 'requestParameters': {'clientID': '670101518111607315298', 'name': 'Integration', 'products': ['*'], 'role': 'readonly', 'scopes': ['read:issues', 'read:vulnerabilities', 'admin:audit'], 'userID': 'service_account_id', 'userpoolID': 'us-east-2_9224610792'}, 'responseElements': None}, 'body': {'timestamp': '2025-08-26T00:00:09.3454Z', 'time': 1756166529345, 'class_uid': '8002', 'class_name': 'Cloud Activity', 'category_uid': '8', 'category_name': 'System Activity', 'activity_id': '1', 'activity_name': 'Cloud Audit', 'type_uid': '800201', 'severity_id': 1, 's",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "zscaler": {
+      "name": "zscaler",
+      "category": "infrastructure",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/infrastructure/zscaler.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON String",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{\"datetime\": \"2025-08-26T00:02:09Z\", \"protocol\": \"HTTPS\", \"action\": \"Allowed\", \"requestmethod\": \"GET\", \"urlsupercategory\": \"Technology\", \"urlcategory\": \"Search Engines\", \"urlclass\": \"Information Technology\", \"serverip\": \"168.166.145.58\", \"clientpublicIP\": \"119.71.75.125\", \"location\": \"US\\u2011West\", \"devicehostname\": \"laptop\\u2011demo\", \"deviceowner\": \"jsmith\", \"department\": \"Engineering\", \"requestsize\": 512, \"responsesize\": 2048, \"clienttranstime\": 45, \"servertranstime\": 92, \"reason\": \"Allowed\", \"appname\": \"Google Search\", \"appclass\": \"Web Search\", \"contenttype\": \"text/html\", \"useragent\": \"Mozilla/5.0 Demo\", \"refererURL\": \"https://www.bing.com\", \"filetype\": \"html\", \"threatname\": \"Trojan.Generic\", \"bwthrottle\": \"\", \"dlpdictionaries\": \"\", \"dlpengine\": \"Indexed Document Match\", \"fileclass\": \"Archive\", \"threatclass\": \"Ransomware\", \"unscannabletype\": \"Unsupported format\", \"url\": \"https://safe.example.com/653/index.html\", \"transactionsize\": 2560}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "apache_http": {
+      "name": "apache_http",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/apache_http.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Plain Text",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/apache_http_logs-latest"
+      },
+      "sample_output": "10.30.216.105 - - [26/Aug/2025:00:02:09 +0000] \"POST /settings HTTP/1.1\" 200 7455",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "armis": {
+      "name": "armis",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/armis.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Syslog/CEF",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "<134>Aug 25 23:59:05 armis-sensor armis - - .{\"id\":\"11d2caae-e480-45dc-830e-bd19bf74a4ba\",\"type\":\"VulnerabilityDetected\",\"_time\":\"2025-08-25T23:59:05.346011+00:00Z\",\"time\":1756166345,\"description\":\"Known vulnerability detected on device\",\"severity\":\"High\",\"content\":{\"device\":{\"id\":\"1123953\",\"name\":\"server-635\",\"type\":\"Server\",\"ip\":\"192.168.253.106\",\"mac\":\"3e:24:75:9c:e5:a2\",\"manufacturer\":\"Yealink\",\"model\":\"Yealink Server Plus\",\"osName\":\"VMware ESXi\",\"osVersion\":\"9.9.8\",\"category\":\"IT\",\"isManaged\":true,\"tags\":[\"monitored\",\"managed\",\"vulnerable\"]},\"vulnerability\":{\"cve\":\"CVE-2022-13633\",\"cvss\":4.5,\"severity\":\"Critical\",\"description\":\"Remote code execution vulnerability\",\"affected\":\"Yealink Yealink Server Plus < 9.9.8\",\"remediation\":\"Apply security patch or upgrade firmware\",\"exploitAvailable\":false}}}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "aruba_clearpass": {
+      "name": "aruba_clearpass",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/aruba_clearpass.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/aruba_clearpass_logs-latest"
+      },
+      "sample_output": "2025-08-26 00:02:09,346 clearpass-1.company.com clearpass-server 10.100.10.61 System Logs 4457 component=Policy_Engine severity=INFO",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "checkpoint": {
+      "name": "checkpoint",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/checkpoint.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 33
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.346352+00:00"
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'time': '2025-08-26T00:02:09.346352+00:00', 'timestamp': 1756166529346, 'orig': '24.150.177.5', 'origin': 'fw01', 'action': 'Decrypt', 'src': '24.150.177.5', 'dst': '10.238.46.19', 'proto': 'tcp', 'service': 'ldap', 'service_id': '389', 's_port': 50328, 'd_port': 389, 'rule': 'Allow_VPN', 'rule_uid': '5093ffba-ec31-4e70-9e93-a10788ec1187', 'rule_name': 'Allow_VPN', 'product': 'Threat Prevention', 'blade': 'dlp', 'ifdir': 'outbound', 'ifname': 'eth2', 'loguid': 'd2053a40-efd4-4866-b455-dbf65a3445bd', 'version': '5', 'fw_subproduct': 'VPN-1', 'policy_id_tag': 'Standard', 'nat_rulenum': 0, 'nat_addtnl_rulenum': 0, 'bytes': 428, 'packets': 10, 'elapsed': 0, 'hostname': 'checkpoint-4.company.com', 'sequencenum': 597480, 'type': 'log', 'vendor': 'Check Point', 'product_family': 'Network Security'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Create parser configuration"
+      ]
+    },
+    "cisco_asa": {
+      "name": "cisco_asa",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_asa.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Syslog/CEF",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "<166>Aug 26 2025 00:02:09 asa-demo : %ASA-4-313001: Deny TCP (no connection) from 192.0.2.10/31281 to 203.0.113.5/443 on interface inside",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_duo": {
+      "name": "cisco_duo",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_duo.py",
+      "status": "excellent",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 26
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_duo-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09Z', 'time': 1756166529346, 'class_uid': '3002', 'class_name': 'Authentication', 'category_uid': '3', 'category_name': 'Identity & Access Management', 'activity_id': '1', 'activity_name': 'Logon', 'type_uid': '300201', 'severity_id': 1, 'status_id': 1, 'user': {'name': 'edward', 'account_uid': 'edward', 'account_type': 'User'}, 'src_endpoint': {'ip': '198.51.100.150', 'location': {'desc': 'Denver, US', 'city': 'Denver', 'country': 'US'}}, 'auth_protocol': 'push', 'auth_protocol_id': 4, 'status': 'SUCCESS', 'message': 'User approved push notification', 'mfa_factors': [{'factor_type': 'push', 'factor_result': 'SUCCESS', 'factor_desc': 'Push notification'}], 'metadata': {'version': '1.0.0', 'product': {'vendor_name': 'Cisco', 'name': 'Cisco Duo Security'}}, 'observables': [{'name': 'user', 'type': 'User', 'value': 'edward'}, {'name': 'src_ip', 'type': 'IP Address', 'value': '198.51.100.150'}, {'name': 'auth_factor', 'type': 'Other', 'value': 'push'}], 'dat",
+      "issues": [],
+      "recommendations": [
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_firewall_threat_defense": {
+      "name": "cisco_firewall_threat_defense",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_firewall_threat_defense.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 11
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.346819Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_firewall_threat_defense-latest"
+      },
+      "sample_output": "{'raw': '<165>Aug 25 17:02:09 ftd-747 : FTD-1-430004: FileName: script.ps1, FileAction: CREATE, FileSHA256: 0000000000182fc3868faf3c1c185389e1715a7fe9e5c46a34f386ca2ce47b33, User: user9049, SrcIP: 192.168.119.59', 'timestamp': '2025-08-26T00:02:09.346819Z', 'vendor': 'Cisco', 'product': 'Firewall Threat Defense', 'event_type': 'File events', 'event_id': 'FTD-1-430004', 'hostname': 'ftd-747', 'src_ip': '192.168.119.59', 'dst_ip': '203.0.113.136', 'user': 'user9049', 'device_uuid': '61620255-8360-446f-b5e7-4e4b44313b51'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_fmc": {
+      "name": "cisco_fmc",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_fmc.py",
+      "status": "excellent",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 32
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "starfleet",
+          "enterprise",
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-25T23:53:09.346961+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_fmc_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T23:53:09.346961+00:00', 'event_id': 4104348, 'event_type': 'Policy', 'event_subtype': 'POLICY_EVENT', 'severity': 'Warning', 'action': 'Drop', 'device_name': 'ENTERPRISE-FTD-MEDICAL-2', 'device_ip': '122.79.73.23', 'policy_name': 'StarfleetSecurityPolicy_1', 'rule_name': 'Directive_40', 'source_ip': '3.53.103.159', 'destination_ip': '207.51.136.188', 'source_port': 41286, 'destination_port': 135, 'protocol': 'AH', 'source_country': 'FR', 'destination_country': 'IN', 'application_protocol': 'HTTPS', 'client_application': 'Edge', 'web_application': 'Apache', 'bytes_sent': 44872, 'bytes_received': 11306, 'packets_sent': 186, 'packets_received': 87, 'duration': 3032, 'dataSource.vendor': 'Cisco', 'dataSource.name': 'Cisco FMC', 'dataSource.category': 'security', 'source_latitude': -33.522894, 'source_longitude': 88.758347, 'destination_latitude': -15.973896, 'destination_longitude': -58.430574}",
+      "issues": [],
+      "recommendations": []
+    },
+    "cisco_ios": {
+      "name": "cisco_ios",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_ios.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 22
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T15:08:09.347119+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_ios_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T15:08:09.347119+00:00', 'hostname': 'switch-5', 'device_ip': '57.17.230.74', 'facility': 'LOCAL7', 'severity': 'info', 'mnemonic': 'ADJCHG', 'facility_mnemonic': 'OSPF', 'sequence_number': 833470, 'message': 'Process 40900, Nbr 142.170.189.25 on Loopback1 from FULL to FULL', 'raw_message': '*Aug 25 15:08:09.347: %OSPF-INFO-ADJCHG: Process 40900, Nbr 142.170.189.25 on Loopback1 from FULL to FULL', 'process_name': 'OSPF', 'ios_version': '15.0.5', 'hardware_platform': 'Cat6500', 'uptime': '74 days, 3 hours, 59 minutes', 'location': 'DataCenter-1', 'dataSource.vendor': 'Cisco', 'dataSource.name': 'Cisco IOS', 'dataSource.category': 'network', 'ospf_process_id': 1795, 'ospf_neighbor': '77.74.161.21', 'ospf_area': '0.0.0.14', 'ospf_state': '2-Way'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_ironport": {
+      "name": "cisco_ironport",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_ironport.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_ironport-latest"
+      },
+      "sample_output": "2025-08-25T16:09:09Z esa-prod facility=mail severity=info message_id=\"7490969\" from_address=\"henry@supplier.net\" to_address=\"charlie@customer.org\" subject=\"Free software download\" src_ip=\"67.40.15.149\" dst_ip=\"20.213.225.171\" antispam_verdict=\"Bulk mail\" antivirus_verdict=\"Infected\" verdict=\"BLOCKED\" message_size=274797 attachment_count=4 connection_id=5587 reputation_score=-5.7",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_isa3000": {
+      "name": "cisco_isa3000",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_isa3000.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 36
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T00:26:09.347399+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_isa3000_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T00:26:09.347399+00:00', 'hostname': 'ISA3000-8', 'device_ip': '192.168.3.220', 'event_type': 'VPN', 'action': 'CONNECT', 'severity': 'INFO', 'message_id': 'ISA-250023', 'source_ip': '10.152.168.147', 'destination_ip': '192.168.5.175', 'source_port': 35461, 'destination_port': 2404, 'protocol': 'UDP', 'zone_from': 'UNTRUSTED', 'zone_to': 'CORPORATE', 'policy_name': 'ISA_Policy_7', 'rule_name': 'Rule_47', 'interface_in': 'GigabitEthernet0/2', 'interface_out': 'GigabitEthernet0/0', 'bytes_sent': 7718, 'bytes_received': 1215, 'duration': 514, 'dataSource.vendor': 'Cisco', 'dataSource.name': 'Cisco ISA3000', 'dataSource.category': 'security', 'vpn_type': 'Site-to-Site', 'tunnel_id': 875, 'peer_ip': '192.168.5.230', 'encryption': '3DES', 'authentication': 'SHA-256', 'user': 'user44@company.com', 'bytes_transmitted': 0, 'session_duration': 0, 'industrial_zone': 'Level 2', 'criticality': 'Low', 'safety_system': True, 'process_area': 'Quality Control'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_ise": {
+      "name": "cisco_ise",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_ise.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON String",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_ise_logs-latest"
+      },
+      "sample_output": "{\"EventTimestamp\": \"2025-08-25T07:53:09.347556+00:00\", \"MessageCode\": \"5400\", \"ACSServer\": \"ise-psn-2\", \"AccessService\": \"Device Admin\", \"UserName\": \"host/PC-288\", \"IdentityGroup\": \"Executives\", \"NetworkDeviceName\": \"nad-vpn-9\", \"NetworkDeviceGroups\": \"Location#Remote-VPN#Device Type#Switch\", \"AuthenticationMethod\": \"PEAP(EAP-TLS)\", \"AuthenticationResult\": \"Passed\", \"FailureReason\": \"\", \"Protocol\": \"RADIUS\", \"FramedIPAddress\": \"10.248.14.143\", \"NASIPAddress\": \"10.102.240.176\", \"NASPortType\": \"Async\", \"NASPortId\": \"GigabitEthernet1/0/44\", \"CallingStationID\": \"20:42:f1:82:2d:97\", \"CalledStationID\": \"91:37:b1:c9:99:ea:CORP-WIFI\", \"AuthorizationPolicyMatchedRule\": \"Guest-Internet-Only\", \"PostureStatus\": \"Unknown\", \"EndpointProfile\": \"Android-Device\", \"DeviceType\": \"Linux\", \"SSID\": \"GUEST-WIFI\", \"SessionID\": \"d66f73ad29ade3c9c39e7b6da06ceebf\", \"AuthenticationLatency\": 184, \"RadiusPacketType\": \"Access-Challenge\", \"ISEPolicySetName\": \"Wireless_802.1X\", \"Location\": \"Remote-VPN\", \"DeviceRegistr",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_meraki": {
+      "name": "cisco_meraki",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_meraki.py",
+      "status": "excellent",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 19
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_meraki-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09Z', 'syslog_priority': 135, 'unix_timestamp': 1756166529, 'hostname': 'meraki-mx64', 'log_type': 'ip_flow', 'src_ip': '10.0.85.161', 'dst_ip': '93.184.113.152', 'protocol': 'icmp', 'src_port': 10006, 'dst_port': 500, 'dataSource.vendor': 'Cisco', 'dataSource.name': 'Meraki', 'dataSource.category': 'network', 'metadata.product.vendor_name': 'Cisco', 'metadata.product.name': 'Cisco Meraki', 'metadata.version': '1.0.0', 'translated_src_ip': '172.16.230.97', 'translated_port': 500, 'message': '<135> 1756166529 meraki-mx64 ip_flow src=10.0.85.161 dst=93.184.113.152 protocol=icmp sport=10006 dport=500 translated_src_ip=172.16.230.97 translated_port=500'}",
+      "issues": [],
+      "recommendations": [
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_meraki_flow": {
+      "name": "cisco_meraki_flow",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_meraki_flow.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 17
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.347874Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_meraki_flow_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-26T00:02:09.347874Z', 'vendor': 'Cisco', 'product': 'Meraki Flow Logs', 'version': '1.0', 'event_type': 'security_event', 'message': 'Sample Cisco Meraki Flow Logs event at 2025-08-26T00:02:09.347874Z', 'severity': 'high', 'category': 'security', 'source_ip': '192.168.9.239', 'user': 'user8462', 'device': 'device-267', 'log_level': 'WARN', 'event_id': 92666, 'session_id': 'sess_107383', 'class_name': 'Security Event', 'activity_name': 'Log Generated', 'risk_score': 83}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_networks": {
+      "name": "cisco_networks",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_networks.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 19
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T15:55:09.347997+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_networks_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T15:55:09.347997+00:00', 'hostname': 'router-19', 'device_type': 'Router', 'facility': 'LOCAL1', 'severity': 'Warning', 'priority': '22.3', 'message': 'STP topology change', 'source_ip': '169.195.92.211', 'interface': '', 'process_name': 'SNMP', 'process_id': 9399, 'sequence_number': 554637, 'uptime': '104d 6h 42m', 'software_version': 'IOS 15.7.8', 'hardware_platform': 'ISR4321', 'location': 'Building-B', 'dataSource.vendor': 'Cisco', 'dataSource.name': 'Cisco Networks', 'dataSource.category': 'network'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "cisco_umbrella": {
+      "name": "cisco_umbrella",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/cisco_umbrella.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Plain Text",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cisco_umbrella-latest"
+      },
+      "sample_output": "\"2025-08-26 00:02:09\",\"ACME-Laptop67\",\"ACME-Laptop98;Finance\",\"10.0.1.112\",\"8.8.8.8\",\"Allowed\",\"TXT\",\"NOERROR\",\"malware.test\",\"None\",\"Roaming Computer\",\"Roaming Computer;Group\",\"\"",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "corelight_conn": {
+      "name": "corelight_conn",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/corelight_conn.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 18
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/corelight_conn_logs-latest"
+      },
+      "sample_output": "{'ts': 1756166271.348945, 'uid': 'CUJQyAKeSbYbPyy9xZ', 'id': {'orig_h': '10.185.75.211', 'orig_p': 31201, 'resp_h': '192.168.128.83', 'resp_p': 3389}, 'proto': 'tcp', 'service': 'rdp', 'duration': 61.056554, 'orig_bytes': 161, 'resp_bytes': 27, 'conn_state': 'RSTOS0', 'local_orig': True, 'local_resp': True, 'missed_bytes': 0, 'history': 'SR', 'orig_pkts': 1, 'orig_ip_bytes': 201, 'resp_pkts': 1, 'resp_ip_bytes': 67, 'tunnel_parents': []}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "corelight_http": {
+      "name": "corelight_http",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/corelight_http.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 17
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/corelight_http_logs-latest"
+      },
+      "sample_output": "{'ts': 1756166519.34911, 'uid': 'CzPQiib1m1JSUBWtkB', 'id': {'orig_h': '192.168.252.205', 'orig_p': 2797, 'resp_h': '10.191.103.109', 'resp_p': 443}, 'trans_depth': 1, 'method': 'CONNECT', 'host': 'cdn.example.com', 'uri': '/checkout', 'referrer': 'https://www.example.com/products', 'version': '1.1', 'user_agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36', 'request_body_len': 92, 'response_body_len': 20, 'status_code': 301, 'status_msg': 'Moved Permanently', 'tags': [], 'orig_fuids': ['F4XiMR0Fn65Wb6V7Dw'], 'orig_filenames': []}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "corelight_ssl": {
+      "name": "corelight_ssl",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/corelight_ssl.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 16
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/corelight_ssl_logs-latest"
+      },
+      "sample_output": "{'ts': 1756166305.349291, 'uid': 'CJ5g7C1KgPoqTbalaf', 'id': {'orig_h': '192.168.240.207', 'orig_p': 45470, 'resp_h': '10.132.92.242', 'resp_p': 443}, 'version': 'TLSv1.2', 'cipher': 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'server_name': 'remote.company.com', 'resumed': True, 'established': True, 'curve': 'secp521r1', 'subject': 'CN=*.amazon.com,O=Amazon.com Inc.,L=Seattle,ST=Washington,C=US', 'issuer': 'CN=DigiCert SHA2 High Assurance Server CA,O=DigiCert Inc,C=US', 'cert_chain_fuids': ['F5Repb3mApNTdk3gC7', 'FwNmJUFPWhytmA1gqS'], 'client_cert_chain_fuids': [], 'validation_status': 'ok', 'ja3': '8215959c596949b4850606f4fda8c2ac', 'ja3s': 'f72d42bee12248d398680657b336dcb9'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "corelight_tunnel": {
+      "name": "corelight_tunnel",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/corelight_tunnel.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 6
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/corelight_tunnel_logs-latest"
+      },
+      "sample_output": "{'ts': 1756166395.34944, 'uid': 'CJ7BAt8MyqwAA8gtEk', 'id': {'orig_h': '192.168.12.70', 'orig_p': 10410, 'resp_h': '12.77.237.30', 'resp_p': 1701}, 'tunnel_type': 'Tunnel::L2TP', 'action': 'Tunnel::DISCOVER', 'inner': {'id': {'orig_h': '192.168.128.231', 'orig_p': 3239, 'resp_h': '130.60.29.28', 'resp_p': 3389}, 'proto': 'udp', 'service': 'rdp'}}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "darktrace": {
+      "name": "darktrace",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/darktrace.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 18
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'time': 1756166529349, 'incidentId': 'a2b88ddf-1052-4928-a325-b80854b2f43d', 'title': 'Lateral Movement Detected', 'summary': 'Device accessing multiple internal systems in unusual pattern', 'category': 'lateral_movement', 'groupSeverity': 80, 'incidentUrl': 'https://darktrace-6e95fec7-0001-01/saas#aiincident/14586', 'startTime': 1756164560349, 'endTime': 1756166305349, 'devices': [{'hostname': 'DESKTOP-770', 'ip': '10.136.199.47', 'mac': '77:37:4b:4d:7e:40', 'type': 'iot', 'os': 'macOS 12.0'}, {'hostname': 'PROD-427', 'ip': '10.217.122.85', 'mac': '54:05:e2:d7:00:f8', 'type': 'mobile', 'os': 'Windows 10'}, {'hostname': 'SERVER-565', 'ip': '10.187.175.124', 'mac': '1e:e3:b8:d9:b7:5a', 'type': 'desktop', 'os': 'Windows 10'}], 'relatedBreaches': [{'modelName': 'Compliance / Crypto Currency Mining Activity', 'pbid': 3193035, 'time': 1756164560349, 'score': 0.766, 'device': {'hostname': 'PROD-427', 'ip': '10.217.122.85', 'mac': '54:05:e2:d7:00:f8', 'type': 'mobile', 'os': 'Windows 10'}}, ",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "extrahop": {
+      "name": "extrahop",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/extrahop.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 19
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'id': 9250145, 'start_time': 1756156329349, 'update_time': 1756159929349, 'mod_time': 1756159929349, 'title': 'Anomalous Authentication Pattern', 'description': 'Anomalous Authentication Pattern involving 135.82.10.111 and 1 target(s)', 'risk_score': 65, 'type': 'suspicious_authentication', 'categories': ['sec', 'sec.attack'], 'participants': [{'object_id': '38409', 'object_type': 'device', 'role': 'offender', 'hostname': None, 'ipaddr': '135.82.10.111', 'port': 49613}, {'object_id': '1364', 'object_type': 'device', 'role': 'victim', 'hostname': 'srv-file-35', 'ipaddr': '10.170.222.195'}], 'properties': {'detection_id': '0f77cefe-10f3-4e4c-a13a-656b3d2a9af2', 'severity': 'medium', 'confidence': 90}, 'mitre_tactics': ['Privilege Escalation'], 'mitre_techniques': ['T1055', 'T1134'], 'ticket_id': None, 'assignee': 'analyst8@company.com', 'status': 'suppressed', 'resolution': None, 'appliance_id': 3, 'is_user_created': False}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "extreme_networks": {
+      "name": "extreme_networks",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/extreme_networks.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 21
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T22:02:09.350010+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/extreme_networks_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T22:02:09.350010+00:00', 'hostname': 'access-point-46', 'device_type': 'Access Point', 'device_ip': '10.142.184.53', 'event_type': 'HIGH_CPU', 'severity': 'CRITICAL', 'message': 'CPU utilization high: 80%', 'facility': 'LOCAL0', 'priority': 17, 'software_version': 'EXOS 26.4.3.10', 'hardware_model': 'X440-G2', 'uptime': '57d 14h 51m', 'serial_number': 'Q6N51BCFA9Y8', 'location': 'Building-A-Floor-1', 'dataSource.vendor': 'Extreme Networks', 'dataSource.name': 'Extreme Networks', 'dataSource.category': 'network', 'channel': 2, 'signal_strength': -63, 'data_rate': '867Mbps', 'encryption': 'WEP'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "f5_networks": {
+      "name": "f5_networks",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/f5_networks.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/f5_networks_logs-latest"
+      },
+      "sample_output": "timestamp=2025-08-26T00:02:09.350171+00:00,hostname=f5-bigip-1,device_ip=94.241.31.100,module=LTM,event_type=VIRTUAL_SERVER_DOWN,severity=ERROR,facility=LOCAL0,priority=17,slot=1.2,tmm=2,virtual_server=vs_api_1,pool=pool_web_3,client_ip=80.100.21.36,server_ip=10.170.175.81,client_port=59288,server_port=443,protocol=UDP,dataSource.vendor=F5,dataSource.name=F5 Networks,dataSource.category=security,pool_member_status=down,connection_count=6287,throughput_mbps=431,response_time_ms=525,class_uid=4001,class_name=Network Activity,category_uid=4,category_name=Network Activity,activity_id=6,activity_name=Traffic,type_uid=400106,severity_id=3,status_id=2",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "f5_vpn": {
+      "name": "f5_vpn",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/f5_vpn.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 4
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/f5_vpn-latest"
+      },
+      "sample_output": "{'raw': '2025-08-25T11:27:09Z F5VPN session_id=\"sid-450\" user=\"diana\" client_ip=\"172.149.4.43\" start_time=\"2025-08-25T11:27:09Z\" event=\"LOGIN\" device=\"Windows10\" message=\"VPN session terminated\"', 'vendor': 'f5', 'product': 'vpn', 'log_type': 'vpn_access'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "forcepoint_firewall": {
+      "name": "forcepoint_firewall",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/forcepoint_firewall.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "2025-08-26T00:00:08.350+00:00 CEF:0|Forcepoint|NGFW|6.8.1|1002|Brute Force Attack|9|act=Deny app=Web Browsing deviceDirection=0 rt=1756166408350 src=10.250.85.69 spt=14770 dst=26.227.255.178 dpt=35614 proto=GRE request=/data/latest/ requestMethod=GET cs1=torrent-site.com/files cs1Label=URL cs2=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 cs2Label=UserAgent cs3=Rule_2454 cs3Label=PolicyRule cs4=External cs4Label=SourceZone cs5=External cs5Label=DestinationZone cs6=Low cs6Label=ThreatLevel cnt=52 in=78758 out=98012 cat=Anti-Malware reason=Brute Force Attack - Denyed outcome=Denyed dvchost=FP-FW-03 dvc=192.168.250.58 deviceInboundInterface=eth3 deviceOutboundInterface=eth3 externalId=436325 msg=ForcePoint Firewall: Brute Force Attack dpriv=User suser=user_43 duser=target_user_54 smac=86:3e:c0:b5:38:af dmac=a5:c3:1c:ea:1d:a8 cn1=366570 cn1Label=ConnectionCount cn2=1990 cn2Label=Duration cn3=37 cn3Label=ThreatScore",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "fortimanager": {
+      "name": "fortimanager",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/fortimanager.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 10
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.350629Z"
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'raw': '2025-08-25 17:02:09 FortiManager-68 FortiManager: action=device_register device=FortiAP-65 serial=FG584638 status=pending ip=10.0.58.166', 'timestamp': '2025-08-26T00:02:09.350629Z', 'vendor': 'Fortinet', 'product': 'FortiManager', 'event_type': 'DEVICE_REGISTRATION', 'user': 'readonly_user', 'ui': 'CLI', 'src_ip': '192.168.194.117', 'status': 'pending', 'hostname': 'FortiManager-68'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "fortinet_fortigate": {
+      "name": "fortinet_fortigate",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/fortinet_fortigate.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "devname=FortiGate-40F devid=FGT40FTK23099XSK logid=0000000013 identifier=3750 type=traffic subtype=forward level=notice vd=root srcip=192.168.1.121 dstip=8.8.8.8 srcport=56789 dstport=443 srcintf=lan srcintfrole=lan dstintf=wan dstintfrole=wan srccountry=Reserved dstcountry=United States sessionid=11109805 proto=6 action=accept policyid=1 policytype=policy policyname=\"LAN to WAN\" trandisp=snat transip=70.48.255.88 transport=56789 duration=120 sentbyte=1228 rcvdbyte=0 sentpkt=10 rcvdpkt=0 appcat=unscanned devtype=Phone srchwvendor=Apple srcfamily=iPhone osname=iOS srcmac=8d:d9:71:85:c2:27 dstmac=2c:1f:f3:dc:3b:07 tz=-0400 date=2025-08-26 time=00:02:09 eventtime=0001756166529350782",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "infoblox_ddi": {
+      "name": "infoblox_ddi",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/infoblox_ddi.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 11
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-26T00:02:09.350919Z"
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'raw': '25-Aug-2025 17:02:09.350 infoblox-36 dhcpd[9784]: DHCPRELEASE of 192.168.100.224 from 46:9f:9a:d1:99:fb (laptop-user) via vlan100', 'timestamp': '2025-08-26T00:02:09.350919Z', 'vendor': 'Infoblox', 'product': 'DDI', 'event_type': 'DHCP_RELEASE', 'service': 'dhcpd', 'hostname': 'infoblox-36', 'client_ip': '192.168.190.221', 'server_ip': '10.0.2.5', 'domain': '', 'assigned_ip': '192.168.100.224'}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "juniper_networks": {
+      "name": "juniper_networks",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/juniper_networks.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 19
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T13:42:09.351047+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/juniper_networks_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T13:42:09.351047+00:00', 'hostname': 'srx-40', 'device_type': 'SRX', 'device_ip': '216.20.210.26', 'facility': 'daemon', 'severity': 'notice', 'tag': 'mib2d', 'process_name': 'dcd', 'process_id': 6145, 'message': 'Chassis temperature normal', 'event_category': 'system', 'software_version': 'Junos 21.4R2', 'model': 'SRX3338', 'serial_number': 'BIJSNMHJBCU', 'uptime': '344 days, 21:19:11', 'dataSource.vendor': 'Juniper', 'dataSource.name': 'Juniper Networks', 'dataSource.category': 'network', 'temperature_celsius': 62}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "manch_siem": {
+      "name": "manch_siem",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/manch_siem.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 36
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T03:52:09.351201+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/manch_siem_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T03:52:09.351201+00:00', 'event_id': 'MSIEM-9871274', 'alert_id': 'ALERT-593418', 'event_type': 'COMPLIANCE_VIOLATION', 'severity': 'MEDIUM', 'category': 'Compliance', 'status': 'New', 'risk_score': 64, 'risk_level': 'MEDIUM', 'confidence': 98, 'title': 'Compliance Violation Detected', 'description': 'Manchester SIEM detected compliance violation activity', 'source_ip': '47.224.115.16', 'destination_ip': '32.205.213.79', 'source_hostname': 'host-757', 'destination_hostname': 'server-38', 'user_name': 'user24@company.com', 'source_country': 'IN', 'destination_country': 'CN', 'data_source': 'Application Logs', 'rule_name': 'SIEM_Rule_183', 'rule_description': 'Detection rule for compliance violation', 'asset_criticality': 'Medium', 'analyst_assigned': 'analyst4@company.com', 'investigation_notes': '', 'dataSource.vendor': 'Manchester', 'dataSource.name': 'Manchester SIEM', 'dataSource.category': 'security', 'created_time': '2025-08-25T03:52:09.351201+00:00', 'las",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "paloalto_firewall": {
+      "name": "paloalto_firewall",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/paloalto_firewall.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Plain Text",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": ",2025/08/26 00:02:09,921267714104719,TRAFFIC,drop,,2025/08/25 23:59:01,10.250.29.106,106.26.133.164,10.250.29.106,106.26.133.164,block-default,,,ssl,vsys1,internet,internal,ethernet1/8,ethernet1/4,FORWARD,,241049,1,31370,443,31370,443,0x0,tcp,deny,423,150,273,7,2025/08/25 23:59:01,283,business-systems,,415499,0x0,GB,CN,,4,2,tcp-rst",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "paloalto_prismasase": {
+      "name": "paloalto_prismasase",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/paloalto_prismasase.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 69
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/paloalto_prismasase_logs-latest"
+      },
+      "sample_output": "{'time_generated': '2025-08-25T03:57:09.351546+00:00', 'serial': 'PA-SASE-819217', 'type': 'AUTH', 'subtype': 'login', 'config_version': '2.4.4', 'time_received': '2025-08-25T03:57:09.351546+00:00', 'src': '135.55.42.146', 'dst': '95.36.37.65', 'natsrc': '115.120.14.150', 'natdst': '208.46.145.235', 'rule': 'Rule-96', 'srcuser': 'user30@company.com', 'app': 'skype', 'vsys': 'vsys1', 'from': 'trust', 'to': 'dmz', 'inbound_if': 'ethernet1/5', 'outbound_if': 'ethernet1/8', 'logset': 'LSet1', 'sessionid': 948333, 'repeatcnt': 1, 'sport': 63820, 'dport': 139, 'natsport': 0, 'natdport': 53, 'flags': '0x1a02', 'proto': 'icmp', 'action': 'failed', 'bytes': 535176, 'bytes_sent': 457004, 'bytes_received': 30178, 'packets': 874, 'start': 1756094229, 'elapsed': 2521, 'category': 'computer-and-internet-info', 'srcloc': 'IT', 'dstloc': 'FR', 'pkts_sent': 397, 'pkts_received': 21, 'dataSource.vendor': 'Palo Alto Networks', 'dataSource.name': 'Prisma SASE', 'dataSource.category': 'security', 'authpoli",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "vectra_ai": {
+      "name": "vectra_ai",
+      "category": "network_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/network_security/vectra_ai.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Syslog/CEF",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/vectra_ai_logs-latest"
+      },
+      "sample_output": "<134>Aug 26 00:01:50 vectra-brain vectra_json_account -: {\"version\":\"v3.3\",\"account_uid\":\"gcp:user483@company.com\",\"category\":\"account\",\"certainty\":36,\"threat\":67,\"score\":24,\"severity\":\"low\",\"account_id\":7846,\"href\":\"https://vectra.company.com/accounts/user483@company.com\",\"is_prioritized\":false,\"last_detection_timestamp\":\"2025-08-26T00:01:50.351758+00:00Z\",\"detection_count\":5,\"detection_categories\":[\"Suspicious File Activity\",\"Command & Control\",\"Hidden HTTPS Tunnel\",\"Port Scan\",\"Ransomware\"],\"tags\":[],\"service_access_history\":{\"last_30_days\":100,\"last_7_days\":91,\"last_day\":15},\"vectra_timestamp\":\"2025-08-26T00:01:50.351758+00:00Z\",\"ts\":1756166510.351758}",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "akamai_cdn": {
+      "name": "akamai_cdn",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/akamai_cdn.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/akamai_cdn-latest"
+      },
+      "sample_output": "2025-08-25T14:49:09Z AkamaiCDN streamId=\"stream-230\" cp=\"53450\" reqId=\"n7tmegqk39\" statusCode=304 cliIP=\"12.52.85.23\" reqHost=\"assets.example.com\" reqMethod=\"POST\" reqPath=\"/sitemap.xml\" bytes=702998 cacheStatus=\"TCP_MISS\" turnAroundTimeMSec=48 edgeIP=\"192.139.140.60\" country=\"CA\" city=\"London\"",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "akamai_dns": {
+      "name": "akamai_dns",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/akamai_dns.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/akamai_dns-latest"
+      },
+      "sample_output": "2025-08-25T04:11:09Z AkamaiDNS streamId=\"dns-817\" cliIP=\"81.28.228.50\" resolverIP=\"203.0.113.200\" domain=\"shop.example.com\" recordType=\"A\" responseCode=\"NOERROR\" answer=\"192.0.2.237\" edge=\"edge-syd\" ttl=600 bytes=192",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "akamai_general": {
+      "name": "akamai_general",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/akamai_general.py",
+      "status": "functional",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": false,
+        "examples": []
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/akamai_general-latest"
+      },
+      "sample_output": "2025-08-25T04:36:09Z AkamaiSecurity clientIP=\"131.82.78.194\" host=\"www.example.com\" path=\"/config\" ruleId=\"961590\" attackType=\"LFI\" action=\"allowed\" httpMethod=\"POST\" status=200 userAgent=\"sqlmap/1.5\" message=\"Cross-site scripting attack prevented\"",
+      "issues": [],
+      "recommendations": [
+        "Add Star Trek character/domain integration",
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "akamai_sitedefender": {
+      "name": "akamai_sitedefender",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/akamai_sitedefender.py",
+      "status": "excellent",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 10
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": true,
+        "value": "2025-08-25T23:56:09.352234Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/akamai_sitedefender-latest"
+      },
+      "sample_output": "{'type': 'akamai_siem', 'attackData': {'clientIP': '198.51.100.86', 'configId': '56902', 'policyId': 'p_40862', 'rules': []}, 'httpMessage': {'method': 'POST', 'host': 'shop.example.com', 'path': '/', 'status': 301}, 'botData': None, 'geo': {'city': 'New York', 'country': 'JP'}, 'userRiskData': {'botScore': 14}, 'time': '2025-08-25T23:56:09.352234Z', 'dataSource.vendor': 'Akamai', 'dataSource.name': 'Akamai SiteDefender', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": [
+        "Add overrides parameter support"
+      ]
+    },
+    "cloudflare_general": {
+      "name": "cloudflare_general",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/cloudflare_general.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 42
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cloudflare_general_logs-latest"
+      },
+      "sample_output": "{'Datetime': 1756154049352, 'ZoneID': 857155079312248939, 'ZoneName': 'example.com', 'ClientIP': '144.218.41.198', 'ClientRequestHost': 'api.example.com', 'ClientRequestMethod': 'OPTIONS', 'ClientRequestURI': '/admin', 'ClientRequestUserAgent': 'curl/7.68.0', 'ClientCountry': 'CA', 'ClientASN': 17849, 'ClientIPClass': 'whitelist', 'EdgeResponseStatus': 503, 'EdgeResponseBytes': 46236, 'EdgeRequestHost': 'example.com', 'EdgeStartTimestamp': 1756154049352364, 'EdgeEndTimestamp': 1756154051097495, 'OriginIP': '10.245.229.191', 'OriginResponseStatus': 0, 'OriginResponseTime': 0, 'Action': 'challenge', 'SecurityLevel': 'off', 'WAFProfile': 'high', 'WAFAction': 'challenge', 'WAFFlags': 108, 'WAFMatchedVar': 'HTTP_USER_AGENT', 'WAFRuleID': '', 'WAFRuleMessage': 'WAF Custom Rule', 'RayID': '0317dd8a6d965aaa', 'CacheCacheStatus': 'expired', 'CacheResponseBytes': 6804, 'CacheResponseStatus': 200, 'BotScore': 77, 'BotScoreSrc': 'JS Fingerprinting', 'BotTags': 'likely_human', 'ThreatScore': 64, 'R",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "cloudflare_waf": {
+      "name": "cloudflare_waf",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/cloudflare_waf.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "Key-Value",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/cloudflare_waf_logs-latest"
+      },
+      "sample_output": "json.Timestamp = \"2025-08-26T00:02:09.352557+00:00Z\";\njson.CreatedAt = \"2025-08-26T00:02:09.352557+00:00Z\";\njson.EdgeStartTimestamp = 1756166529352557056;\njson.ClientIP = \"95.86.33.56\";\njson.ClientRequestHost = \"example-4.com\";\njson.ClientRequestMethod = \"PUT\";\njson.ClientRequestURI = \"/payment\";\njson.ClientRequestProtocol = \"HTTP/2\";\njson.ClientRequestUserAgent = \"sqlmap/1.5.2#stable (http://sqlmap.org)\";\njson.EdgeResponseStatus = 403;\njson.OriginResponseStatus = 0;\njson.EdgeServerIP = \"179.71.159.194\";\njson.RayID = \"18bc41cd92d36-ORD\";\njson.EdgeColoCode = \"CDG\";\njson.ClientCountry = \"IN\";\njson.ClientDeviceType = \"desktop\";\njson.ClientRequestBytes = 325;\njson.EdgeResponseBytes = 10022;\njson.EdgeRequestHost = \"example-7.com\";\njson.EdgePathingOp = \"ban\";\njson.EdgePathingSrc = \"filterBasedFirewall\";\njson.EdgePathingStatus = \"captchaNew\";\njson.FirewallMatchesActions[0] = \"challenge\";\njson.FirewallMatchesRuleIDs[0] = \"100001\";\njson.SecurityLevel = \"high\";\njson.WAFAction = \"challenge\";\njson",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)"
+      ]
+    },
+    "imperva_sonar": {
+      "name": "imperva_sonar",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/imperva_sonar.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 13
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T23:29:09.352753Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/imperva_sonar-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T23:29:09.352753Z', 'dataSource': 'ImpervaSonar', 'eventType': 'POLICY_VIOLATION', 'databaseUser': 'app_user', 'sourceIP': '203.0.113.196', 'database': 'hr', 'dataSource.vendor': 'Imperva', 'dataSource.name': 'Imperva Sonar', 'dataSource.category': 'security', 'statement': 'DROP TABLE employees', 'outcome': 'BLOCKED', 'policy': 'DataExfiltration', 'message': 'Drop table command blocked by security policy'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "imperva_waf": {
+      "name": "imperva_waf",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/imperva_waf.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 38
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T14:44:09.352881+00:00"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/imperva_waf_logs-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T14:44:09.352881+00:00', 'eventId': 'imp_3332651555', 'clientIP': '37.31.206.233', 'serverIP': '10.185.209.229', 'httpMethod': 'PUT', 'uri': '/login', 'userAgent': 'python-requests/2.25.1', 'referer': 'https://malicious-site.com/', 'host': 'www.example.com', 'protocol': 'HTTP/2.0', 'responseCode': 503, 'responseSize': 31603, 'requestSize': 6127, 'processingTime': 258, 'action': 'Redirect', 'attackType': 'Command Injection', 'violationCategory': 'Bot Protection', 'severity': 'Informational', 'policyName': 'policy_10', 'ruleName': 'rule_478', 'ruleId': 23966, 'confidenceLevel': 4, 'riskScore': 58, 'sessionId': 'sess_226456872', 'sourceCountry': 'US', 'sourceASN': 24261, 'destinationPort': 80, 'sourcePort': 47539, 'applicationName': 'WebApp1', 'siteName': 'site_4', 'serverGroup': 'group_3', 'dataSource.vendor': 'Imperva', 'dataSource.name': 'Imperva WAF', 'dataSource.category': 'security', 'commandPattern': '; ls -la', 'botType': 'Bad Bot', 'botScore': 85, 'challe",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "incapsula": {
+      "name": "incapsula",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/incapsula.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 41
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T00:39:09.353044+00:00"
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'timestamp': '2025-08-25T00:39:09.353044+00:00', 'log_id': 'inc_6044427091', 'account_id': '429835', 'site_id': '52552021', 'request_id': '5567819478629525', 'client_ip': '67.239.28.195', 'client_country': 'ES', 'client_country_code': 'NL', 'client_asn': 8883, 'client_asn_name': 'Digital Ocean', 'server_ip': '10.206.11.36', 'host': 'admin.example.com', 'method': 'GET', 'uri': '/../../../etc/passwd', 'query_string': '?id=123', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15', 'referer': 'https://malicious-site.com/', 'request_size': 45608, 'response_code': 404, 'response_size': 62141, 'response_time': 881, 'action': 'Monitor', 'rule_name': 'rule_228', 'rule_id': 18020, 'policy_name': 'policy_19', 'attack_type': '', 'severity': '', 'session_id': 'sess_279898597', 'visit_id': 'visit_612962408', 'dataSource.vendor': 'Imperva', 'dataSource.name': 'Incapsula', 'dataSource.category': 'security', 'is_bot': ",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    },
+    "netskope": {
+      "name": "netskope",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/netskope.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": true
+      },
+      "format": {
+        "type": "JSON String",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "troi"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{\"_id\": \"b79a3da3-6fd9-44f9-8534-bd9a15b271d6\", \"_event_id\": \"3194114\", \"_category_id\": 4137, \"_category_tags\": [\"logout\", \"it_management\"], \"_correlation_id\": \"8da238c2-78b2-48c9-9332-7e3848a9aba0\", \"_detection_name\": \"Netskope Force Logout Detection\", \"_nshostname\": \"netskope-5.company.com\", \"_resource_name\": \"ns-resource-215\", \"_service_identifier\": \"netskope-service-89\", \"timestamp\": 1756166529, \"src_time\": 1756166306, \"event_type\": \"logout\", \"activity\": \"Force Logout\", \"user\": \"deanna.troi\", \"user_id\": \"614e2e90-908c-413e-857b-2dcec73dea7e\", \"userkey\": \"deanna.troi_key_9782\", \"account_name\": \"Deanna\", \"app_name\": \"Unknown App\", \"appcategory\": \"IT Management\", \"category\": \"Logout\", \"action\": \"alert\", \"device\": \"iOS-513\", \"hostname\": \"deanna-ios-188\", \"os\": \"iOS\", \"srcip\": \"10.53.122.8\", \"userip\": \"10.181.37.184\", \"dstip\": \"139.193.92.182\", \"protocol\": \"HTTPS\", \"src_country\": \"Canada\", \"src_region\": \"Unknown\", \"src_latitude\": 0.3027, \"src_longitude\": 2.7483, \"src_timezone\": \"Austral",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration"
+      ]
+    },
+    "zscaler_dns_firewall": {
+      "name": "zscaler_dns_firewall",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/zscaler_dns_firewall.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 15
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": "2025-08-25T08:17:09Z"
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/zscaler_dns_firewall-latest"
+      },
+      "sample_output": "{'timestamp': '2025-08-25T08:17:09Z', 'userName': 'charlie@example.com', 'sourceIp': '147.87.177.105', 'deviceId': 'TABLET-01', 'query': 'microsoft.com', 'queryType': 'NS', 'responseCode': 'NXDOMAIN', 'answer': '', 'action': 'ALLOWED', 'bytes_sent': 905, 'bytes_received': 386, 'response_time_ms': 142, 'dataSource.vendor': 'Zscaler', 'dataSource.name': 'Zscaler DNS Firewall', 'dataSource.category': 'security'}",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "zscaler_firewall": {
+      "name": "zscaler_firewall",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/zscaler_firewall.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON String",
+        "valid": true
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": true,
+        "path": "/Users/nathanial.smalley/projects/jarvis_coding/parsers/community/zscaler_firewall_logs-latest"
+      },
+      "sample_output": "{\"datetime\": \"2025-08-25T02:17:09.353572+00:00\", \"timestamp\": 1756088229, \"recordtype\": \"FirewallLogs\", \"recordid\": \"fw_8503897729\", \"action\": \"Block\", \"aggregate\": \"No\", \"bandwidth_throttle\": \"No\", \"client_ip\": \"10.89.127.56\", \"client_publicip\": \"138.195.7.48\", \"client_country\": \"IN\", \"client_latitude\": -35.398062, \"client_longitude\": -24.771005, \"department\": \"Engineering\", \"dest_ip\": \"89.209.138.161\", \"dest_port\": 25, \"dest_country\": \"FR\", \"device_owner\": \"user17@company.com\", \"device_hostname\": \"PC-8537\", \"dnat_ip\": \"\", \"dnat_port\": 0, \"duration\": 1079, \"inbound_bytes\": 144384, \"outbound_bytes\": 785382, \"app\": \"FTP\", \"nwapp\": \"DNS\", \"nwsvc\": \"HTTP\", \"proto\": \"ICMP\", \"src_ip\": \"10.208.248.185\", \"src_port\": 40261, \"stateful\": \"Yes\", \"aggregate_session\": \"Yes\", \"policy\": \"FW_Policy_6\", \"rule\": \"Rule_686\", \"nat_rule\": \"\", \"locationname\": \"London\", \"numsessions\": 81, \"user\": \"user81@company.com\", \"vendor\": \"Zscaler\", \"product\": \"ZIA\", \"version\": \"1.0\", \"dataSource.vendor\": \"Zscaler\", \"d",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Add overrides parameter support"
+      ]
+    },
+    "zscaler_private_access": {
+      "name": "zscaler_private_access",
+      "category": "web_security",
+      "path": "/Users/nathanial.smalley/projects/jarvis_coding/event_generators/web_security/zscaler_private_access.py",
+      "status": "good",
+      "execution": {
+        "success": true,
+        "error": null,
+        "supports_overrides": false
+      },
+      "format": {
+        "type": "JSON/Dict",
+        "valid": true,
+        "fields": 128
+      },
+      "star_trek": {
+        "present": true,
+        "examples": [
+          "data"
+        ]
+      },
+      "timestamp": {
+        "recent": false,
+        "value": null
+      },
+      "parser": {
+        "exists": false,
+        "path": null
+      },
+      "sample_output": "{'LogTimestamp': '2025-08-26T00:02:09.353765Z', 'Customer': 'company.com', 'SessionID': '88638497', 'ConnectionID': 'conn_2861848', 'InternalReason': '', 'ConnectionStatus': 'active', 'IPProtocol': 9, 'DoubleEncryption': 1, 'Username': 'user7842@company.com', 'ServicePort': 22, 'ClientPublicIP': '101.163.243.247', 'ClientPrivateIP': '10.211.57.186', 'ClientLatitude': -63.29393, 'ClientLongitude': 64.072379, 'ClientCountryCode': 'GB', 'ClientZEN': 'zen1.zscaler.net', 'Policy': 'Policy_16', 'Connector': 'zpa-connector-11', 'ConnectorZEN': 'zen5.zscaler.net', 'ConnectorIP': '172.16.138.180', 'ConnectorPort': 57665, 'Host': 'app18.internal.company.com', 'Application': 'HR-Portal', 'AppGroup': 'Admin_Tools', 'Server': 'server44.company.local', 'ServerIP': '10.236.233.112', 'ServerPort': 5000, 'ServerProtocol': 'HTTP', 'Type': 'UserStatus', 'ZENLatitude': 54.389552, 'ZENLongitude': -95.662227, 'ZENCountryCode': 'JP', 'TimestampRequestReceiveStart': '2025-08-26T00:02:09.353765+00:00', 'Timest",
+      "issues": [],
+      "recommendations": [
+        "Update to use recent timestamps (last 10 minutes)",
+        "Create parser configuration",
+        "Add overrides parameter support"
+      ]
+    }
+  },
+  "categories": {
+    "cloud_infrastructure": {
+      "total": 9,
+      "successful": 9,
+      "failed": 0,
+      "generators": [
+        "aws_cloudtrail",
+        "aws_elasticloadbalancer",
+        "aws_guardduty",
+        "aws_route53",
+        "aws_vpc_dns",
+        "aws_vpcflowlogs",
+        "aws_waf",
+        "google_cloud_dns",
+        "google_workspace"
+      ]
+    },
+    "email_security": {
+      "total": 4,
+      "successful": 4,
+      "failed": 0,
+      "generators": [
+        "abnormal_security",
+        "microsoft_defender_email",
+        "mimecast",
+        "proofpoint"
+      ]
+    },
+    "endpoint_security": {
+      "total": 6,
+      "successful": 6,
+      "failed": 0,
+      "generators": [
+        "crowdstrike_falcon",
+        "jamf_protect",
+        "linux_auth",
+        "microsoft_windows_eventlog",
+        "sentinelone_endpoint",
+        "sentinelone_identity"
+      ]
+    },
+    "identity_access": {
+      "total": 20,
+      "successful": 20,
+      "failed": 0,
+      "generators": [
+        "beyondtrust_passwordsafe",
+        "beyondtrust_privilegemgmt_windows",
+        "cyberark_conjur",
+        "cyberark_pas",
+        "hashicorp_vault",
+        "hypr_auth",
+        "microsoft_365_collaboration",
+        "microsoft_365_defender",
+        "microsoft_365_mgmt_api",
+        "microsoft_azure_ad",
+        "microsoft_azure_ad_signin",
+        "microsoft_azuread",
+        "microsoft_eventhub_azure_signin",
+        "microsoft_eventhub_defender_email",
+        "microsoft_eventhub_defender_emailforcloud",
+        "okta_authentication",
+        "pingfederate",
+        "pingone_mfa",
+        "pingprotect",
+        "rsa_adaptive"
+      ]
+    },
+    "infrastructure": {
+      "total": 20,
+      "successful": 20,
+      "failed": 0,
+      "generators": [
+        "axway_sftp",
+        "buildkite",
+        "cohesity_backup",
+        "github_audit",
+        "harness_ci",
+        "iis_w3c",
+        "isc_bind",
+        "isc_dhcp",
+        "manageengine_adauditplus",
+        "manageengine_general",
+        "sap",
+        "securelink",
+        "tailscale",
+        "teleport",
+        "ubiquiti_unifi",
+        "veeam_backup",
+        "vmware_vcenter",
+        "windows_dhcp",
+        "wiz_cloud",
+        "zscaler"
+      ]
+    },
+    "network_security": {
+      "total": 34,
+      "successful": 34,
+      "failed": 0,
+      "generators": [
+        "apache_http",
+        "armis",
+        "aruba_clearpass",
+        "checkpoint",
+        "cisco_asa",
+        "cisco_duo",
+        "cisco_firewall_threat_defense",
+        "cisco_fmc",
+        "cisco_ios",
+        "cisco_ironport",
+        "cisco_isa3000",
+        "cisco_ise",
+        "cisco_meraki",
+        "cisco_meraki_flow",
+        "cisco_networks",
+        "cisco_umbrella",
+        "corelight_conn",
+        "corelight_http",
+        "corelight_ssl",
+        "corelight_tunnel",
+        "darktrace",
+        "extrahop",
+        "extreme_networks",
+        "f5_networks",
+        "f5_vpn",
+        "forcepoint_firewall",
+        "fortimanager",
+        "fortinet_fortigate",
+        "infoblox_ddi",
+        "juniper_networks",
+        "manch_siem",
+        "paloalto_firewall",
+        "paloalto_prismasase",
+        "vectra_ai"
+      ]
+    },
+    "web_security": {
+      "total": 13,
+      "successful": 13,
+      "failed": 0,
+      "generators": [
+        "akamai_cdn",
+        "akamai_dns",
+        "akamai_general",
+        "akamai_sitedefender",
+        "cloudflare_general",
+        "cloudflare_waf",
+        "imperva_sonar",
+        "imperva_waf",
+        "incapsula",
+        "netskope",
+        "zscaler_dns_firewall",
+        "zscaler_firewall",
+        "zscaler_private_access"
+      ]
+    }
+  }
+}

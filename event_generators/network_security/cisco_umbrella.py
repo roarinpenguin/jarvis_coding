@@ -2,9 +2,9 @@
 """
 Cisco Umbrella synthetic log generator
 """
-import requests
 import json
 import csv, io, random, time, uuid
+from datetime import datetime, timezone, timedelta
 
 ATTR_FIELDS = {
     "dataSource_vendor": "Cisco",

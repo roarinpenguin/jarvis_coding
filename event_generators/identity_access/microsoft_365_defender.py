@@ -29,34 +29,42 @@ ACTION_TYPES = [
     "MalwareDetected"
 ]
 
-# Device names
+# Star Trek themed device names
 DEVICE_NAMES = [
-    "DESKTOP-01", "DESKTOP-02", "DESKTOP-03",
-    "LAPTOP-01", "LAPTOP-02", "LAPTOP-03",
-    "SERVER-01", "SERVER-02", "WKS-001", "WKS-002"
+    "ENTERPRISE-BRIDGE-01", "ENTERPRISE-BRIDGE-02", "ENTERPRISE-BRIDGE-03",
+    "ENTERPRISE-ENG-01", "ENTERPRISE-ENG-02", "ENTERPRISE-MED-01",
+    "ENTERPRISE-SEC-01", "ENTERPRISE-SCI-01", "HOLODECK-01", "HOLODECK-02",
+    "TRANSPORTER-01", "SHUTTLEBAY-01", "READYROOM-01", "TENFORWARD-01"
 ]
 
-# Account names
-ACCOUNT_NAMES = ["alice", "bob", "charlie", "admin", "system", "service"]
+# Star Trek themed account names
+ACCOUNT_NAMES = [
+    "jean.picard", "william.riker", "data.android", "geordi.laforge",
+    "worf.security", "deanna.troi", "beverly.crusher", "wesley.crusher",
+    "guinan.bartender", "obrien.transporter", "system", "service"
+]
 
-# Account domains
-ACCOUNT_DOMAINS = ["CONTOSO", "WORKGROUP", "NT AUTHORITY"]
+# Star Trek themed account domains
+ACCOUNT_DOMAINS = ["STARFLEET", "ENTERPRISE", "FEDERATION", "NT AUTHORITY"]
 
-# File names
+# Star Trek themed file names
 FILE_NAMES = [
-    "chrome.exe", "powershell.exe", "cmd.exe", "notepad.exe",
-    "malicious.exe", "virus.dll", "trojan.scr", "document.pdf",
-    "script.ps1", "config.xml", "data.txt"
+    "lcars.exe", "powershell.exe", "cmd.exe", "padd.exe",
+    "borg-malware.exe", "romulan-virus.dll", "ferengi-trojan.scr", 
+    "captains-log.pdf", "warp-script.ps1", "shields-config.xml", 
+    "sensor-data.txt", "tricorder.exe", "phaser-control.exe"
 ]
 
-# Folder paths
+# Star Trek themed folder paths
 FOLDER_PATHS = [
-    "C:\\Windows\\System32",
-    "C:\\Program Files\\Google\\Chrome\\Application", 
-    "C:\\Users\\alice\\Downloads",
-    "C:\\Users\\bob\\Documents",
-    "C:\\Temp",
-    "C:\\Windows\\Temp"
+    "C:\\Starfleet\\System32",
+    "C:\\Program Files\\LCARS\\Application", 
+    "C:\\Users\\picard\\Downloads",
+    "C:\\Users\\riker\\Documents",
+    "C:\\Users\\data\\Analysis",
+    "C:\\Starfleet\\Temp",
+    "C:\\Bridge\\Operations",
+    "C:\\Engineering\\Core"
 ]
 
 # Process names
@@ -65,22 +73,22 @@ PROCESS_NAMES = [
     "explorer.exe", "svchost.exe", "winlogon.exe", "lsass.exe"
 ]
 
-# Remote URLs
+# Star Trek themed remote URLs
 REMOTE_URLS = [
-    "https://google.com",
-    "https://microsoft.com",
-    "https://malicious.example.com",
-    "https://c2-server.net",
-    "https://phishing-site.org"
+    "https://starfleet.corp",
+    "https://memory-alpha.org",
+    "https://romulan-spy.net",
+    "https://borg-collective.net",
+    "https://ferengi-phishing.com"
 ]
 
-# Malware detection IDs
+# Star Trek themed malware detection IDs
 DETECTION_IDS = [
-    "Trojan:Win32/Phish",
-    "Virus:Win32/Malware",
-    "Adware:Win32/Suspicious", 
-    "Ransomware:Win32/Cryptor",
-    "Backdoor:Win32/Remote"
+    "Trojan:Romulan/Cloak",
+    "Virus:Borg/Assimilate",
+    "Adware:Ferengi/Profit", 
+    "Ransomware:Orion/Cryptor",
+    "Backdoor:Dominion/Changeling"
 ]
 
 def generate_device_id() -> str:
@@ -99,10 +107,10 @@ def generate_ip() -> str:
     """Generate IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def microsoft_365_defender_log() -> Dict:
+def microsoft_365_defender_log(overrides: dict = None) -> Dict:
     """Generate a single Microsoft 365 Defender event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    event_time = now - timedelta(minutes=random.randint(0, 10))
     
     action_type = random.choice(ACTION_TYPES)
     device_name = random.choice(DEVICE_NAMES)
@@ -175,6 +183,10 @@ def microsoft_365_defender_log() -> Dict:
     
     # Remove None values
     event = {k: v for k, v in event.items() if v is not None}
+    
+    # Apply overrides if provided (for scenario customization)
+    if overrides:
+        event.update(overrides)
     
     return event
 

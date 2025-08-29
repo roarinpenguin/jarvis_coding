@@ -27,18 +27,21 @@ RESPONSE_CODES = [
     "TIMEOUT"
 ]
 
-# Common domains
+# Common domains with Star Trek themed enterprise domains
 DOMAINS = [
-    "example.com",
+    "starfleet.corp",
+    "bridge.enterprise.starfleet.corp",
+    "engineering.starfleet.corp", 
+    "sickbay.starfleet.corp",
     "google.com",
     "amazonaws.com",
     "microsoft.com",
     "cloudflare.com",
     "github.com",
     "stackoverflow.com",
-    "suspicious-domain.com",
-    "malware-c2.net",
-    "phishing-site.org"
+    "romulan-spy.org",
+    "borg-collective.net",
+    "ferengi-trading.com"
 ]
 
 def generate_vpc_ip() -> str:

@@ -57,10 +57,10 @@ def generate_ip() -> str:
     """Generate a random IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def cisco_fmc_log() -> Dict:
+def cisco_fmc_log(overrides: dict = None) -> Dict:
     """Generate a single Cisco FMC event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    event_time = now - timedelta(minutes=random.randint(0, 10))
     
     event_info = random.choice(EVENT_TYPES)
     action = random.choice(ACTIONS)
@@ -72,10 +72,10 @@ def cisco_fmc_log() -> Dict:
         "event_subtype": event_info["subtype"],
         "severity": event_info["severity"],
         "action": action,
-        "device_name": f"FTD-{random.randint(1, 10)}",
+        "device_name": f"ENTERPRISE-FTD-{random.choice(['BRIDGE', 'ENGINEERING', 'SECURITY', 'MEDICAL'])}-{random.randint(1, 5)}",
         "device_ip": generate_ip(),
-        "policy_name": f"AccessControlPolicy_{random.randint(1, 5)}",
-        "rule_name": f"Rule_{random.randint(1, 100)}",
+        "policy_name": f"StarfleetSecurityPolicy_{random.randint(1, 5)}",
+        "rule_name": f"Directive_{random.randint(1, 100)}",
         "source_ip": generate_ip(),
         "destination_ip": generate_ip(),
         "source_port": random.randint(1024, 65535),
@@ -142,10 +142,11 @@ def cisco_fmc_log() -> Dict:
     elif event_info["type"] == "URL":
         event.update({
             "url": random.choice([
-                "http://malicious-site.com/payload",
-                "https://phishing-bank.net/login", 
-                "http://c2-server.org/beacon",
-                "https://legitimate-site.com/page"
+                "http://romulan-spy.net/payload",
+                "https://ferengi-phishing.com/login", 
+                "http://borg-collective.net/assimilate",
+                "https://starfleet.corp/bridge",
+                "https://memory-alpha.org/library"
             ]),
             "url_category": random.choice([
                 "Business", "Social Networking", "News/Media", "Shopping",
@@ -153,9 +154,9 @@ def cisco_fmc_log() -> Dict:
             ]),
             "url_reputation": random.choice(["Trusted", "Untrusted", "Neutral", "Unknown"]),
             "referer": random.choice([
-                "https://google.com/search",
-                "https://company.com/",
-                "https://malicious-redirect.com/"
+                "https://starfleet.corp/search",
+                "https://enterprise.starfleet.corp/",
+                "https://dominion-redirect.net/"
             ]),
             "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         })
@@ -163,8 +164,8 @@ def cisco_fmc_log() -> Dict:
     elif event_info["type"] == "DNS":
         event.update({
             "dns_query": random.choice([
-                "google.com", "facebook.com", "malware-c2.net", 
-                "phishing-site.org", "legitimate-domain.com"
+                "starfleet.corp", "memory-alpha.org", "borg-collective.net", 
+                "romulan-spy.org", "enterprise.starfleet.corp"
             ]),
             "dns_record_type": random.choice(["A", "AAAA", "MX", "NS", "TXT", "CNAME"]),
             "dns_response_type": random.choice(["No Error", "Format Error", "Server Failure", "Name Error"]),
@@ -183,6 +184,10 @@ def cisco_fmc_log() -> Dict:
             "destination_latitude": round(random.uniform(-90, 90), 6),
             "destination_longitude": round(random.uniform(-180, 180), 6)
         })
+    
+    # Apply overrides if provided (for scenario customization)
+    if overrides:
+        event.update(overrides)
     
     return event
 

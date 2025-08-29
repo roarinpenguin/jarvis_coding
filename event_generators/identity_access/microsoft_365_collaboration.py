@@ -32,47 +32,60 @@ OPERATIONS = [
     "SharingLinkUsed"
 ]
 
-# Users
+# Star Trek themed users
 USERS = [
-    "alice@example.com",
-    "bob@example.com", 
-    "charlie@example.com",
-    "diana@example.com",
-    "admin@example.com",
-    "external.user@partner.com",
-    "contractor@supplier.org"
+    "jean.picard@starfleet.corp",
+    "william.riker@starfleet.corp", 
+    "data.android@starfleet.corp",
+    "geordi.laforge@starfleet.corp",
+    "worf.security@starfleet.corp",
+    "deanna.troi@starfleet.corp",
+    "beverly.crusher@starfleet.corp",
+    "wesley.crusher@starfleet.corp",
+    "james.kirk@starfleet.corp",
+    "spock.science@starfleet.corp",
+    "leonard.mccoy@starfleet.corp",
+    "montgomery.scott@starfleet.corp",
+    "external.vulcan@embassy.vulcan",
+    "contractor@ferengi-trading.com"
 ]
 
-# Site URLs
+# Star Trek themed site URLs
 SITE_URLS = [
-    "https://contoso-my.sharepoint.com/sites/Docs",
-    "https://contoso-my.sharepoint.com/sites/Marketing",
-    "https://contoso-my.sharepoint.com/sites/Finance",
-    "https://contoso-my.sharepoint.com/sites/HR",
-    "https://contoso-my.sharepoint.com/sites/Engineering"
+    "https://starfleet-my.sharepoint.com/sites/Bridge",
+    "https://starfleet-my.sharepoint.com/sites/Engineering", 
+    "https://starfleet-my.sharepoint.com/sites/Science",
+    "https://starfleet-my.sharepoint.com/sites/Security",
+    "https://starfleet-my.sharepoint.com/sites/Medical",
+    "https://starfleet-my.sharepoint.com/sites/Command",
+    "https://starfleet-my.sharepoint.com/sites/Operations"
 ]
 
-# File names
+# Star Trek themed file names
 FILE_NAMES = [
-    "ProjectPlan.docx",
-    "Budget.xlsx",
-    "Policies.docx", 
-    "Presentation.pptx",
-    "Contract.pdf",
-    "Secrets.txt",
-    "Database.sql",
-    "Config.json",
-    "Report.docx",
-    "Financials.xlsx"
+    "StarfleetRegulations.docx",
+    "BridgeRotations.xlsx", 
+    "SecurityProtocols.docx",
+    "MissionBriefing.pptx",
+    "FirstContact.pdf",
+    "WarpCoreSpecs.txt",
+    "ReplicatorDatabase.sql",
+    "TransporterConfig.json",
+    "CaptainsLog.docx",
+    "ShieldsAnalysis.xlsx",
+    "DiplomaticTreaty.pdf",
+    "HolodeckPrograms.json"
 ]
 
-# File paths
+# Star Trek themed file paths
 FILE_PATHS = [
-    "/Shared Documents/",
-    "/Personal/",
-    "/Admin/",
+    "/Bridge Documents/",
+    "/Personal Logs/",
+    "/Command/",
     "/Archive/",
-    "/Templates/"
+    "/Starfleet Templates/",
+    "/Engineering Schematics/",
+    "/Medical Records/"
 ]
 
 def generate_object_id() -> str:
@@ -81,10 +94,10 @@ def generate_object_id() -> str:
     file_name = random.choice(FILE_NAMES)
     return base_path + file_name
 
-def microsoft_365_collaboration_log() -> Dict:
+def microsoft_365_collaboration_log(overrides: dict = None) -> Dict:
     """Generate a single Microsoft 365 Collaboration event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    event_time = now - timedelta(minutes=random.randint(0, 10))
     
     operation = random.choice(OPERATIONS)
     user_id = random.choice(USERS)
@@ -132,10 +145,18 @@ def microsoft_365_collaboration_log() -> Dict:
     
     # Add conditional fields based on operation
     if "Access" in operation:
-        event["TargetUser"] = random.choice([u for u in USERS if u != user_id])
-    
-    if "Request" in operation:
+        event["TargetUser"] = target_user
         event["RequestedBy"] = user_id
+    elif "Request" in operation:
+        event["RequestedBy"] = user_id
+    
+    # Add threat indicators for suspicious activity
+    if is_suspicious:
+        event["ThreatIndicator"] = "Suspicious file or user activity detected"
+    
+    # Apply overrides if provided (for scenario customization)
+    if overrides:
+        event.update(overrides)
     
     return event
 
