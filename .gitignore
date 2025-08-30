@@ -285,6 +285,11 @@ ai_*
 assistant_*
 copilot_*
 
+# Agent Force - Keep local only
+agent_force/
+*agent_force*
+.agent_force/
+
 # Keep important example files
 !README.md
 !requirements.txt
