@@ -48,13 +48,6 @@ class GeneratorInfo(BaseModel):
     ocsf_compliance: Optional[float] = None
 
 
-class GeneratorExecuteRequest(BaseModel):
-    """Generator execution request"""
-    count: int = Field(default=1, ge=1, le=1000, description="Number of events to generate")
-    format: str = Field(default="json", description="Output format")
-    star_trek_theme: bool = Field(default=True, description="Use Star Trek themed data")
-    options: Dict[str, Any] = Field(default_factory=dict, description="Generator-specific options")
-
 
 class GeneratorExecuteResponse(BaseModel):
     """Generator execution response"""

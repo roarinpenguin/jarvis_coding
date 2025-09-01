@@ -13,12 +13,12 @@ import traceback
 from app.models.responses import (
     BaseResponse,
     GeneratorInfo,
-    GeneratorExecuteRequest,
     GeneratorExecuteResponse,
     PaginationInfo,
     ErrorResponse,
     ErrorDetail
 )
+from app.models.requests import BatchExecuteRequest, GeneratorExecuteRequest
 from app.core.config import settings
 from app.services.generator_service import GeneratorService
 from app.core.simple_auth import require_read_access, require_write_access
@@ -105,6 +105,66 @@ async def get_generator(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/batch/execute", response_model=BaseResponse)
+async def batch_execute_generators(
+    request: BatchExecuteRequest,
+    _: str = Depends(require_write_access)
+):
+    """Execute multiple generators in batch"""
+    try:
+        results = []
+        total_events = 0
+        total_time = 0
+        
+        for execution in request.executions:
+            generator_id = execution.get("generator_id")
+            count = execution.get("count", 1)
+            format = execution.get("format", "json")
+            
+            try:
+                start_time = time.time()
+                events = await generator_service.execute_generator(
+                    generator_id,
+                    count=count,
+                    format=format
+                )
+                execution_time = (time.time() - start_time) * 1000
+                
+                results.append({
+                    "generator_id": generator_id,
+                    "success": True,
+                    "events_count": len(events),
+                    "execution_time_ms": execution_time
+                })
+                total_events += len(events)
+                total_time += execution_time
+                
+            except Exception as e:
+                results.append({
+                    "generator_id": generator_id,
+                    "success": False,
+                    "error": str(e),
+                    "events_count": 0,
+                    "execution_time_ms": 0
+                })
+        
+        return BaseResponse(
+            success=True,
+            data={
+                "batch_id": f"batch_{int(time.time())}",
+                "executions": results,
+                "total_events": total_events,
+                "total_execution_time_ms": total_time
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Batch execution failed: {str(e)}"
+        )
 
 
 @router.post("/{generator_id}/execute", response_model=BaseResponse)
@@ -230,60 +290,3 @@ async def get_generator_schema(
         )
 
 
-@router.post("/batch/execute", response_model=BaseResponse)
-async def batch_execute_generators(
-    executions: List[dict],
-    _: str = Depends(require_write_access)
-):
-    """Execute multiple generators in batch"""
-    try:
-        results = []
-        total_events = 0
-        total_time = 0
-        
-        for execution in executions:
-            generator_id = execution.get("generator_id")
-            count = execution.get("count", 1)
-            format = execution.get("format", "json")
-            
-            try:
-                start_time = time.time()
-                events = await generator_service.execute_generator(
-                    generator_id,
-                    count=count,
-                    format=format
-                )
-                execution_time = (time.time() - start_time) * 1000
-                
-                results.append({
-                    "generator_id": generator_id,
-                    "success": True,
-                    "events_count": len(events),
-                    "execution_time_ms": execution_time
-                })
-                total_events += len(events)
-                total_time += execution_time
-                
-            except Exception as e:
-                results.append({
-                    "generator_id": generator_id,
-                    "success": False,
-                    "error": str(e)
-                })
-        
-        return BaseResponse(
-            success=True,
-            data={
-                "batch_id": f"batch_{int(time.time())}",
-                "executions": results,
-                "total_events": total_events,
-                "total_execution_time_ms": total_time,
-                "parallel_execution": False  # Currently sequential
-            }
-        )
-        
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Batch execution failed: {str(e)}"
-        )

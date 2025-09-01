@@ -360,3 +360,51 @@ class MetricsService:
             },
             "timestamp": datetime.utcnow().isoformat()
         }
+    
+    async def get_base_metrics(self) -> Dict[str, Any]:
+        """Get base API metrics"""
+        uptime_seconds = (datetime.utcnow() - self.start_time).total_seconds()
+        
+        # Basic counts
+        total_generators = len(self.metrics_storage["generator_usage"])
+        total_api_calls = sum(self.metrics_storage["api_calls"].values())
+        total_events = sum(self.metrics_storage["event_counts"].values())
+        total_errors = sum(self.metrics_storage["error_counts"].values())
+        
+        # Calculate error rate
+        error_rate = (total_errors / max(total_api_calls, 1)) * 100
+        
+        # Calculate average response time
+        all_response_times = []
+        for times in self.metrics_storage["response_times"].values():
+            all_response_times.extend(times)
+        
+        avg_response_time = statistics.mean(all_response_times) if all_response_times else 0
+        
+        return {
+            "uptime_seconds": uptime_seconds,
+            "uptime_human": self._format_uptime(uptime_seconds),
+            "total_generators": total_generators,
+            "total_api_calls": total_api_calls, 
+            "total_events_generated": total_events,
+            "total_errors": total_errors,
+            "error_rate_percent": round(error_rate, 2),
+            "avg_response_time_ms": round(avg_response_time, 2),
+            "status": "healthy" if error_rate < 1 else "degraded" if error_rate < 5 else "unhealthy",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    
+    def _format_uptime(self, seconds: float) -> str:
+        """Format uptime in human readable format"""
+        if seconds < 60:
+            return f"{int(seconds)}s"
+        elif seconds < 3600:
+            return f"{int(seconds // 60)}m {int(seconds % 60)}s"
+        elif seconds < 86400:
+            hours = int(seconds // 3600)
+            minutes = int((seconds % 3600) // 60)
+            return f"{hours}h {minutes}m"
+        else:
+            days = int(seconds // 86400)
+            hours = int((seconds % 86400) // 3600)
+            return f"{days}d {hours}h"

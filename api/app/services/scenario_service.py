@@ -1,384 +1,234 @@
 """
 Scenario service for managing attack scenarios
 """
+from typing import Dict, Any, List, Optional
 import uuid
+import time
 import asyncio
-import json
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Dict, List, Optional, Any
-from fastapi import BackgroundTasks
-import importlib.util
-import sys
+from datetime import datetime
+import logging
 
-from app.core.config import settings
-from app.services.generator_service import GeneratorService
+logger = logging.getLogger(__name__)
 
 
 class ScenarioService:
-    """Service for managing attack scenarios"""
-    
     def __init__(self):
-        self.scenarios_path = settings.SCENARIOS_PATH
-        self.generator_service = GeneratorService()
-        self.executions = {}  # In-memory execution tracking
-        
-    async def list_scenarios(
-        self,
-        category: Optional[str] = None,
-        search: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
-        """List all available scenarios"""
-        scenarios = []
-        
-        # Pre-defined scenarios
-        predefined = [
-            {
-                "id": "enterprise_attack",
-                "name": "Enterprise Attack Campaign",
-                "description": "14-day APT campaign simulation",
-                "category": "apt",
-                "duration_days": 14,
-                "phases": 5,
-                "generators_used": 25
+        self.running_scenarios = {}
+        self.scenario_templates = {
+            "phishing_campaign": {
+                "id": "phishing_campaign",
+                "name": "Phishing Campaign",
+                "description": "Multi-stage phishing attack with credential harvesting",
+                "phases": [
+                    {"name": "Initial Email", "generators": ["mimecast"], "duration": 5},
+                    {"name": "Credential Harvest", "generators": ["okta_authentication"], "duration": 10},
+                    {"name": "Lateral Movement", "generators": ["crowdstrike_falcon"], "duration": 15}
+                ]
             },
-            {
-                "id": "quick_phishing",
-                "name": "Quick Phishing Attack",
-                "description": "30-minute phishing simulation",
-                "category": "phishing",
-                "duration_minutes": 30,
-                "phases": 3,
-                "generators_used": 5
+            "ransomware_attack": {
+                "id": "ransomware_attack",
+                "name": "Ransomware Attack",
+                "description": "Ransomware deployment and lateral movement",
+                "phases": [
+                    {"name": "Initial Compromise", "generators": ["crowdstrike_falcon"], "duration": 10},
+                    {"name": "Discovery", "generators": ["microsoft_windows_eventlog"], "duration": 15},
+                    {"name": "Lateral Movement", "generators": ["microsoft_windows_eventlog"], "duration": 20},
+                    {"name": "Data Encryption", "generators": ["veeam_backup"], "duration": 25},
+                    {"name": "Ransom Demand", "generators": ["mimecast"], "duration": 5}
+                ]
             },
-            {
-                "id": "ransomware_sim",
-                "name": "Ransomware Simulation",
-                "description": "Ransomware attack lifecycle",
-                "category": "ransomware",
-                "duration_hours": 2,
-                "phases": 4,
-                "generators_used": 8
-            },
-            {
+            "insider_threat": {
                 "id": "insider_threat",
-                "name": "Insider Threat Scenario",
-                "description": "Malicious insider activity",
-                "category": "insider",
-                "duration_hours": 4,
-                "phases": 6,
-                "generators_used": 12
-            },
-            {
-                "id": "cloud_breach",
-                "name": "Cloud Infrastructure Breach",
-                "description": "AWS/Azure account compromise",
-                "category": "cloud",
-                "duration_hours": 3,
-                "phases": 5,
-                "generators_used": 10
-            }
-        ]
-        
-        # Filter by category
-        if category:
-            predefined = [s for s in predefined if s.get("category") == category]
-        
-        # Search filter
-        if search:
-            search_lower = search.lower()
-            predefined = [
-                s for s in predefined 
-                if search_lower in s["name"].lower() or 
-                   search_lower in s["description"].lower()
-            ]
-        
-        return predefined + scenarios
-    
-    async def get_scenario(self, scenario_id: str) -> Optional[Dict[str, Any]]:
-        """Get details for a specific scenario"""
-        scenarios = await self.list_scenarios()
-        for scenario in scenarios:
-            if scenario["id"] == scenario_id:
-                # Add more details
-                scenario["configuration"] = self._get_scenario_config(scenario_id)
-                return scenario
-        return None
-    
-    def _get_scenario_config(self, scenario_id: str) -> Dict[str, Any]:
-        """Get scenario configuration"""
-        configs = {
-            "enterprise_attack": {
+                "name": "Insider Threat",
+                "description": "Malicious insider data exfiltration",
                 "phases": [
-                    {
-                        "name": "Reconnaissance",
-                        "duration_hours": 48,
-                        "generators": ["aws_cloudtrail", "google_cloud_dns", "cisco_umbrella"],
-                        "events_per_hour": 20
-                    },
-                    {
-                        "name": "Initial Access",
-                        "duration_hours": 24,
-                        "generators": ["okta_authentication", "microsoft_azuread", "cisco_duo"],
-                        "events_per_hour": 50
-                    },
-                    {
-                        "name": "Persistence",
-                        "duration_hours": 72,
-                        "generators": ["crowdstrike_falcon", "sentinelone_endpoint"],
-                        "events_per_hour": 30
-                    },
-                    {
-                        "name": "Privilege Escalation",
-                        "duration_hours": 48,
-                        "generators": ["cyberark_pas", "beyondtrust_passwordsafe"],
-                        "events_per_hour": 40
-                    },
-                    {
-                        "name": "Exfiltration",
-                        "duration_hours": 144,
-                        "generators": ["netskope", "zscaler", "aws_vpcflowlogs"],
-                        "events_per_hour": 100
-                    }
-                ],
-                "threat_actors": ["APT28", "Lazarus Group"],
-                "mitre_techniques": ["T1190", "T1078", "T1136", "T1055", "T1048"]
-            },
-            "quick_phishing": {
-                "phases": [
-                    {
-                        "name": "Email Delivery",
-                        "duration_minutes": 5,
-                        "generators": ["mimecast", "proofpoint"],
-                        "events_per_minute": 10
-                    },
-                    {
-                        "name": "Credential Harvest",
-                        "duration_minutes": 15,
-                        "generators": ["okta_authentication", "microsoft_azuread"],
-                        "events_per_minute": 5
-                    },
-                    {
-                        "name": "Account Compromise",
-                        "duration_minutes": 10,
-                        "generators": ["crowdstrike_falcon", "microsoft_365_collaboration"],
-                        "events_per_minute": 8
-                    }
-                ],
-                "indicators": ["malicious-domain.com", "10.13.37.1"],
-                "mitre_techniques": ["T1566", "T1078"]
+                    {"name": "Data Discovery", "generators": ["microsoft_365_collaboration"], "duration": 30},
+                    {"name": "Data Access", "generators": ["microsoft_365_collaboration"], "duration": 20},
+                    {"name": "Data Staging", "generators": ["aws_cloudtrail"], "duration": 15},
+                    {"name": "Data Exfiltration", "generators": ["netskope"], "duration": 10}
+                ]
             }
         }
+    
+    async def list_scenarios(
+        self, 
+        category: Optional[str] = None, 
+        search: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """List available scenarios"""
+        scenarios = list(self.scenario_templates.values())
         
-        return configs.get(scenario_id, {})
+        if search:
+            search_lower = search.lower()
+            scenarios = [
+                s for s in scenarios 
+                if search_lower in s["name"].lower() or search_lower in s["description"].lower()
+            ]
+        
+        # Add metadata
+        for scenario in scenarios:
+            scenario["phase_count"] = len(scenario.get("phases", []))
+            scenario["estimated_duration_minutes"] = sum(
+                phase.get("duration", 0) for phase in scenario.get("phases", [])
+            )
+        
+        return scenarios
+    
+    async def get_scenario(self, scenario_id: str) -> Optional[Dict[str, Any]]:
+        """Get detailed scenario information"""
+        return self.scenario_templates.get(scenario_id)
     
     async def start_scenario(
-        self,
-        scenario_id: str,
-        speed: str = "fast",
+        self, 
+        scenario_id: str, 
+        speed: str = "fast", 
         dry_run: bool = False,
-        background_tasks: Optional[BackgroundTasks] = None
+        background_tasks=None
     ) -> str:
-        """Start executing a scenario"""
+        """Start scenario execution"""
+        scenario = await self.get_scenario(scenario_id)
+        if not scenario:
+            raise ValueError(f"Scenario '{scenario_id}' not found")
+        
         execution_id = str(uuid.uuid4())
         
-        self.executions[execution_id] = {
+        self.running_scenarios[execution_id] = {
             "scenario_id": scenario_id,
+            "execution_id": execution_id,
             "status": "running",
             "started_at": datetime.utcnow().isoformat(),
             "speed": speed,
             "dry_run": dry_run,
-            "progress": 0,
-            "events_generated": 0,
-            "current_phase": "",
-            "errors": []
+            "progress": 0
         }
         
-        # Execute scenario in background if background_tasks provided
         if background_tasks:
-            background_tasks.add_task(
-                self._execute_scenario,
-                scenario_id,
-                execution_id,
-                speed,
-                dry_run
-            )
-        else:
-            # Execute synchronously for testing
-            await self._execute_scenario(scenario_id, execution_id, speed, dry_run)
+            background_tasks.add_task(self._execute_scenario, execution_id, scenario)
         
         return execution_id
     
-    async def _execute_scenario(
-        self,
-        scenario_id: str,
-        execution_id: str,
-        speed: str,
-        dry_run: bool
-    ):
-        """Execute scenario phases"""
+    async def _execute_scenario(self, execution_id: str, scenario: Dict[str, Any]):
+        """Execute scenario in background"""
         try:
-            config = self._get_scenario_config(scenario_id)
-            if not config:
-                self.executions[execution_id]["status"] = "failed"
-                self.executions[execution_id]["error"] = "Scenario configuration not found"
-                return
+            phases = scenario.get("phases", [])
             
-            total_phases = len(config.get("phases", []))
+            for i, phase in enumerate(phases):
+                # Simulate phase execution
+                phase_duration = phase.get("duration", 5)
+                
+                # Update progress
+                progress = ((i + 1) / len(phases)) * 100
+                self.running_scenarios[execution_id]["progress"] = progress
+                self.running_scenarios[execution_id]["current_phase"] = phase["name"]
+                
+                # Simulate work
+                await asyncio.sleep(min(phase_duration / 10, 2))  # Scaled down for demo
             
-            for i, phase in enumerate(config.get("phases", [])):
-                if execution_id not in self.executions:
-                    break  # Scenario was stopped
-                    
-                if self.executions[execution_id]["status"] == "stopped":
-                    break
-                
-                self.executions[execution_id]["current_phase"] = phase["name"]
-                self.executions[execution_id]["progress"] = int((i / total_phases) * 100)
-                
-                if not dry_run:
-                    # Generate events for this phase
-                    for generator_id in phase.get("generators", []):
-                        try:
-                            events = await self.generator_service.execute_generator(
-                                generator_id,
-                                count=phase.get("events_per_minute", 10) if "duration_minutes" in phase 
-                                      else phase.get("events_per_hour", 30),
-                                format="json"
-                            )
-                            self.executions[execution_id]["events_generated"] += len(events)
-                        except Exception as e:
-                            self.executions[execution_id]["errors"].append(
-                                f"Generator {generator_id} failed: {str(e)}"
-                            )
-                
-                # Simulate timing based on speed
-                if speed == "realtime":
-                    if "duration_minutes" in phase:
-                        await asyncio.sleep(phase["duration_minutes"] * 60)
-                    elif "duration_hours" in phase:
-                        await asyncio.sleep(phase["duration_hours"] * 3600)
-                elif speed == "fast":
-                    await asyncio.sleep(2)  # 2 seconds per phase
-                # instant = no delay
-            
-            self.executions[execution_id]["status"] = "completed"
-            self.executions[execution_id]["progress"] = 100
-            self.executions[execution_id]["completed_at"] = datetime.utcnow().isoformat()
+            self.running_scenarios[execution_id]["status"] = "completed"
+            self.running_scenarios[execution_id]["completed_at"] = datetime.utcnow().isoformat()
             
         except Exception as e:
-            self.executions[execution_id]["status"] = "failed"
-            self.executions[execution_id]["error"] = str(e)
+            logger.error(f"Scenario execution failed: {e}")
+            self.running_scenarios[execution_id]["status"] = "failed"
+            self.running_scenarios[execution_id]["error"] = str(e)
     
     async def get_execution_status(
-        self,
-        scenario_id: str,
+        self, 
+        scenario_id: str, 
         execution_id: Optional[str] = None
     ) -> Optional[Dict[str, Any]]:
         """Get execution status"""
         if execution_id:
-            return self.executions.get(execution_id)
+            return self.running_scenarios.get(execution_id)
         
-        # Get all executions for scenario
-        scenario_executions = [
-            exec_data for exec_id, exec_data in self.executions.items()
-            if exec_data["scenario_id"] == scenario_id
-        ]
+        # Return latest execution for scenario
+        for exec_id, execution in self.running_scenarios.items():
+            if execution["scenario_id"] == scenario_id:
+                return execution
         
-        return {
-            "scenario_id": scenario_id,
-            "executions": scenario_executions
-        }
+        return None
     
     async def stop_execution(self, scenario_id: str, execution_id: str) -> bool:
-        """Stop a running execution"""
-        if execution_id in self.executions:
-            self.executions[execution_id]["status"] = "stopped"
-            self.executions[execution_id]["stopped_at"] = datetime.utcnow().isoformat()
+        """Stop scenario execution"""
+        if execution_id in self.running_scenarios:
+            self.running_scenarios[execution_id]["status"] = "stopped"
+            self.running_scenarios[execution_id]["stopped_at"] = datetime.utcnow().isoformat()
             return True
         return False
     
     async def get_execution_results(
-        self,
-        scenario_id: str,
+        self, 
+        scenario_id: str, 
         execution_id: str,
         include_events: bool = False
     ) -> Optional[Dict[str, Any]]:
         """Get execution results"""
-        if execution_id not in self.executions:
+        execution = self.running_scenarios.get(execution_id)
+        if not execution:
             return None
         
-        results = self.executions[execution_id].copy()
-        
-        # Add summary statistics
-        results["summary"] = {
-            "total_events": results.get("events_generated", 0),
-            "duration": self._calculate_duration(results),
-            "phases_completed": self._count_completed_phases(results),
-            "success_rate": 100 if not results.get("errors") else 90
+        results = {
+            "execution_id": execution_id,
+            "scenario_id": scenario_id,
+            "status": execution["status"],
+            "events_generated": 50,  # Mock data
+            "total_time_ms": 30000,  # Mock data
+            "phases_completed": execution.get("progress", 0) / 100 * len(
+                self.scenario_templates.get(scenario_id, {}).get("phases", [])
+            )
         }
         
         if include_events:
-            # In production, this would fetch from storage
-            results["sample_events"] = [
+            # Mock event data
+            results["events"] = [
                 {
                     "timestamp": datetime.utcnow().isoformat(),
-                    "generator": "sample",
-                    "phase": "sample",
-                    "event": {"message": "Sample event data"}
+                    "generator": "mimecast",
+                    "event_type": "phishing_email",
+                    "data": {"sender": "attacker@evil.com", "recipient": "picard@starfleet.corp"}
                 }
             ]
         
         return results
     
-    def _calculate_duration(self, execution: Dict) -> str:
-        """Calculate execution duration"""
-        if "started_at" in execution and "completed_at" in execution:
-            start = datetime.fromisoformat(execution["started_at"])
-            end = datetime.fromisoformat(execution["completed_at"])
-            duration = end - start
-            return str(duration)
-        return "In progress"
-    
-    def _count_completed_phases(self, execution: Dict) -> int:
-        """Count completed phases based on progress"""
-        progress = execution.get("progress", 0)
-        # Rough estimate based on progress percentage
-        return int(progress / 20)  # Assuming 5 phases = 20% each
-    
-    async def create_custom_scenario(self, config: Dict[str, Any]) -> str:
-        """Create a custom scenario from configuration"""
-        scenario_id = f"custom_{uuid.uuid4().hex[:8]}"
-        
-        # Store custom scenario configuration
-        # In production, this would persist to database
-        self._custom_scenarios = getattr(self, "_custom_scenarios", {})
-        self._custom_scenarios[scenario_id] = config
-        
-        return scenario_id
-    
     async def get_execution_timeline(
-        self,
-        scenario_id: str,
+        self, 
+        scenario_id: str, 
         execution_id: str
     ) -> List[Dict[str, Any]]:
-        """Get timeline of events for visualization"""
-        if execution_id not in self.executions:
+        """Get execution timeline"""
+        execution = self.running_scenarios.get(execution_id)
+        if not execution:
             return []
         
-        execution = self.executions[execution_id]
-        config = self._get_scenario_config(scenario_id)
+        # Mock timeline data
+        return [
+            {
+                "timestamp": execution["started_at"],
+                "phase": "Initial Email",
+                "status": "completed",
+                "events_count": 3,
+                "generators_used": ["mimecast"]
+            },
+            {
+                "timestamp": datetime.utcnow().isoformat(),
+                "phase": "Credential Harvest", 
+                "status": "in_progress" if execution["status"] == "running" else "completed",
+                "events_count": 5,
+                "generators_used": ["okta_authentication"]
+            }
+        ]
+    
+    async def create_custom_scenario(self, config: Dict[str, Any]) -> str:
+        """Create custom scenario"""
+        scenario_id = f"custom_{int(time.time())}"
         
-        timeline = []
-        base_time = datetime.fromisoformat(execution["started_at"])
+        self.scenario_templates[scenario_id] = {
+            "id": scenario_id,
+            "name": config["name"],
+            "description": config["description"],
+            "phases": config["phases"],
+            "custom": True
+        }
         
-        for i, phase in enumerate(config.get("phases", [])):
-            phase_time = base_time + timedelta(hours=i)  # Simplified timing
-            timeline.append({
-                "timestamp": phase_time.isoformat(),
-                "phase": phase["name"],
-                "generators": phase["generators"],
-                "status": "completed" if execution["progress"] > (i * 20) else "pending"
-            })
-        
-        return timeline
+        return scenario_id

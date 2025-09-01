@@ -1,259 +1,194 @@
 """
-Search and filtering service for generators, parsers, and events
+Search service for finding generators, parsers, and scenarios
 """
 import re
-import json
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Set
-from datetime import datetime, timedelta
-from collections import defaultdict
-import importlib.util
+from typing import List, Dict, Any, Optional
+import logging
 
-from app.core.config import settings
+from app.services.generator_service import GeneratorService
+
+logger = logging.getLogger(__name__)
 
 
 class SearchService:
-    """Service for searching and filtering across the system"""
-    
     def __init__(self):
-        self.generators_path = settings.GENERATORS_PATH
-        self.parsers_path = settings.PARSERS_PATH
-        self.scenarios_path = settings.SCENARIOS_PATH
+        self.generator_service = GeneratorService()
         self._cache = {}
-        self._index_built = False
-    
-    async def build_search_index(self):
-        """Build search index for faster queries"""
-        if self._index_built:
-            return
-        
-        self._cache["generators"] = await self._index_generators()
-        self._cache["parsers"] = await self._index_parsers()
-        self._cache["scenarios"] = await self._index_scenarios()
-        self._index_built = True
-    
-    async def _index_generators(self) -> Dict[str, Any]:
-        """Index all generators for searching"""
-        index = {
-            "by_category": defaultdict(list),
-            "by_vendor": defaultdict(list),
-            "by_product": defaultdict(list),
-            "by_format": defaultdict(list),
-            "all": []
-        }
-        
-        categories = [
-            "cloud_infrastructure",
-            "network_security",
-            "endpoint_security",
-            "identity_access",
-            "email_security",
-            "web_security",
-            "infrastructure"
-        ]
-        
-        for category in categories:
-            category_path = self.generators_path / category
-            if not category_path.exists():
-                continue
-            
-            for file_path in category_path.glob("*.py"):
-                if file_path.name.startswith("__"):
-                    continue
-                
-                generator_id = file_path.stem
-                parts = generator_id.split("_", 1)
-                vendor = parts[0] if parts else ""
-                product = parts[1] if len(parts) > 1 else generator_id
-                
-                # Determine format from generator
-                format_type = await self._detect_generator_format(file_path)
-                
-                generator_info = {
-                    "id": generator_id,
-                    "category": category,
-                    "vendor": vendor,
-                    "product": product,
-                    "format": format_type,
-                    "file_path": str(file_path),
-                    "star_trek": await self._has_star_trek_theme(file_path)
-                }
-                
-                index["by_category"][category].append(generator_info)
-                index["by_vendor"][vendor].append(generator_info)
-                index["by_product"][product].append(generator_info)
-                index["by_format"][format_type].append(generator_info)
-                index["all"].append(generator_info)
-        
-        return index
-    
-    async def _index_parsers(self) -> Dict[str, Any]:
-        """Index all parsers for searching"""
-        index = {
-            "by_type": defaultdict(list),
-            "by_vendor": defaultdict(list),
-            "all": []
-        }
-        
-        community_path = self.parsers_path / "community"
-        if community_path.exists():
-            for parser_dir in community_path.iterdir():
-                if not parser_dir.is_dir():
-                    continue
-                
-                parser_id = parser_dir.name
-                if parser_id.endswith("-latest"):
-                    parser_id = parser_id[:-7]
-                
-                parts = parser_id.split("_", 1)
-                vendor = parts[0] if parts else ""
-                
-                # Read parser config
-                config_file = parser_dir / "parser.json"
-                parser_type = "community"
-                fields_count = 0
-                
-                if config_file.exists():
-                    try:
-                        with open(config_file, 'r') as f:
-                            config = json.load(f)
-                            fields_count = len(config.get("fields", []))
-                    except:
-                        pass
-                
-                parser_info = {
-                    "id": parser_id,
-                    "type": parser_type,
-                    "vendor": vendor,
-                    "fields_count": fields_count,
-                    "path": str(parser_dir)
-                }
-                
-                index["by_type"][parser_type].append(parser_info)
-                index["by_vendor"][vendor].append(parser_info)
-                index["all"].append(parser_info)
-        
-        return index
-    
-    async def _index_scenarios(self) -> Dict[str, Any]:
-        """Index all scenarios for searching"""
-        index = {
-            "by_category": defaultdict(list),
-            "all": []
-        }
-        
-        # Pre-defined scenarios
-        scenarios = [
-            {"id": "enterprise_attack", "category": "apt", "phases": 5},
-            {"id": "quick_phishing", "category": "phishing", "phases": 3},
-            {"id": "ransomware_sim", "category": "ransomware", "phases": 4},
-            {"id": "insider_threat", "category": "insider", "phases": 6},
-            {"id": "cloud_breach", "category": "cloud", "phases": 5}
-        ]
-        
-        for scenario in scenarios:
-            index["by_category"][scenario["category"]].append(scenario)
-            index["all"].append(scenario)
-        
-        return index
     
     async def search_generators(
-        self,
-        query: Optional[str] = None,
+        self, 
+        query: Optional[str] = None, 
         category: Optional[str] = None,
         vendor: Optional[str] = None,
         format: Optional[str] = None,
         star_trek: Optional[bool] = None
     ) -> List[Dict[str, Any]]:
-        """Search generators with filters"""
-        await self.build_search_index()
-        
-        results = self._cache["generators"]["all"].copy()
-        
-        # Apply filters
-        if category:
-            results = [g for g in results if g["category"] == category]
-        
-        if vendor:
-            results = [g for g in results if g["vendor"].lower() == vendor.lower()]
-        
-        if format:
-            results = [g for g in results if g["format"] == format]
-        
-        if star_trek is not None:
-            results = [g for g in results if g["star_trek"] == star_trek]
-        
-        # Apply text search
-        if query:
-            query_lower = query.lower()
-            results = [
-                g for g in results
-                if query_lower in g["id"].lower() or
-                   query_lower in g["vendor"].lower() or
-                   query_lower in g["product"].lower()
-            ]
-        
-        return results
+        """Search generators using text matching and filters"""
+        try:
+            generators = await self.generator_service.list_generators(
+                category=category,
+                vendor=vendor
+            )
+            
+            results = []
+            
+            for generator in generators:
+                # Apply filters
+                if format and format not in generator.get("supported_formats", []):
+                    continue
+                
+                if star_trek is not None and generator.get("star_trek_enabled", True) != star_trek:
+                    continue
+                
+                # Apply text search if provided
+                if query:
+                    query_lower = query.lower()
+                    searchable_text = " ".join([
+                        generator.get("name", ""),
+                        generator.get("description", ""),
+                        generator.get("vendor", ""),
+                        generator.get("category", ""),
+                        " ".join(generator.get("supported_formats", []))
+                    ]).lower()
+                    
+                    # Calculate relevance score
+                    score = 0
+                    if query_lower in generator.get("name", "").lower():
+                        score += 10
+                    if query_lower in generator.get("vendor", "").lower():
+                        score += 5
+                    if query_lower in generator.get("category", "").lower():
+                        score += 3
+                    if query_lower in generator.get("description", "").lower():
+                        score += 1
+                    
+                    if score > 0 or query_lower in searchable_text:
+                        generator["search_score"] = score
+                        results.append(generator)
+                else:
+                    # No query, include all matching filters
+                    results.append(generator)
+            
+            # Sort by relevance score if query was provided
+            if query:
+                results.sort(key=lambda x: x.get("search_score", 0), reverse=True)
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error searching generators: {e}")
+            return []
     
     async def search_parsers(
-        self,
-        query: Optional[str] = None,
+        self, 
+        query: Optional[str] = None, 
         parser_type: Optional[str] = None,
         vendor: Optional[str] = None,
         min_fields: Optional[int] = None
     ) -> List[Dict[str, Any]]:
-        """Search parsers with filters"""
-        await self.build_search_index()
+        """Search parsers (placeholder - implement based on parser service)"""
+        # This would integrate with a parser service when available
+        results = []
         
-        results = self._cache["parsers"]["all"].copy()
+        # Mock parser search for now
+        mock_parsers = [
+            {
+                "id": "crowdstrike_endpoint",
+                "name": "CrowdStrike Endpoint",
+                "type": "community",
+                "vendor": "CrowdStrike",
+                "description": "CrowdStrike Falcon endpoint events",
+                "fields_count": 150
+            },
+            {
+                "id": "aws_cloudtrail",
+                "name": "AWS CloudTrail",
+                "type": "marketplace",
+                "vendor": "AWS",
+                "description": "AWS CloudTrail API audit events",
+                "fields_count": 120
+            },
+            {
+                "id": "fortinet_fortigate",
+                "name": "FortiGate Firewall",
+                "type": "marketplace",
+                "vendor": "Fortinet",
+                "description": "FortiGate firewall security events",
+                "fields_count": 240
+            }
+        ]
         
-        # Apply filters
-        if parser_type:
-            results = [p for p in results if p["type"] == parser_type]
-        
-        if vendor:
-            results = [p for p in results if p["vendor"].lower() == vendor.lower()]
-        
-        if min_fields:
-            results = [p for p in results if p["fields_count"] >= min_fields]
-        
-        # Apply text search
-        if query:
-            query_lower = query.lower()
-            results = [
-                p for p in results
-                if query_lower in p["id"].lower() or
-                   query_lower in p["vendor"].lower()
-            ]
+        for parser in mock_parsers:
+            # Apply filters
+            if parser_type and parser["type"] != parser_type:
+                continue
+            
+            if vendor and vendor.lower() != parser["vendor"].lower():
+                continue
+                
+            if min_fields and parser["fields_count"] < min_fields:
+                continue
+            
+            # Apply text search if provided
+            if query:
+                query_lower = query.lower()
+                searchable = f"{parser['name']} {parser['vendor']} {parser['description']}".lower()
+                if query_lower in searchable:
+                    results.append(parser)
+            else:
+                results.append(parser)
         
         return results
     
     async def search_scenarios(
-        self,
+        self, 
         query: Optional[str] = None,
         category: Optional[str] = None,
         min_phases: Optional[int] = None
     ) -> List[Dict[str, Any]]:
-        """Search scenarios with filters"""
-        await self.build_search_index()
+        """Search scenarios (placeholder)"""
+        # Mock scenario search
+        mock_scenarios = [
+            {
+                "id": "phishing_campaign",
+                "name": "Phishing Campaign",
+                "description": "Multi-stage phishing attack",
+                "category": "email_attack",
+                "phases": 3
+            },
+            {
+                "id": "ransomware_attack", 
+                "name": "Ransomware Attack",
+                "description": "Ransomware deployment and lateral movement",
+                "category": "malware_attack",
+                "phases": 5
+            },
+            {
+                "id": "insider_threat",
+                "name": "Insider Threat",
+                "description": "Malicious insider data exfiltration",
+                "category": "data_theft",
+                "phases": 4
+            }
+        ]
         
-        results = self._cache["scenarios"]["all"].copy()
-        
-        # Apply filters
-        if category:
-            results = [s for s in results if s["category"] == category]
-        
-        if min_phases:
-            results = [s for s in results if s.get("phases", 0) >= min_phases]
-        
-        # Apply text search
-        if query:
-            query_lower = query.lower()
-            results = [
-                s for s in results
-                if query_lower in s["id"].lower() or
-                   query_lower in s.get("category", "").lower()
-            ]
+        results = []
+        for scenario in mock_scenarios:
+            # Apply filters
+            if category and scenario["category"] != category:
+                continue
+            
+            if min_phases and scenario["phases"] < min_phases:
+                continue
+            
+            # Apply text search if provided
+            if query:
+                query_lower = query.lower()
+                searchable = f"{scenario['name']} {scenario['description']}".lower()
+                if query_lower in searchable:
+                    results.append(scenario)
+            else:
+                results.append(scenario)
         
         return results
     
@@ -263,19 +198,19 @@ class SearchService:
         types: Optional[List[str]] = None
     ) -> Dict[str, List[Dict[str, Any]]]:
         """Search across all resource types"""
-        if not types:
+        if types is None:
             types = ["generators", "parsers", "scenarios"]
         
         results = {}
         
         if "generators" in types:
-            results["generators"] = await self.search_generators(query=query)
+            results["generators"] = await self.search_generators(query)
         
         if "parsers" in types:
-            results["parsers"] = await self.search_parsers(query=query)
+            results["parsers"] = await self.search_parsers(query)
         
         if "scenarios" in types:
-            results["scenarios"] = await self.search_scenarios(query=query)
+            results["scenarios"] = await self.search_scenarios(query)
         
         return results
     
@@ -285,177 +220,189 @@ class SearchService:
         parser_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """Find compatible generators and parsers"""
-        await self.build_search_index()
-        
-        matches = {
-            "generators": [],
-            "parsers": [],
-            "compatibility_score": 0
-        }
-        
         if generator_id:
-            # Find matching parsers for generator
-            generators = await self.search_generators(query=generator_id)
-            if generators:
-                generator = generators[0]
-                vendor = generator["vendor"]
-                product = generator["product"]
-                
-                # Search for parsers with same vendor/product
-                parsers = await self.search_parsers(query=f"{vendor}_{product}")
-                matches["parsers"] = parsers
-                
-                if parsers:
-                    matches["compatibility_score"] = 100
+            generator = await self.generator_service.get_generator(generator_id)
+            if not generator:
+                return {"matches": [], "message": "Generator not found"}
+            
+            # Find compatible parsers
+            compatible_parsers = await self.search_parsers()
+            matches = []
+            
+            for parser in compatible_parsers:
+                # Simple compatibility check based on vendor
+                if parser["vendor"].lower() == generator.get("vendor", "").lower():
+                    matches.append({
+                        "parser": parser,
+                        "compatibility_score": 0.9,
+                        "reason": "Same vendor"
+                    })
+            
+            return {
+                "generator": generator,
+                "compatible_parsers": matches,
+                "total_matches": len(matches)
+            }
         
-        if parser_id:
-            # Find matching generators for parser
-            parsers = await self.search_parsers(query=parser_id)
-            if parsers:
-                parser = parsers[0]
-                vendor = parser["vendor"]
-                
-                # Search for generators with same vendor
-                generators = await self.search_generators(vendor=vendor)
-                matches["generators"] = generators
-                
-                if generators:
-                    matches["compatibility_score"] = 100
+        elif parser_id:
+            parsers = await self.search_parsers()
+            parser = next((p for p in parsers if p["id"] == parser_id), None)
+            
+            if not parser:
+                return {"matches": [], "message": "Parser not found"}
+            
+            # Find compatible generators
+            compatible_generators = await self.search_generators(vendor=parser["vendor"])
+            matches = []
+            
+            for generator in compatible_generators:
+                matches.append({
+                    "generator": generator,
+                    "compatibility_score": 0.8,
+                    "reason": "Same vendor"
+                })
+            
+            return {
+                "parser": parser,
+                "compatible_generators": matches,
+                "total_matches": len(matches)
+            }
         
-        return matches
+        return {"matches": [], "message": "No ID provided"}
     
     async def get_statistics(self) -> Dict[str, Any]:
-        """Get search statistics"""
-        await self.build_search_index()
+        """Get statistics about searchable resources"""
+        generators = await self.search_generators()
+        parsers = await self.search_parsers()
+        scenarios = await self.search_scenarios()
+        
+        # Count by categories
+        generator_categories = {}
+        for gen in generators:
+            cat = gen.get("category", "unknown")
+            generator_categories[cat] = generator_categories.get(cat, 0) + 1
+        
+        parser_types = {}
+        for parser in parsers:
+            ptype = parser.get("type", "unknown")
+            parser_types[ptype] = parser_types.get(ptype, 0) + 1
         
         return {
             "generators": {
-                "total": len(self._cache["generators"]["all"]),
-                "by_category": {
-                    cat: len(gens) 
-                    for cat, gens in self._cache["generators"]["by_category"].items()
-                },
-                "by_format": {
-                    fmt: len(gens)
-                    for fmt, gens in self._cache["generators"]["by_format"].items()
-                },
-                "with_star_trek": len([
-                    g for g in self._cache["generators"]["all"] 
-                    if g.get("star_trek", False)
-                ])
+                "total": len(generators),
+                "categories": generator_categories,
+                "avg_supported_formats": sum(
+                    len(g.get("supported_formats", [])) for g in generators
+                ) / len(generators) if generators else 0
             },
             "parsers": {
-                "total": len(self._cache["parsers"]["all"]),
-                "by_type": {
-                    typ: len(pars)
-                    for typ, pars in self._cache["parsers"]["by_type"].items()
-                },
+                "total": len(parsers),
+                "types": parser_types,
                 "avg_fields": sum(
-                    p["fields_count"] for p in self._cache["parsers"]["all"]
-                ) / len(self._cache["parsers"]["all"]) if self._cache["parsers"]["all"] else 0
+                    p.get("fields_count", 0) for p in parsers
+                ) / len(parsers) if parsers else 0
             },
             "scenarios": {
-                "total": len(self._cache["scenarios"]["all"]),
-                "by_category": {
-                    cat: len(scens)
-                    for cat, scens in self._cache["scenarios"]["by_category"].items()
-                }
+                "total": len(scenarios),
+                "avg_phases": sum(
+                    s.get("phases", 0) for s in scenarios
+                ) / len(scenarios) if scenarios else 0
             }
         }
     
-    async def _detect_generator_format(self, file_path: Path) -> str:
-        """Detect the output format of a generator"""
-        try:
-            with open(file_path, 'r') as f:
-                content = f.read()
-                
-                if 'json.dumps' in content or 'return {' in content:
-                    return "json"
-                elif 'csv' in content.lower():
-                    return "csv"
-                elif 'syslog' in content.lower():
-                    return "syslog"
-                elif 'key=' in content or 'key-value' in content.lower():
-                    return "keyvalue"
-                else:
-                    return "json"  # Default
-        except:
-            return "unknown"
-    
-    async def _has_star_trek_theme(self, file_path: Path) -> bool:
-        """Check if generator has Star Trek theme"""
-        try:
-            with open(file_path, 'r') as f:
-                content = f.read().lower()
-                
-                star_trek_indicators = [
-                    "picard", "worf", "data", "laforge", "crusher",
-                    "enterprise", "starfleet", "federation", "vulcan"
-                ]
-                
-                return any(indicator in content for indicator in star_trek_indicators)
-        except:
-            return False
-    
     async def get_recommendations(
         self,
-        resource_type: str = "generator",
+        resource_type: str,
         based_on: Optional[str] = None
     ) -> List[Dict[str, Any]]:
-        """Get recommendations based on usage or similarity"""
-        await self.build_search_index()
-        
+        """Get recommendations based on similarity or usage"""
         recommendations = []
         
-        if resource_type == "generator" and based_on:
-            # Find similar generators
-            generators = await self.search_generators(query=based_on)
-            if generators:
-                source = generators[0]
-                
-                # Recommend generators from same category
-                similar = await self.search_generators(
-                    category=source["category"]
-                )
-                
-                recommendations = [
-                    g for g in similar 
-                    if g["id"] != source["id"]
-                ][:5]
+        if resource_type == "generator":
+            if based_on:
+                generator = await self.generator_service.get_generator(based_on)
+                if generator:
+                    # Find similar generators
+                    similar = await self.search_generators(
+                        category=generator.get("category"),
+                        vendor=generator.get("vendor")
+                    )
+                    recommendations = [g for g in similar if g.get("id") != based_on][:5]
+            else:
+                # Popular generators
+                all_generators = await self.search_generators()
+                recommendations = all_generators[:5]
         
-        elif resource_type == "parser" and based_on:
-            # Find similar parsers
-            parsers = await self.search_parsers(query=based_on)
-            if parsers:
-                source = parsers[0]
-                
-                # Recommend parsers from same vendor
-                similar = await self.search_parsers(
-                    vendor=source["vendor"]
-                )
-                
-                recommendations = [
-                    p for p in similar
-                    if p["id"] != source["id"]
-                ][:5]
+        elif resource_type == "parser":
+            all_parsers = await self.search_parsers()
+            # Recommend high field count parsers
+            recommendations = sorted(
+                all_parsers, 
+                key=lambda x: x.get("fields_count", 0), 
+                reverse=True
+            )[:5]
         
-        else:
-            # General recommendations
-            if resource_type == "generator":
-                # Recommend top generators with Star Trek theme
-                all_gens = self._cache["generators"]["all"]
-                recommendations = [
-                    g for g in all_gens
-                    if g.get("star_trek", False)
-                ][:5]
-            
-            elif resource_type == "parser":
-                # Recommend parsers with most fields
-                all_pars = sorted(
-                    self._cache["parsers"]["all"],
-                    key=lambda x: x["fields_count"],
-                    reverse=True
-                )
-                recommendations = all_pars[:5]
+        elif resource_type == "scenario":
+            recommendations = await self.search_scenarios()
         
         return recommendations
+    
+    async def build_search_index(self):
+        """Build search index for faster lookups"""
+        if not self._cache:
+            generators = await self.search_generators()
+            parsers = await self.search_parsers()
+            scenarios = await self.search_scenarios()
+            
+            self._cache = {
+                "generators": {
+                    "by_category": {},
+                    "by_vendor": {},
+                    "by_format": {}
+                },
+                "parsers": {
+                    "by_type": {},
+                    "by_vendor": {}
+                },
+                "scenarios": {
+                    "by_category": {}
+                }
+            }
+            
+            # Index generators
+            for gen in generators:
+                cat = gen.get("category", "unknown")
+                vendor = gen.get("vendor", "unknown")
+                
+                if cat not in self._cache["generators"]["by_category"]:
+                    self._cache["generators"]["by_category"][cat] = []
+                self._cache["generators"]["by_category"][cat].append(gen["id"])
+                
+                if vendor not in self._cache["generators"]["by_vendor"]:
+                    self._cache["generators"]["by_vendor"][vendor] = []
+                self._cache["generators"]["by_vendor"][vendor].append(gen["id"])
+                
+                for fmt in gen.get("supported_formats", []):
+                    if fmt not in self._cache["generators"]["by_format"]:
+                        self._cache["generators"]["by_format"][fmt] = []
+                    self._cache["generators"]["by_format"][fmt].append(gen["id"])
+            
+            # Index parsers
+            for parser in parsers:
+                ptype = parser.get("type", "unknown")
+                vendor = parser.get("vendor", "unknown")
+                
+                if ptype not in self._cache["parsers"]["by_type"]:
+                    self._cache["parsers"]["by_type"][ptype] = []
+                self._cache["parsers"]["by_type"][ptype].append(parser["id"])
+                
+                if vendor not in self._cache["parsers"]["by_vendor"]:
+                    self._cache["parsers"]["by_vendor"][vendor] = []
+                self._cache["parsers"]["by_vendor"][vendor].append(parser["id"])
+            
+            # Index scenarios
+            for scenario in scenarios:
+                cat = scenario.get("category", "unknown")
+                if cat not in self._cache["scenarios"]["by_category"]:
+                    self._cache["scenarios"]["by_category"][cat] = []
+                self._cache["scenarios"]["by_category"][cat].append(scenario["id"])

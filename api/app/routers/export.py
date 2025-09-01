@@ -1,7 +1,7 @@
 """
 Export and streaming API endpoints for events
 """
-from fastapi import APIRouter, HTTPException, Query, Depends, BackgroundTasks
+from fastapi import APIRouter, HTTPException, Query, Depends, BackgroundTasks, Response
 from fastapi.responses import FileResponse, StreamingResponse
 from typing import Optional, List
 import json
@@ -11,12 +11,121 @@ from datetime import datetime, timedelta
 import asyncio
 
 from app.models.responses import BaseResponse
+from app.models.requests import ExportGeneratorsRequest, ExportEventsRequest
 from app.core.config import settings
 from app.core.simple_auth import require_read_access
 from app.services.generator_service import GeneratorService
 
 router = APIRouter()
 generator_service = GeneratorService()
+
+
+@router.get("/generators", response_model=BaseResponse)
+async def export_generators_list(
+    format: str = Query("json", pattern="^(json|csv|yaml)$"),
+    category: Optional[str] = Query(None),
+    _: str = Depends(require_read_access)
+):
+    """Export generators list in various formats"""
+    try:
+        generators = await generator_service.list_generators(category=category)
+        
+        if format == "csv":
+            output = io.StringIO()
+            if generators:
+                fieldnames = generators[0].keys()
+                writer = csv.DictWriter(output, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(generators)
+            
+            return Response(
+                content=output.getvalue(),
+                media_type="text/csv",
+                headers={"Content-Disposition": "attachment; filename=generators.csv"}
+            )
+        
+        elif format == "yaml":
+            import yaml
+            yaml_content = yaml.dump({"generators": generators}, default_flow_style=False)
+            return Response(
+                content=yaml_content,
+                media_type="text/yaml",
+                headers={"Content-Disposition": "attachment; filename=generators.yaml"}
+            )
+        
+        else:  # json
+            return BaseResponse(
+                success=True,
+                data={"generators": generators, "exported_at": datetime.utcnow().isoformat()}
+            )
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/events", response_model=BaseResponse)
+async def export_generated_events(
+    request: ExportEventsRequest,
+    _: str = Depends(require_read_access)
+):
+    """Export events from multiple generators"""
+    try:
+        all_events = []
+        
+        for generator_id in request.generator_ids:
+            events = await generator_service.execute_generator(
+                generator_id, 
+                count=request.count_per_generator, 
+                format="json"
+            )
+            
+            # Add metadata to each event
+            for event in events:
+                event["_generator"] = generator_id
+                event["_exported_at"] = datetime.utcnow().isoformat()
+            
+            all_events.extend(events)
+        
+        if request.format == "csv":
+            if not all_events:
+                return Response(content="", media_type="text/csv")
+            
+            output = io.StringIO()
+            # Flatten nested objects for CSV
+            flattened_events = []
+            for event in all_events:
+                flat_event = {}
+                for key, value in event.items():
+                    if isinstance(value, (dict, list)):
+                        flat_event[key] = json.dumps(value)
+                    else:
+                        flat_event[key] = value
+                flattened_events.append(flat_event)
+            
+            fieldnames = flattened_events[0].keys()
+            writer = csv.DictWriter(output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(flattened_events)
+            
+            return Response(
+                content=output.getvalue(),
+                media_type="text/csv",
+                headers={"Content-Disposition": "attachment; filename=events.csv"}
+            )
+        
+        else:  # json
+            return BaseResponse(
+                success=True,
+                data={
+                    "events": all_events,
+                    "total_events": len(all_events),
+                    "generators": request.generator_ids,
+                    "exported_at": datetime.utcnow().isoformat()
+                }
+            )
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/stream", response_model=BaseResponse)

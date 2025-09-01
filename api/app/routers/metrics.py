@@ -14,6 +14,20 @@ router = APIRouter()
 metrics_service = MetricsService()
 
 
+@router.get("", response_model=BaseResponse)
+async def get_base_metrics(_: str = Depends(require_read_access)):
+    """Get base API metrics"""
+    try:
+        metrics = await metrics_service.get_base_metrics()
+        
+        return BaseResponse(
+            success=True,
+            data=metrics
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/summary", response_model=BaseResponse)
 async def get_metrics_summary(
     _: str = Depends(require_read_access)

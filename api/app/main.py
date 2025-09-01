@@ -6,8 +6,10 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
+from pydantic import ValidationError
 import logging
 import sys
+import uuid
 from pathlib import Path
 
 # Add parent directories to path for imports
@@ -71,6 +73,33 @@ else:
     )
 
 # Exception handlers
+@app.exception_handler(ValidationError)
+async def validation_exception_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "success": False,
+            "error": {
+                "code": "VALIDATION_ERROR",
+                "message": "Request validation failed",
+                "details": exc.errors()
+            }
+        }
+    )
+
+@app.exception_handler(422)
+async def unprocessable_entity_handler(request: Request, exc):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "success": False,
+            "error": {
+                "code": "UNPROCESSABLE_ENTITY",
+                "message": "The request was well-formed but contains semantic errors"
+            }
+        }
+    )
+
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):
     return JSONResponse(
@@ -94,6 +123,22 @@ async def internal_error_handler(request: Request, exc):
             "error": {
                 "code": "INTERNAL_ERROR",
                 "message": "An internal server error occurred"
+            }
+        }
+    )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception: {exc}", exc_info=True)
+    
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "An unexpected error occurred",
+                "request_id": str(uuid.uuid4())  # For tracking
             }
         }
     )
