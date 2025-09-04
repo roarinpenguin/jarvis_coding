@@ -67,14 +67,16 @@ EVENT_TYPES = {
     ]
 }
 
-# User names and emails
+# Star Trek themed users and emails
 USERS = [
-    {"email": "john.doe@company.com", "name": "John Doe"},
-    {"email": "jane.smith@company.com", "name": "Jane Smith"},
-    {"email": "admin@company.com", "name": "Admin User"},
-    {"email": "bob.jones@company.com", "name": "Bob Jones"},
-    {"email": "alice.williams@company.com", "name": "Alice Williams"},
-    {"email": "service-account@company.com", "name": "Service Account"}
+    {"email": "jean.picard@starfleet.corp", "name": "Jean-Luc Picard"},
+    {"email": "william.riker@starfleet.corp", "name": "William T. Riker"},
+    {"email": "data.android@starfleet.corp", "name": "Data Android"},
+    {"email": "jordy.laforge@starfleet.corp", "name": "Geordi La Forge"},
+    {"email": "worf.security@starfleet.corp", "name": "Worf Security"},
+    {"email": "beverly.crusher@starfleet.corp", "name": "Beverly Crusher"},
+    {"email": "deanna.troi@starfleet.corp", "name": "Deanna Troi"},
+    {"email": "starfleet-admin@enterprise.starfleet.corp", "name": "Starfleet Admin"}
 ]
 
 # IP addresses
@@ -88,7 +90,8 @@ def generate_ip() -> str:
 def google_workspace_log() -> Dict:
     """Generate a single Google Workspace event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    # Use recent timestamps (last 10 minutes)
+    event_time = now - timedelta(minutes=random.randint(0, 10))
     
     # Select service and event
     service = random.choice(list(EVENT_TYPES.keys()))
@@ -104,7 +107,7 @@ def google_workspace_log() -> Dict:
             "time": event_time.isoformat(),
             "uniqueQualifier": str(random.randint(1000000000000000000, 9999999999999999999)),
             "applicationName": service,
-            "customerId": "C01abc123"
+            "customerId": "C01NCC1701"
         },
         "etag": f'"{uuid.uuid4().hex}"',
         "actor": {
@@ -145,7 +148,7 @@ def google_workspace_log() -> Dict:
     elif service == "drive":
         parameters.extend([
             {"name": "doc_id", "value": uuid.uuid4().hex},
-            {"name": "doc_title", "value": random.choice(["Q4 Report.xlsx", "Project Plan.docx", "Budget 2025.xlsx", "Presentation.pptx", "Meeting Notes.doc"])},
+            {"name": "doc_title", "value": random.choice(["Starfleet Q4 Report.xlsx", "Enterprise Mission Plan.docx", "Starfleet Budget 2378.xlsx", "Bridge Presentation.pptx", "Senior Staff Meeting Notes.doc"])},
             {"name": "doc_type", "value": random.choice(["document", "spreadsheet", "presentation", "folder"])},
             {"name": "visibility", "value": random.choice(["private", "people_with_link", "public"])},
             {"name": "owner", "value": actor["email"]},
@@ -172,7 +175,7 @@ def google_workspace_log() -> Dict:
     elif service == "meet":
         parameters.extend([
             {"name": "meeting_id", "value": f"{random.choice(['abc', 'xyz', 'def'])}-{random.choice(['defg', 'hijk', 'lmno'])}-{random.choice(['pqr', 'stu', 'vwx'])}"},
-            {"name": "meeting_title", "value": random.choice(["Team Standup", "Client Meeting", "Project Review", "All Hands", "1:1 Meeting"])},
+            {"name": "meeting_title", "value": random.choice(["Bridge Team Standup", "Diplomatic Meeting", "Engineering Review", "All Hands Starfleet", "Captain's 1:1 Meeting"])},
             {"name": "duration_seconds", "intValue": random.randint(300, 7200)},
             {"name": "participant_count", "intValue": random.randint(2, 100)},
             {"name": "is_external", "boolValue": random.choice([True, False])},
@@ -180,7 +183,7 @@ def google_workspace_log() -> Dict:
         ])
     
     # Add organization info
-    event["ownerDomain"] = "company.com"
+    event["ownerDomain"] = "starfleet.corp"
     
     # Add warning for suspicious events
     if any(word in event_info["name"] for word in ["suspicious", "leak", "phishing"]):

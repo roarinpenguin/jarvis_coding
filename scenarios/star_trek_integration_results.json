@@ -3,10 +3,10 @@
     "generator": "aws_route53",
     "category": "cloud_infrastructure",
     "format_correct": true,
-    "star_trek_integrated": true,
+    "star_trek_integrated": false,
     "recent_timestamp": true,
     "override_support": false,
-    "sample_output": "2025-08-25T17:59:39Z Route53 queryName=\"sickbay.enterprise.starfleet.corp\" queryType=\"NS\" clientIp=\"28.89.159.44\" edgeLocation=\"SFO53-P1\" responseCode=\"NOERROR\" resolverEndpointId=\"rslvr-endpt-5258\"",
+    "sample_output": "2025-09-02T17:09:12Z Route53 queryName=\"cloudflare.com\" queryType=\"A\" clientIp=\"158.157.176.127\" edgeLocation=\"IAD79-P3\" responseCode=\"NOERROR\" resolverEndpointId=\"rslvr-endpt-1134\"",
     "errors": []
   },
   {
@@ -16,7 +16,7 @@
     "star_trek_integrated": true,
     "recent_timestamp": false,
     "override_support": false,
-    "sample_output": "{'version': '1.100000', 'account-id': '624568752495', 'interface-id': 'eni-0105e2c8', 'srcaddr': '10.91.132.115', 'dstaddr': '169.254.169.253', 'srcport': 64712, 'dstport': 53, 'protocol': 17, 'packets': 1, 'bytes': 225, 'windowstart': 1756136139, 'windowend': 1756136199, 'action': 'ACCEPT', 'flowlogstatus': 'OK', 'query_name': 'sickbay.starfleet.corp', 'query_type': 'TXT', 'query_class': 'IN', 'rcode': 'TIMEOUT', 'rdata': '', 'answers': 0, 'transport': 'UDP', 'vpc-id': 'vpc-04e7f2d7', 'subnet-i",
+    "sample_output": "{'version': '1.100000', 'account-id': '792320273761', 'interface-id': 'eni-02bc56c3', 'srcaddr': '10.141.168.45', 'dstaddr': '169.254.169.253', 'srcport': 57042, 'dstport': 53, 'protocol': 17, 'packets': 1, 'bytes': 202, 'windowstart': 1756747572, 'windowend': 1756747632, 'action': 'ACCEPT', 'flowlogstatus': 'OK', 'query_name': 'engineering.starfleet.corp', 'query_type': 'TXT', 'query_class': 'IN', 'rcode': 'REFUSED', 'rdata': '', 'answers': 0, 'transport': 'UDP', 'vpc-id': 'vpc-02cf2be1', 'subn",
     "errors": []
   },
   {
@@ -26,7 +26,7 @@
     "star_trek_integrated": true,
     "recent_timestamp": true,
     "override_support": true,
-    "sample_output": "{'TimeStamp': '2025-08-25T18:01:39Z', 'UserId': 'geordi.laforge@starfleet.corp', 'Operation': 'AccessRequestApproved', 'SiteUrl': 'https://starfleet-my.sharepoint.com/sites/Engineering', 'ObjectId': '/Personal Logs/FirstContact.pdf', 'FileName': 'FirstContact.pdf', 'Details': 'User geordi.laforge@starfleet.corp accessrequestapproved for FirstContact.pdf', 'UserAgent': 'Microsoft SharePoint Online', 'ClientIP': '43.212.197.31', 'Workload': 'SharePoint', 'RecordType': 6, 'Version': '1', 'dataSourc",
+    "sample_output": "{'TimeStamp': '2025-09-02T17:04:12Z', 'UserId': 'beverly.crusher@starfleet.corp', 'Operation': 'FileDeleted', 'SiteUrl': 'https://starfleet-my.sharepoint.com/sites/Command', 'ObjectId': '/Medical Records/MissionBriefing.pptx', 'FileName': 'MissionBriefing.pptx', 'Details': 'User beverly.crusher@starfleet.corp filedeleted MissionBriefing.pptx', 'UserAgent': 'Microsoft Office/16.0 (Microsoft OneDrive for Business)', 'ClientIP': '126.248.172.149', 'Workload': 'SharePoint', 'RecordType': 6, 'Version",
     "errors": []
   },
   {
@@ -36,7 +36,7 @@
     "star_trek_integrated": true,
     "recent_timestamp": true,
     "override_support": true,
-    "sample_output": "{'Timestamp': '2025-08-25T17:59:39Z', 'DeviceName': 'ENTERPRISE-ENG-01', 'DeviceId': '001B6B6DB7AB9CC7', 'AccountName': 'service', 'AccountDomain': 'FEDERATION', 'ActionType': 'FileDeleted', 'dataSource.vendor': 'Microsoft', 'dataSource.name': 'Microsoft 365 Defender', 'dataSource.category': 'security', 'FileName': 'tricorder.exe', 'FolderPath': 'C:\\\\Users\\\\picard\\\\Downloads', 'SHA1': 'ae92ae94df4de29efde1188fd09101a0cf3b4e78', 'MD5': '4b22970e71199c1ba140e091ff50b993'}",
+    "sample_output": "{'Timestamp': '2025-09-02T17:03:12Z', 'DeviceName': 'READYROOM-01', 'DeviceId': '001F69D24B480216', 'AccountName': 'worf.security', 'AccountDomain': 'STARFLEET', 'ActionType': 'SuspiciousProcess', 'dataSource.vendor': 'Microsoft', 'dataSource.name': 'Microsoft 365 Defender', 'dataSource.category': 'security'}",
     "errors": []
   },
   {
@@ -46,7 +46,7 @@
     "star_trek_integrated": true,
     "recent_timestamp": true,
     "override_support": false,
-    "sample_output": "{'timestamp': '2025-08-25T18:02:39Z', 'time': 1756144959311, 'class_uid': '3002', 'class_name': 'Authentication', 'category_uid': '3', 'category_name': 'Identity & Access Management', 'activity_id': '1', 'activity_name': 'Logon', 'type_uid': '300201', 'severity_id': 3, 'status_id': 2, 'user': {'name': 'bob', 'account_uid': 'bob', 'account_type': 'User'}, 'src_endpoint': {'ip': '203.0.113.180', 'location': {'desc': 'Chicago, US', 'city': 'Chicago', 'country': 'US'}}, 'auth_protocol': 'passcode', ",
+    "sample_output": "{'timestamp': '2025-09-02T17:12:12Z', 'time': 1756833132709, 'class_uid': '3002', 'class_name': 'Authentication', 'category_uid': '3', 'category_name': 'Identity & Access Management', 'activity_id': '1', 'activity_name': 'Logon', 'type_uid': '300201', 'severity_id': 1, 'status_id': 1, 'user': {'name': 'fiona', 'account_uid': 'fiona', 'account_type': 'User'}, 'src_endpoint': {'ip': '203.0.113.180', 'location': {'desc': 'Chicago, US', 'city': 'Chicago', 'country': 'US'}}, 'auth_protocol': 'passcod",
     "errors": []
   },
   {
@@ -56,7 +56,7 @@
     "star_trek_integrated": true,
     "recent_timestamp": true,
     "override_support": true,
-    "sample_output": "{'timestamp': '2025-08-25T17:57:39.313516+00:00', 'event_id': 6317570, 'event_type': 'Connection', 'event_subtype': 'CONNECTION_EVENT', 'severity': 'Info', 'action': 'Allow', 'device_name': 'ENTERPRISE-FTD-MEDICAL-1', 'device_ip': '144.206.255.116', 'policy_name': 'StarfleetSecurityPolicy_4', 'rule_name': 'Directive_90', 'source_ip': '192.170.140.83', 'destination_ip': '223.235.220.165', 'source_port': 9744, 'destination_port': 80, 'protocol': 'ESP', 'source_country': 'JP', 'destination_country'",
+    "sample_output": "{'timestamp': '2025-09-02T17:02:12.709412+00:00', 'event_id': 6241434, 'event_type': 'System', 'event_subtype': 'SYSTEM_EVENT', 'severity': 'Warning', 'action': 'Drop', 'device_name': 'ENTERPRISE-FTD-SECURITY-5', 'device_ip': '45.194.224.199', 'policy_name': 'StarfleetSecurityPolicy_1', 'rule_name': 'Directive_58', 'source_ip': '53.114.107.37', 'destination_ip': '156.107.207.88', 'source_port': 43008, 'destination_port': 80, 'protocol': 'ICMP', 'source_country': 'BR', 'destination_country': 'DE'",
     "errors": []
   },
   {
@@ -66,7 +66,7 @@
     "star_trek_integrated": true,
     "recent_timestamp": false,
     "override_support": false,
-    "sample_output": "{'kind': 'admin#reports#activity', 'id': {'time': '2025-08-24T18:38:39.316491+00:00', 'uniqueQualifier': '8439701097154030417', 'applicationName': 'gmail', 'customerId': 'C01abc123'}, 'etag': '\"9f286e21a18f424d9a1da59ea0339e9d\"', 'actor': {'email': 'alice.williams@company.com', 'profileId': '456029745837919904'}, 'ipAddress': '10.114.140.130', 'events': [{'type': 'email_security', 'name': 'suspicious_email_attachment', 'parameters': [{'name': 'setting_name', 'value': 'forwarding'}, {'name': 'set",
+    "sample_output": "{'kind': 'admin#reports#activity', 'id': {'time': '2025-09-02T07:36:12.710310+00:00', 'uniqueQualifier': '8669520187512128261', 'applicationName': 'meet', 'customerId': 'C01abc123'}, 'etag': '\"9c2ad3c3da26462994ea4b29257fedd2\"', 'actor': {'email': 'alice.williams@company.com', 'profileId': '601639341490199089'}, 'ipAddress': '71.97.106.182', 'events': [{'type': 'video_conferencing', 'name': 'meeting_end', 'parameters': [{'name': 'meeting_id', 'value': 'xyz-hijk-stu'}, {'name': 'meeting_title', '",
     "errors": []
   }
 ]

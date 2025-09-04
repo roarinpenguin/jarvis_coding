@@ -13,15 +13,16 @@ from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 
 # Configuration
-SDL_API_TOKEN = "0sjCPYMhCFzUao1m9SFpEVXOevQVP3y9rV_5pTAA6hdI-"
-SDL_API_URL = "https://xdr.us1.sentinelone.net/api/query"
+SDL_API_TOKEN = os.getenv("S1_SDL_API_TOKEN", "")
+SDL_API_URL = os.getenv("S1_SDL_API_URL", "https://xdr.us1.sentinelone.net/api/query")
 
-sys.path.insert(0, 'event_python_writer')
-os.environ['S1_HEC_TOKEN'] = '1FUC88b9Z4BaHtQxwIXwYGpMGEMv7UQ1JjPHEkERjDEe2U7_AS67SJJRpbIqk78h7'
+sys.path.insert(0, 'event_generators/shared')
 from hec_sender import PROD_MAP, SOURCETYPE_MAP, MARKETPLACE_PARSER_MAP
 
 def query_parser_events(parser_name: str, hours_back: int = 4) -> list:
     """Query SDL for events processed by a specific parser"""
+    if not SDL_API_TOKEN:
+        return []
     headers = {
         'Authorization': f'Bearer {SDL_API_TOKEN}',
         'Content-Type': 'application/json'

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Send logs from vendor_product generators to SentinelOne AI SIEM (Splunk‑HEC) one‑by‑one."""
 import argparse, json, os, time, random, requests, importlib, sys
+from typing import Callable, Tuple, Optional
 
 # Add generator category paths to sys.path
 import os
@@ -540,116 +541,180 @@ HEC_TOKEN = os.getenv("S1_HEC_TOKEN")
 if not HEC_TOKEN:
     raise RuntimeError("export S1_HEC_TOKEN=… first")
 
+# Allow switching between Splunk and Bearer auth schemes
+AUTH_SCHEME = os.getenv("S1_HEC_AUTH_SCHEME", "Splunk")
 HEADERS = {
-    "Authorization": f"Bearer {HEC_TOKEN}",
+    "Authorization": f"{AUTH_SCHEME} {HEC_TOKEN}",
 }
 
+def _make_poster(verify: bool, tls_low: bool) -> Callable:
+    """Create a requests.post-like function with desired TLS settings."""
+    session = requests.Session()
+    if tls_low:
+        try:
+            from requests.adapters import HTTPAdapter
+            from requests.packages.urllib3.util.ssl_ import create_urllib3_context
+
+            class TLSAdapter(HTTPAdapter):
+                def init_poolmanager(self, *args, **kwargs):
+                    ctx = create_urllib3_context()
+                    try:
+                        ctx.set_ciphers('DEFAULT@SECLEVEL=1')
+                    except Exception:
+                        pass
+                    if not verify:
+                        try:
+                            ctx.check_hostname = False
+                        except Exception:
+                            pass
+                    kwargs['ssl_context'] = ctx
+                    return super().init_poolmanager(*args, **kwargs)
+
+            session.mount('https://', TLSAdapter())
+        except Exception:
+            # If TLS adapter cannot be created, proceed with default session
+            pass
+
+    session.verify = verify
+
+    def _post(url, headers=None, data=None, json=None, timeout=10):
+        return session.post(url, headers=headers, data=data, json=json, timeout=timeout)
+
+    return _post
+
+# TLS verification toggle (default True). Set S1_HEC_VERIFY=false to disable.
+DEFAULT_VERIFY_TLS = os.getenv("S1_HEC_VERIFY", "true").lower() in ("true", "1", "yes")
+# TLS compatibility (SECLEVEL=1) if requested
+DEFAULT_TLS_LOW = bool(os.getenv("S1_HEC_TLS_LOW"))
+# Allow insecure fallback automatically as last resort (off by default)
+ALLOW_INSECURE_FALLBACK = os.getenv("S1_HEC_AUTO_INSECURE", "false").lower() in ("true", "1", "yes")
+DEBUG = os.getenv("S1_HEC_DEBUG")
+
 SOURCETYPE_MAP = {
-    # Marketplace parsers (official)
+    # ===== FIXED PARSER MAPPINGS (Based on actual parser discovery) =====
+    # Marketplace parsers (official) - Working parsers
     "fortinet_fortigate": "marketplace-fortinetfortigate-latest",
     "zscaler": "marketplace-zscalerinternetaccess-latest",
-    "aws_cloudtrail": "marketplace-awscloudtrail-latest",
+    "aws_cloudtrail": "marketplace-awscloudtrail-latest",  # Fixed: Use marketplace parser
     "aws_vpcflowlogs": "marketplace-awsvpcflowlogs-latest",
-    "aws_guardduty": "marketplace-awsguardduty-latest",
-    "microsoft_azuread": "azuread",
-    "okta_authentication": "community-oktaocsflogs-latest",
-    "cisco_asa": "CommCiscoASA",
-    "cisco_umbrella": "community-ciscoumbrella-latest",
-    "cisco_meraki": "CommCiscoMeraki",
-    "crowdstrike_falcon": "community-crowdstrike_endpoint-latest",
-    "cyberark_pas": "community-cyberarkpaslogs-latest",
-    "darktrace": "community-darktracedarktrace-latest",
-    "proofpoint": "community-proofpointproofpoint-latest",
-    "microsoft_365_mgmt_api": "community-microsoft365mgmtapi-latest",
-    "netskope": "marketplace-netskopecloudlogshipper-latest",
-    "mimecast": "community-mimecastmimecast-latest",
-    "microsoft_azure_ad_signin": "community-microsofteventhubazuresigninlogs-latest",
-    "microsoft_defender_email": "community-microsofteventhubdefenderemaillogs-latest",
-    "beyondtrust_passwordsafe": "community-beyondtrustpasswordsafelogs-latest",
-    "hashicorp_vault": "community-hashicorphcpvaultlogs-latest",
-    "corelight_conn": "marketplace-corelight-conn-latest",
-    "corelight_http": "marketplace-corelight-http-latest",
-    "corelight_ssl": "marketplace-corelight-ssl-latest",
-    "corelight_tunnel": "marketplace-corelight-tunnel-latest",
-    "vectra_ai": "vectra_ai_logs-latest",
-    "tailscale": "community-tailscaletailscalelogs-latest",
-    "extrahop": "community-extrahopextrahoplogs-latest",
-    "armis": "community-armisarmislogs-latest",
-    "sentinelone_endpoint": "json",
-    "sentinelone_identity": "community-singularityidentitysingularityidentitylogs-latest",
-    "apache_http": "community-apachehttplogs-latest",
-    "abnormal_security": "community-abnormalsecurityemailsecurity-latest",
-    "buildkite": "community-buildkiteaudit-latest",
-    "teleport": "community-teleportaccessproxy-latest",
-    "cisco_ise": "community-ciscoidentityservicesengine-latest",
-    "google_workspace": "community-googleworkspaceaudit-latest",
-    "aws_vpc_dns": "community-awsvpcdns-latest",
-    "cisco_networks": "community-cisconetworks-latest",
-    "cloudflare_general": "community-cloudflaregeneral-latest",
-    "cloudflare_waf": "community-cloudflarewaflogs-latest",
-    "extreme_networks": "community-extremenetworks-latest",
-    "f5_networks": "community-f5networks-latest",
-    "google_cloud_dns": "community-googleclouddns-latest",
-    "imperva_waf": "community-impervawaf-latest",
-    "juniper_networks": "community-junipernetworks-latest",
-    "ubiquiti_unifi": "community-ubiquitiunifi-latest",
-    "zscaler_firewall": "community-zscalerfirewall-latest",
-    "cisco_fmc": "community-ciscofmc-latest",
-    "cisco_ios": "community-ciscoios-latest",
-    "cisco_isa3000": "community-ciscoisa3000-latest",
-    "incapsula": "community-incapsula-latest",
-    "manageengine_general": "community-manageenginegeneral-latest",
-    "manch_siem": "community-manchsiem-latest",
-    "microsoft_windows_eventlog": "community-microsoftwindowseventlog-latest",
-    "paloalto_prismasase": "marketplace-paloaltonetworksprismaaccess-latest",
-    "sap": "community-sap-latest",
-    "securelink": "community-securelink-latest",
-    "aws_waf": "community-awswaf-latest",
-    "aws_route53": "community-awsroute53-latest",
-    "cisco_ironport": "community-ciscoironport-latest",
-    "cyberark_conjur": "community-cyberarkconjur-latest",
-    "iis_w3c": "community-iisw3c-latest",
-    "linux_auth": "community-linuxauth-latest",
-    "microsoft_365_collaboration": "community-microsoft365collaboration-latest",
-    "microsoft_365_defender": "community-microsoft365defender-latest",
-    "pingfederate": "community-pingfederate-latest",
-    "zscaler_dns_firewall": "community-zscalerdnsfirewall-latest",
-    "akamai_cdn": "community-akamaicdn-latest",
-    "akamai_dns": "community-akamaidns-latest",
-    "akamai_general": "community-akamaigeneral-latest",
-    "akamai_sitedefender": "community-akamaisitedefender-latest",
-    "axway_sftp": "community-axwaysftp-latest",
-    "cisco_duo": "community-ciscoduo-latest",
-    "cohesity_backup": "community-cohesitybackup-latest",
-    "f5_vpn": "community-f5vpn-latest",
-    "github_audit": "community-githubaudit-latest",
-    "harness_ci": "community-harnessci-latest",
-    "hypr_auth": "community-hyprauth-latest",
-    "imperva_sonar": "community-impervasonar-latest",
-    "isc_bind": "community-iscbind-latest",
-    "isc_dhcp": "community-iscdhcp-latest",
-    "jamf_protect": "community-jamfprotect-latest",
-    "pingone_mfa": "community-pingonemfa-latest",
-    "pingprotect": "community-pingprotect-latest",
-    "rsa_adaptive": "community-rsaadaptive-latest",
-    "veeam_backup": "community-veeambackup-latest",
-    "wiz_cloud": "community-wizcloud-latest",
-    # Newly created generators
-    "aws_elasticloadbalancer": "marketplace-awselasticloadbalancer-latest",
-    "beyondtrust_privilegemgmt_windows": "community-beyondtrustprivilegemgmtwindowslogs-latest",
-    "cisco_firewall_threat_defense": "marketplace-ciscofirewallthreatdefense-latest",
-    "cisco_meraki_flow": "community-ciscomerkiflow-latest",
-    "manageengine_adauditplus": "community-manageengineadauditplus-latest",
-    "microsoft_azure_ad": "community-microsoftazuread-latest",
-    "microsoft_eventhub_azure_signin": "community-microsofteventhubazuresignin-latest",
-    "microsoft_eventhub_defender_email": "community-microsofteventhhubdefenderemail-latest",
-    "microsoft_eventhub_defender_emailforcloud": "community-microsofteventhubdefenderemailforcloud-latest",
-    # Additional marketplace parsers
+    "aws_guardduty": "marketplace-awsguardduty-latest",  # Fixed: Use marketplace parser
+    "aws_elasticloadbalancer": "marketplace-awselasticloadbalancer-latest",  # Fixed: Use marketplace parser
+    "cisco_firewall_threat_defense": "cisco_firewall_threat_defense-latest",  # Use community parser
     "checkpoint": "marketplace-checkpointfirewall-latest",
     "fortimanager": "marketplace-fortinetfortimanager-latest",
     "infoblox_ddi": "marketplace-infobloxddi-latest",
-    "paloalto_firewall": "marketplace-paloaltonetworksfirewall-latest",
-    "zscaler_private_access": "marketplace-zscalerprivateaccess-latest",
+    "paloalto_firewall": "paloalto_paloalto_logs-latest",  # Fixed: Use actual existing community parser
+    "paloalto_prismasase": "marketplace-paloaltonetworksprismaaccess-latest",
+    "zscaler_private_access": "zscaler_firewall_logs-latest",  # Fallback to similar parser
+    "netskope": "netskope_netskope_logs-latest",  # Use community parser
+    "corelight_conn": "corelight_conn_logs-latest",  # Use community parser
+    "corelight_http": "marketplace-corelight-http-latest",
+    "corelight_ssl": "marketplace-corelight-ssl-latest",
+    "corelight_tunnel": "marketplace-corelight-tunnel-latest",
+    
+    # Community parsers - Fixed to match actual existing parsers
+    "okta_authentication": "okta_ocsf_logs-latest",  # Fixed: Use actual existing parser name
+    "crowdstrike_falcon": "crowdstrike_endpoint-latest",  # Fixed: Use actual existing parser name
+    "sentinelone_endpoint": "singularityidentity_logs-latest",  # Fixed: Use actual existing parser name
+    "sentinelone_identity": "singularityidentity_singularityidentity_logs-latest",
+    "vectra_ai": "vectra_ai_logs-latest",
+    
+    # Microsoft products - mapped to existing parsers
+    "microsoft_azuread": "microsoft_azure_ad_logs-latest",
+    "microsoft_azure_ad": "microsoft_azure_ad_logs-latest", 
+    "microsoft_azure_ad_signin": "microsoft_eventhub_azure_signin_logs-latest",
+    "microsoft_365_mgmt_api": "microsoft_365_mgmt_api_logs-latest",
+    "microsoft_365_collaboration": "microsoft_365_collaboration-latest",
+    "microsoft_365_defender": "microsoft_365_defender-latest",
+    "microsoft_defender_email": "microsoft_eventhub_defender_email_logs-latest",
+    "microsoft_windows_eventlog": "microsoft_windows_eventlog-latest",
+    "microsoft_eventhub_azure_signin": "microsoft_eventhub_azure_signin_logs-latest",
+    "microsoft_eventhub_defender_email": "microsoft_eventhub_defender_email_logs-latest",
+    "microsoft_eventhub_defender_emailforcloud": "microsoft_eventhub_defender_emailforcloud_logs-latest",
+    
+    # Cisco products - mapped to existing community parsers
+    "cisco_asa": "cisco_firewall-latest",
+    "cisco_umbrella": "cisco_umbrella-latest",
+    "cisco_meraki": "cisco_meraki-latest",
+    "cisco_duo": "cisco_duo-latest",
+    "cisco_ise": "cisco_ise_logs-latest",
+    "cisco_fmc": "cisco_fmc_logs-latest",
+    "cisco_ios": "cisco_ios_logs-latest",
+    "cisco_ironport": "cisco_ironport-latest",
+    "cisco_meraki_flow": "cisco_meraki_flow_logs-latest",
+    "cisco_networks": "cisco_networks_logs-latest",
+    
+    # Security vendors - mapped to existing parsers
+    "cyberark_pas": "cyberark_pas_logs-latest",
+    "cyberark_conjur": "cyberark_conjur-latest",
+    "darktrace": "darktrace_darktrace_logs-latest",
+    "extrahop": "extrahop_extrahop_logs-latest",
+    "armis": "armis_armis_logs-latest",
+    # "sentinelone_endpoint": "singularityidentity_singularityidentity_logs-latest",  # DUPLICATE - moved up to line 618
+    
+    # Email security - mapped to existing parsers
+    "proofpoint": "proofpoint_proofpoint_logs-latest",
+    "mimecast": "mimecast_mimecast_logs-latest",
+    "abnormal_security": "abnormal_security_logs-latest",
+    
+    # Identity and access management
+    "beyondtrust_passwordsafe": "beyondtrust_passwordsafe_logs-latest",
+    "beyondtrust_privilegemgmt_windows": "beyondtrust_privilegemgmtwindows_logs-latest",
+    "hashicorp_vault": "hashicorp_hcp_vault_logs-latest",
+    "hypr_auth": "hypr_auth-latest",
+    "pingfederate": "pingfederate-latest",
+    "pingone_mfa": "pingone_mfa-latest",
+    "pingprotect": "pingprotect-latest",
+    "rsa_adaptive": "rsa_adaptive-latest",
+    
+    # Web security and CDN
+    "cloudflare_general": "cloudflare_general_logs-latest",
+    "cloudflare_waf": "cloudflare_waf_logs-latest",
+    "imperva_waf": "imperva_waf_logs-latest",
+    "imperva_sonar": "imperva_sonar-latest",
+    "incapsula": "incapsula_incapsula_logs-latest",
+    "akamai_cdn": "akamai_cdn-latest",
+    "akamai_dns": "akamai_dns-latest",
+    "akamai_general": "akamai_general-latest",
+    "akamai_sitedefender": "akamai_sitedefender-latest",
+    "zscaler_firewall": "zscaler_firewall_logs-latest",
+    "zscaler_dns_firewall": "zscaler_dns_firewall-latest",
+    
+    # Cloud and infrastructure
+    "aws_waf": "aws_waf-latest",
+    "aws_route53": "aws_route53-latest",
+    "aws_vpc_dns": "aws_vpc_dns_logs-latest",
+    "google_workspace": "google_workspace_logs-latest",
+    "google_cloud_dns": "google_cloud_dns_logs-latest",
+    
+    # Network infrastructure
+    "apache_http": "apache_http_logs-latest",
+    "f5_networks": "f5_networks_logs-latest",
+    "f5_vpn": "f5_vpn-latest",
+    "extreme_networks": "extreme_networks_logs-latest",
+    "juniper_networks": "juniper_networks_logs-latest",
+    "ubiquiti_unifi": "ubiquiti_unifi_logs-latest",
+    "tailscale": "tailscale_tailscale_logs-latest",
+    
+    # IT management and DevOps
+    "buildkite": "buildkite_ci_logs-latest",
+    "github_audit": "github_audit-latest",
+    "harness_ci": "harness_ci-latest",
+    "teleport": "teleport_logs-latest",
+    "linux_auth": "linux_auth-latest",
+    "iis_w3c": "iis_w3c-latest",
+    "veeam_backup": "veeam_backup-latest",
+    "cohesity_backup": "cohesity_backup-latest",
+    "axway_sftp": "axway_sftp-latest",
+    "sap": "sap_logs-latest",
+    "securelink": "securelink_logs-latest",
+    "wiz_cloud": "wiz_cloud-latest",
+    "manageengine_general": "manageengine_general_logs-latest",
+    "manageengine_adauditplus": "manageengine_adauditplus_logs-latest",
+    "manch_siem": "manch_siem_logs-latest",
+    "isc_bind": "isc_bind-latest",
+    "isc_dhcp": "isc_dhcp-latest",
+    "jamf_protect": "jamf_protect-latest",
 }
 
 # Generators that already emit structured JSON events; these must be sent to /event
@@ -776,22 +841,74 @@ def send_one(line, product: str, attr_fields: dict):
     Route JSON‑structured products to the /event endpoint and all
     raw / CSV / syslog products to the /raw endpoint.
     """
-    raw_base   = os.getenv("S1_HEC_RAW_URL_BASE",   "https://ingest.us1.sentinelone.net/services/collector/raw")
-    event_base = os.getenv("S1_HEC_EVENT_URL_BASE", "https://ingest.us1.sentinelone.net/services/collector/event")
+    # Build endpoint bases to try (env override → us1 → usea1 → global)
+    env_event = os.getenv("S1_HEC_EVENT_URL_BASE")
+    env_raw = os.getenv("S1_HEC_RAW_URL_BASE")
+    bases = []
+    if env_event and env_raw:
+        bases.append((env_event, env_raw))
+    bases.extend([
+        ("https://ingest.us1.sentinelone.net/services/collector/event",
+         "https://ingest.us1.sentinelone.net/services/collector/raw"),
+        ("https://ingest.usea1.sentinelone.net/services/collector/event",
+         "https://ingest.usea1.sentinelone.net/services/collector/raw"),
+        ("https://ingest.sentinelone.net/services/collector/event",
+         "https://ingest.sentinelone.net/services/collector/raw"),
+    ])
 
-    if product in JSON_PRODUCTS:
-        # ── JSON payload → /event ─────────────────────────
-        url = event_base
-        payload = _envelope(line, product, attr_fields)  # JSON envelope
-        headers = {**HEADERS, "Content-Type": "application/json"}
-        # Use json parameter to properly serialize JSON data
-        resp = requests.post(url, headers=headers, json=payload, timeout=10)
-    else:
-        # ── Raw payload → /raw ───────────────────────────
-        url = f"{raw_base}?sourcetype={SOURCETYPE_MAP[product]}"
-        payload = line  # plain CSV/syslog/raw string
-        headers = {**HEADERS, "Content-Type": "text/plain"}
-        resp = requests.post(url, headers=headers, data=payload, timeout=10)
+    # Try verification/TLS combinations (secure → low TLS → insecure as last resort)
+    combos = [
+        (DEFAULT_VERIFY_TLS, DEFAULT_TLS_LOW),
+        (True, True),
+    ]
+    if ALLOW_INSECURE_FALLBACK:
+        combos.append((False, True))
+
+    # Attempt auth schemes: Splunk → Bearer
+    auth_schemes = [os.getenv("S1_HEC_AUTH_SCHEME", "Splunk"), "Bearer"]
+
+    last_error: Optional[Exception] = None
+
+    for event_base, raw_base in bases:
+        for verify, tls_low in combos:
+            POST = _make_poster(verify=verify, tls_low=tls_low)
+
+            for scheme in auth_schemes:
+                headers_auth = {**HEADERS}
+                headers_auth["Authorization"] = f"{scheme} {HEC_TOKEN}"
+
+                try:
+                    if product in JSON_PRODUCTS:
+                        # JSON payload → /event
+                        url = event_base
+                        payload = _envelope(line, product, attr_fields)
+                        headers = {**headers_auth, "Content-Type": "application/json"}
+                        resp = POST(url, headers=headers, json=payload, timeout=10)
+                    else:
+                        # Raw payload → /raw
+                        url = f"{raw_base}?sourcetype={SOURCETYPE_MAP[product]}"
+                        payload = line
+                        headers = {**headers_auth, "Content-Type": "text/plain"}
+                        resp = POST(url, headers=headers, data=payload, timeout=10)
+
+                    # If unauthorized with Splunk, retry with Bearer (handled by loop)
+                    if resp.status_code in (401, 403) and scheme == auth_schemes[0]:
+                        continue
+
+                    resp.raise_for_status()
+                    try:
+                        return resp.json()
+                    except ValueError:
+                        return {"status": "OK", "code": resp.status_code}
+                except Exception as e:
+                    last_error = e
+                    # On SSL/connection errors, continue to next combo/base
+                    continue
+
+    # If all attempts failed, raise last error for visibility
+    if last_error:
+        raise last_error
+    raise RuntimeError("HEC send failed with unknown error")
     resp.raise_for_status()
     try:
         return resp.json()
@@ -816,8 +933,8 @@ if __name__ == "__main__":
                         help="How many events to send (default 1)")
     parser.add_argument("--min-delay", type=float, default=0.020,
                         help="Minimum delay between events in seconds (default 0.02)")
-    parser.add_argument("--max-delay", type=float, default=60.0,
-                        help="Maximum delay between events in seconds (default 60)")
+    parser.add_argument("--max-delay", type=float, default=0.30,
+                        help="Maximum delay between events in seconds (default 0.30)")
     parser.add_argument(
         "--product",
         choices=[
@@ -931,6 +1048,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--marketplace-parser", type=str,
                         help="Use a specific marketplace parser (e.g., marketplace-awscloudtrail-latest)")
+    parser.add_argument("--print-responses", action="store_true",
+                        help="Print all HEC responses instead of a concise summary")
     args = parser.parse_args()
 
     # Handle marketplace parser name
@@ -964,7 +1083,27 @@ if __name__ == "__main__":
         print("HEC response:", send_one(events[0], product, attr_fields))
     else:
         print(f"Sending {args.count} events one-by-one "
-              f"(spacing {args.min_delay}s – {args.max_delay}s)…")
-        print("Responses:", send_many_with_spacing(
+              f"(spacing {args.min_delay}s – {args.max_delay}s)…", flush=True)
+        results = send_many_with_spacing(
             events, product, attr_fields, args.min_delay, args.max_delay
-        ))
+        )
+        if args.print_responses:
+            print("Responses:", results)
+        else:
+            # Concise summary
+            total = len(results)
+            ok = 0
+            fail = 0
+            samples = []
+            for r in results:
+                if isinstance(r, dict) and (r.get('code') == 0 or r.get('status') == 'OK'):
+                    ok += 1
+                else:
+                    fail += 1
+                    if len(samples) < 3:
+                        samples.append(r)
+            print(f"Done. Delivered {ok}/{total} successfully. Failures: {fail}.")
+            if samples:
+                print("Sample failure responses:")
+                for s in samples:
+                    print("  -", s)

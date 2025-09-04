@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 AWS Route 53 event generator
-Generates synthetic AWS Route 53 DNS query logs in syslog format
+Generates synthetic AWS Route 53 DNS query logs in JSON format
 """
 import random
+import json
 from datetime import datetime, timezone, timedelta
 
 # SentinelOne AI-SIEM specific field attributes
@@ -54,8 +55,8 @@ def generate_client_ip() -> str:
     """Generate client IP address"""
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
-def aws_route53_log(overrides: dict = None) -> str:
-    """Generate a single AWS Route 53 DNS event log in syslog format"""
+def aws_route53_log(overrides: dict = None) -> dict:
+    """Generate a single AWS Route 53 DNS event log in JSON format"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 10))
     
@@ -63,25 +64,41 @@ def aws_route53_log(overrides: dict = None) -> str:
     query_type = random.choice(QUERY_TYPES)
     response_code = random.choice(RESPONSE_CODES)
     edge_location = random.choice(EDGE_LOCATIONS)
+    client_ip = generate_client_ip()
     
     timestamp = event_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    resolver_endpoint_id = f"rslvr-endpt-{random.randint(1000, 9999)}"
     
-    # Generate syslog format
-    log = (f'{timestamp} Route53 queryName="{domain}" queryType="{query_type}" '
-           f'clientIp="{generate_client_ip()}" edgeLocation="{edge_location}" '
-           f'responseCode="{response_code}" resolverEndpointId="rslvr-endpt-{random.randint(1000, 9999)}"')
+    # Generate JSON event structure
+    event = {
+        "timestamp": timestamp,
+        "source": "Route53",
+        "queryName": domain,
+        "queryType": query_type,
+        "clientIp": client_ip,
+        "edgeLocation": edge_location,
+        "responseCode": response_code,
+        "resolverEndpointId": resolver_endpoint_id,
+        "version": "1.0",
+        "account": "123456789012",
+        "region": "us-east-1"
+    }
+    
+    # Add SentinelOne AI-SIEM attributes
+    event.update(ATTR_FIELDS)
     
     # Apply overrides if provided (for scenario customization)
     if overrides:
-        # For syslog format, we can override individual fields
         if "domain" in overrides:
-            log = log.replace(f'queryName="{domain}"', f'queryName="{overrides["domain"]}"')
+            event["queryName"] = overrides["domain"]
         if "query_type" in overrides:
-            log = log.replace(f'queryType="{query_type}"', f'queryType="{overrides["query_type"]}"')
+            event["queryType"] = overrides["query_type"]
         if "response_code" in overrides:
-            log = log.replace(f'responseCode="{response_code}"', f'responseCode="{overrides["response_code"]}"')
+            event["responseCode"] = overrides["response_code"]
+        if "client_ip" in overrides:
+            event["clientIp"] = overrides["client_ip"]
     
-    return log
+    return event
 
 if __name__ == "__main__":
     # Generate sample events
@@ -89,4 +106,4 @@ if __name__ == "__main__":
     print("=" * 50)
     for i in range(3):
         print(f"\nEvent {i+1}:")
-        print(aws_route53_log())
+        print(json.dumps(aws_route53_log(), indent=2))

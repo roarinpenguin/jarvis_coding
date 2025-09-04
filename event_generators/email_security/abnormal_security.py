@@ -53,7 +53,12 @@ ATTACK_STRATEGIES = [
 def abnormal_security_log() -> Dict:
     """Generate a single Abnormal Security event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    # Use recent timestamps (last 10 minutes)
+    event_time = now - timedelta(minutes=random.randint(0, 10))
+    
+    # Star Trek themed sender names and domains
+    starfleet_officers = ["jean.picard", "william.riker", "data.android", "jordy.laforge", "worf.security", "beverly.crusher", "deanna.troi"]
+    suspicious_domains = ["romulan-empire.com", "ferengi-commerce.net", "borg-collective.net", "cardassian-union.org"]
     
     # Generate event data
     threat_type = random.choice(THREAT_TYPES)
@@ -64,20 +69,20 @@ def abnormal_security_log() -> Dict:
         "timestamp": event_time.isoformat(),
         "threat_type": threat_type,
         "severity": severity,
-        "sender_email": f"{random.choice(['john', 'admin', 'noreply', 'support', 'finance'])}@{random.choice(['suspicious-domain.com', 'company-lookalike.com', 'legitcompany.com'])}",
-        "recipient_email": f"user{random.randint(1, 100)}@starfleet.corp",
+        "sender_email": f"{random.choice(['admin', 'noreply', 'support', 'finance'])}@{random.choice(suspicious_domains)}",
+        "recipient_email": f"{random.choice(starfleet_officers)}@starfleet.corp",
         "subject": random.choice([
-            "Urgent: Verify Your Account",
-            "Invoice #" + str(random.randint(10000, 99999)) + " - Payment Required",
-            "Re: Wire Transfer Request",
-            "Your Package Could Not Be Delivered",
-            "IT Security Alert - Action Required",
-            "Updated Benefits Information"
+            "Urgent: Verify Your Starfleet Credentials",
+            "Starfleet Command Invoice #" + str(random.randint(10000, 99999)) + " - Payment Required",
+            "Re: Diplomatic Transfer Request",
+            "Your Replicator Order Could Not Be Delivered", 
+            "Starfleet IT Security Alert - Action Required",
+            "Updated Starfleet Benefits Information"
         ]),
         "attack_strategy": random.sample(ATTACK_STRATEGIES, random.randint(1, 3)),
         "remediation_action": random.choice(REMEDIATION_ACTIONS),
         "confidence_score": round(random.uniform(0.7, 0.99), 2),
-        "impersonated_party": random.choice(["CEO", "CFO", "Microsoft", "Google", "IT Department", None]),
+        "impersonated_party": random.choice(["Captain Picard", "Commander Riker", "Starfleet Command", "Starfleet Academy", "Engineering", None]),
         "attack_vector": random.choice(["email", "link", "attachment"]),
         "is_internal": random.choice([True, False]),
         "messages_delivered": random.randint(0, 10),

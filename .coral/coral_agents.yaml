@@ -1,0 +1,106 @@
+# CoralCollective Agents for Claude
+# This file registers CoralCollective agents with Claude's agent system
+
+agents:
+  coral_architect:
+    name: "Coral Architect"
+    description: "System design and architecture planning specialist"
+    prompt_file: ".coral/agents/core/project_architect.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - mcp_filesystem
+    
+  coral_backend:
+    name: "Coral Backend"
+    description: "Server-side and database development specialist"
+    prompt_file: ".coral/agents/specialists/backend_developer.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - mcp_postgres
+      - mcp_docker
+    
+  coral_frontend:
+    name: "Coral Frontend"
+    description: "UI/UX implementation specialist"
+    prompt_file: ".coral/agents/specialists/frontend_developer.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - web_browser
+    
+  coral_fullstack:
+    name: "Coral Full Stack"
+    description: "End-to-end development specialist"
+    prompt_file: ".coral/agents/specialists/full_stack_engineer.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - mcp_postgres
+      - mcp_docker
+    
+  coral_qa:
+    name: "Coral QA"
+    description: "Testing and quality assurance specialist"
+    prompt_file: ".coral/agents/specialists/qa_testing.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - test_runner
+    
+  coral_devops:
+    name: "Coral DevOps"
+    description: "Infrastructure and deployment specialist"
+    prompt_file: ".coral/agents/specialists/devops_deployment.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - mcp_docker
+      - mcp_github
+    
+  coral_security:
+    name: "Coral Security"
+    description: "Application security and compliance specialist"
+    prompt_file: ".coral/agents/specialists/security_specialist.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - security_scanner
+    
+  coral_ai:
+    name: "Coral AI/ML"
+    description: "AI integration and machine learning specialist"
+    prompt_file: ".coral/agents/specialists/ai_ml_specialist.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - python_executor
+    
+  coral_database:
+    name: "Coral Database"
+    description: "Database design and optimization specialist"
+    prompt_file: ".coral/agents/specialists/database_specialist.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - mcp_postgres
+    
+  coral_api:
+    name: "Coral API Designer"
+    description: "RESTful and GraphQL API design specialist"
+    prompt_file: ".coral/agents/specialists/api_designer.md"
+    model: "claude-3-5-sonnet-20241022"
+    tools:
+      - file_editor
+      - bash
+      - api_tester

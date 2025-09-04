@@ -55,7 +55,8 @@ def generate_ip() -> str:
 def cloudflare_general_log() -> Dict:
     """Generate a single Cloudflare event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    # Use recent timestamps (last 10 minutes)
+    event_time = now - timedelta(minutes=random.randint(0, 10))
     
     client_ip = generate_ip()
     action = random.choice(ACTIONS)
@@ -67,21 +68,24 @@ def cloudflare_general_log() -> Dict:
     elif action == "challenge":
         status_code = random.choice([403, 503])
     
+    # Star Trek themed domains
+    star_trek_hosts = ["starfleet.corp", "www.starfleet.corp", "api.starfleet.corp", "enterprise.starfleet.corp"]
+    
     event = {
         "Datetime": int(event_time.timestamp() * 1000),  # Unix timestamp in milliseconds
         "ZoneID": random.randint(100000000000000000, 999999999999999999),
-        "ZoneName": "example.com",
+        "ZoneName": "starfleet.corp",
         "ClientIP": client_ip,
-        "ClientRequestHost": random.choice(["example.com", "www.example.com", "api.example.com", "cdn.example.com"]),
+        "ClientRequestHost": random.choice(star_trek_hosts),
         "ClientRequestMethod": random.choice(HTTP_METHODS),
-        "ClientRequestURI": random.choice(["/", "/api/v1/users", "/login", "/admin", "/wp-admin", "/api/data"]),
+        "ClientRequestURI": random.choice(["/", "/api/v1/crew", "/starfleet/login", "/bridge/admin", "/engineering/console", "/api/ship-status"]),
         "ClientRequestUserAgent": random.choice(USER_AGENTS),
         "ClientCountry": random.choice(COUNTRIES),
         "ClientASN": random.randint(1000, 99999),
         "ClientIPClass": random.choice(["clean", "malicious", "searchEngine", "whitelist", "greylist"]),
         "EdgeResponseStatus": status_code,
         "EdgeResponseBytes": random.randint(100, 50000),
-        "EdgeRequestHost": "example.com",
+        "EdgeRequestHost": "starfleet.corp",
         "EdgeStartTimestamp": int(event_time.timestamp() * 1000000),  # Microseconds
         "EdgeEndTimestamp": int((event_time.timestamp() + random.uniform(0.001, 2.0)) * 1000000),
         "OriginIP": f"10.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}",

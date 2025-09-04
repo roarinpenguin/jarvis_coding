@@ -36,24 +36,25 @@ THREAT_CATEGORIES = [
     "Suspicious", "Adult Content", "Gambling", "Social Media"
 ]
 
-# Domains
+# Star Trek themed domains
 DOMAINS = [
-    "google.com", "microsoft.com", "amazon.com", "cloudflare.com",
-    "github.com", "stackoverflow.com", "linkedin.com",
-    "malicious.example", "phishing-site.org", "c2-server.net",
-    "botnet.com", "suspicious-domain.com", "unknown.example"
+    "starfleet.corp", "memory-alpha.org", "vulcan-academy.org", "betazed-council.net",
+    "earth-starfleet.gov", "starfleet-academy.edu", "engineering.starfleet.corp",
+    "romulan-empire.com", "ferengi-commerce.net", "borg-collective.net",
+    "cardassian-union.org", "dominion-command.net", "suspicious-space-station.com"
 ]
 
-# Users
+# Star Trek themed users
 USERS = [
-    "alice@example.com", "bob@example.com", "charlie@example.com",
-    "admin@example.com", "guest@example.com", "contractor@partner.com"
+    "jean.picard@starfleet.corp", "william.riker@starfleet.corp", "data.android@starfleet.corp",
+    "jordy.laforge@starfleet.corp", "worf.security@starfleet.corp", "beverly.crusher@starfleet.corp",
+    "deanna.troi@starfleet.corp", "starfleet-admin@enterprise.starfleet.corp"
 ]
 
-# Device IDs
+# Star Trek themed device IDs
 DEVICE_IDS = [
-    "LAPTOP-01", "LAPTOP-02", "LAPTOP-03", "DESKTOP-01", 
-    "DESKTOP-02", "MOBILE-01", "MOBILE-02", "TABLET-01"
+    "ENTERPRISE-BRIDGE-01", "ENTERPRISE-BRIDGE-02", "ENTERPRISE-ENG-01", "ENTERPRISE-SEC-01", 
+    "ENTERPRISE-MED-01", "VOYAGER-BRIDGE-01", "DS9-OPS-01", "DEFIANT-TACTICAL-01"
 ]
 
 def generate_ip() -> str:
@@ -67,7 +68,8 @@ def generate_answer_ip() -> str:
 def zscaler_dns_firewall_log() -> Dict:
     """Generate a single Zscaler DNS Firewall event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    # Use recent timestamps (last 10 minutes)
+    event_time = now - timedelta(minutes=random.randint(0, 10))
     
     query = random.choice(DOMAINS)
     query_type = random.choice(QUERY_TYPES)
@@ -76,8 +78,8 @@ def zscaler_dns_firewall_log() -> Dict:
     source_ip = generate_ip()
     device_id = random.choice(DEVICE_IDS)
     
-    # Determine if this is a threat
-    is_threat = any(threat in query for threat in ["malicious", "phishing", "c2-server", "botnet", "suspicious"])
+    # Determine if this is a threat (Star Trek themed)
+    is_threat = any(threat in query for threat in ["romulan-empire", "ferengi-commerce", "borg-collective", "cardassian-union", "dominion-command", "suspicious"])
     
     # Set action and other fields based on threat status
     if is_threat:

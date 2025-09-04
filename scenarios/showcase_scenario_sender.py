@@ -14,9 +14,15 @@ import requests
 import time
 from datetime import datetime, timezone
 from showcase_attack_scenario import generate_showcase_attack_scenario
+from env_loader import load_env_if_present
 
-# Set the HEC token first before importing from hec_sender
-os.environ['S1_HEC_TOKEN'] = os.environ.get('S1_HEC_TOKEN', '1FUC88b9Z4BaHtQxwIXwYGpMGEMv7UQ1JjPHEkERjDEe2U7_AS67SJJRpbIqk78h7')
+# Load .env if present (check scenarios/ and repo root), then require token
+this_dir = os.path.dirname(__file__)
+repo_root = os.path.abspath(os.path.join(this_dir, '..'))
+load_env_if_present(os.path.join(this_dir, '.env'))
+load_env_if_present(os.path.join(repo_root, '.env'))
+if not os.getenv('S1_HEC_TOKEN'):
+    sys.exit('S1_HEC_TOKEN not set. Create a .env file or export it (e.g., export S1_HEC_TOKEN=...)')
 
 from hec_sender import send_one, SOURCETYPE_MAP, JSON_PRODUCTS
 

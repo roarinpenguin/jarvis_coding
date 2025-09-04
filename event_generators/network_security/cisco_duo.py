@@ -3,6 +3,7 @@
 Cisco Duo MFA event generator
 """
 from __future__ import annotations
+import json
 import random
 import time
 from datetime import datetime, timezone
@@ -27,10 +28,12 @@ ATTR_FIELDS: Dict[str, str] = {
 def cisco_duo_log() -> Dict:
     """Generate Cisco Duo MFA authentication event"""
     
-    # Common usernames
+    # Star Trek themed usernames
     usernames = [
-        "alice", "bob", "charlie", "diana", "edward", "fiona",
-        "admin", "service_account", "john.doe", "jane.smith"
+        "jean.picard", "william.riker", "data.android", "geordi.laforge",
+        "worf.security", "deanna.troi", "beverly.crusher", "wesley.crusher",
+        "james.kirk", "spock.science", "leonard.mccoy", "montgomery.scott",
+        "admin", "service_account", "external.vulcan", "contractor.ferengi"
     ]
     
     # Authentication factors
@@ -177,4 +180,9 @@ def cisco_duo_log() -> Dict:
 
 
 if __name__ == "__main__":
-    print(cisco_duo_log())
+    # Generate sample events
+    print("Sample Cisco Duo MFA Events:")
+    print("=" * 50)
+    for i in range(3):
+        print(f"\nEvent {i+1}:")
+        print(json.dumps(cisco_duo_log(), indent=2))

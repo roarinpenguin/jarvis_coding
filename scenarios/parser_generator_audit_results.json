@@ -458,12 +458,12 @@
     },
     {
       "generator": "aws_route53",
-      "has_star_trek": false,
+      "has_star_trek": true,
       "priority": "HIGH"
     },
     {
       "generator": "aws_vpc_dns",
-      "has_star_trek": false,
+      "has_star_trek": true,
       "priority": "HIGH"
     },
     {
@@ -488,7 +488,7 @@
     },
     {
       "generator": "cisco_fmc",
-      "has_star_trek": false,
+      "has_star_trek": true,
       "priority": "HIGH"
     },
     {
@@ -623,12 +623,12 @@
     },
     {
       "generator": "microsoft_365_collaboration",
-      "has_star_trek": false,
+      "has_star_trek": true,
       "priority": "HIGH"
     },
     {
       "generator": "microsoft_365_defender",
-      "has_star_trek": false,
+      "has_star_trek": true,
       "priority": "HIGH"
     },
     {
@@ -921,7 +921,7 @@
   ],
   "recommendations": [],
   "metadata": {
-    "audit_date": "2025-08-24T20:26:43.567211",
+    "audit_date": "2025-09-02T10:12:12.576761",
     "project_root": "/Users/nathanial.smalley/projects/jarvis_coding",
     "total_issues": 69
   }

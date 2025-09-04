@@ -196,4 +196,4 @@ if __name__ == "__main__":
     print("=" * 50)
     for i in range(3):
         print(f"\nEvent {i+1}:")
-        print(microsoft_365_defender_log())
+        print(json.dumps(microsoft_365_defender_log(), indent=2))

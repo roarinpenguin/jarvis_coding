@@ -1,0 +1,58 @@
+# MCP Configuration for CoralCollective
+# This file defines MCP server settings and agent permissions
+
+servers:
+  filesystem:
+    enabled: true
+    path: "@modelcontextprotocol/server-filesystem"
+    sandbox_path: "./projects"
+    max_file_size: "10MB"
+    
+  github:
+    enabled: true
+    path: "@modelcontextprotocol/server-github"
+    default_owner: "${GITHUB_OWNER}"
+    rate_limit: 5000
+    
+  postgres:
+    enabled: true
+    path: "@modelcontextprotocol/server-postgres"
+    connection_string: "${POSTGRES_URL}"
+    
+  docker:
+    enabled: true
+    path: "@modelcontextprotocol/server-docker"
+    
+  e2b:
+    enabled: true
+    path: "@e2b/mcp-server"
+    api_key: "${E2B_API_KEY}"
+    
+  brave_search:
+    enabled: true
+    path: "@modelcontextprotocol/server-brave-search"
+    api_key: "${BRAVE_API_KEY}"
+    
+  memory:
+    enabled: true
+    path: "@modelcontextprotocol/server-memory"
+    storage_path: "./mcp/memory"
+    
+  everything:
+    enabled: true
+    path: "@modelcontextprotocol/server-everything"
+    index_path: "./mcp/indexes"
+
+# Agent-specific permissions
+agent_permissions:
+  backend_developer:
+    allowed_tools:
+      - filesystem: ["read", "write"]
+      - postgres: ["all"]
+      - docker: ["compose", "logs"]
+      - github: ["create_pr", "push"]
+  frontend_developer:
+    allowed_tools:
+      - filesystem: ["read", "write"]
+      - brave_search: ["search"]
+      - memory: ["read", "write"]

@@ -101,27 +101,12 @@
   "phase_3_improvements": [
     {
       "action": "add_star_trek_integration",
-      "generator": "aws_route53",
-      "priority": "HIGH"
-    },
-    {
-      "action": "add_star_trek_integration",
-      "generator": "aws_vpc_dns",
-      "priority": "HIGH"
-    },
-    {
-      "action": "add_star_trek_integration",
       "generator": "aws_waf",
       "priority": "HIGH"
     },
     {
       "action": "add_star_trek_integration",
       "generator": "cisco_duo",
-      "priority": "HIGH"
-    },
-    {
-      "action": "add_star_trek_integration",
-      "generator": "cisco_fmc",
       "priority": "HIGH"
     },
     {
@@ -172,16 +157,6 @@
     {
       "action": "add_star_trek_integration",
       "generator": "google_workspace",
-      "priority": "HIGH"
-    },
-    {
-      "action": "add_star_trek_integration",
-      "generator": "microsoft_365_collaboration",
-      "priority": "HIGH"
-    },
-    {
-      "action": "add_star_trek_integration",
-      "generator": "microsoft_365_defender",
       "priority": "HIGH"
     },
     {

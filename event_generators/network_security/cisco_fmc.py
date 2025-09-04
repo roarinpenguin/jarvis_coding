@@ -197,4 +197,4 @@ if __name__ == "__main__":
     print("=" * 50)
     for i in range(3):
         print(f"\nEvent {i+1}:")
-        print(cisco_fmc_log())
+        print(json.dumps(cisco_fmc_log(), indent=2))
