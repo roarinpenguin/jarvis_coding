@@ -7,6 +7,25 @@
 *.mdown
 *.mkd
 
+# Test and Verification Scripts
+# =============================
+# Keep all test/verification artifacts local only
+*test*.py
+*validation*.py
+*verify*.py
+*analysis*.py
+debug_*.py
+remove_*.py
+sdl_*.py
+simulated_*.py
+quick_*.py
+focused_*.py
+e2e_*.py
+final_*.py
+comprehensive_*.py
+phase*_*.py
+api_validation_report.py
+
 # Security and Sensitive Data
 # ==========================
 *.key
