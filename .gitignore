@@ -1,3 +1,12 @@
+# Markdown Documentation Files
+# =============================
+# IMPORTANT: Keep all documentation local only
+*.md
+!README.md.example
+*.markdown
+*.mdown
+*.mkd
+
 # Security and Sensitive Data
 # ==========================
 *.key
