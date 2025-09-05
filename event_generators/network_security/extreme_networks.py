@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Extreme Networks",
-    "dataSource.name": "Extreme Networks",
-    "dataSource.category": "network",
-}
-
 # Device types
 DEVICE_TYPES = ["Switch", "Access Point", "Router", "Controller"]
 
@@ -96,8 +90,7 @@ def extreme_networks_log() -> Dict:
         "hardware_model": random.choice(["X440-G2", "X460-G2", "X670-G2", "X770", "AP3912", "AP410C"]),
         "uptime": f"{random.randint(1, 365)}d {random.randint(0, 23)}h {random.randint(0, 59)}m",
         "serial_number": f"{''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=12))}",
-        "location": random.choice(["Building-A-Floor-1", "Building-B-Floor-2", "Warehouse", "Data-Center"]),
-        **ATTR_FIELDS
+        "location": random.choice(["Building-A-Floor-1", "Building-B-Floor-2", "Warehouse", "Data-Center"])
     }
     
     # Add wireless-specific fields

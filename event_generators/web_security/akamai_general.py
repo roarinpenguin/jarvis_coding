@@ -82,12 +82,6 @@ def akamai_general_log() -> str:
     return log
 
 # ATTR_FIELDS for AI-SIEM compatibility
-ATTR_FIELDS = {
-    "vendor": "akamai",
-    "product": "general",
-    "log_type": "security_event"
-}
-
 if __name__ == "__main__":
     # Generate sample events
     print("Sample Akamai Security Events:")

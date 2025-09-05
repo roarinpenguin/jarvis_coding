@@ -81,12 +81,6 @@ def akamai_dns_log() -> str:
     return log
 
 # ATTR_FIELDS for AI-SIEM compatibility
-ATTR_FIELDS = {
-    "vendor": "akamai",
-    "product": "dns",
-    "log_type": "dns_query"
-}
-
 if __name__ == "__main__":
     # Generate sample events
     print("Sample Akamai DNS Events:")

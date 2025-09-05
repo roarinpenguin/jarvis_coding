@@ -10,15 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Darktrace",
-    "dataSource.name": "Darktrace",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Darktrace",
-    "metadata.product.name": "Darktrace Enterprise Immune System",
-    "metadata.version": "1.0.0",
-}
-
 # Model breach types and descriptions
 MODEL_BREACHES = [
     {

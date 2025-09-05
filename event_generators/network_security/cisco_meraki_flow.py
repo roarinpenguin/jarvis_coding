@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Cisco",
-    "product": "Meraki Flow",
-    "version": "1.0",
-    "category": "network_security"
-}
-
 def cisco_meraki_flow_log():
     """Generate a synthetic Cisco Meraki Flow Logs log event."""
     

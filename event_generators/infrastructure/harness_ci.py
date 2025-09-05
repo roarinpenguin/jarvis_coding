@@ -51,17 +51,10 @@ def harness_ci_log():
 def harness_ci_log_dict():
     """Generate Harness CI/CD event as dict (for backward compatibility)"""
     return {
-        "raw": harness_ci_log(),
-        **ATTR_FIELDS
+        "raw": harness_ci_log()
     }
 
 # ATTR_FIELDS for AI-SIEM compatibility
-ATTR_FIELDS = {
-    "vendor": "harness",
-    "product": "ci",
-    "log_type": "pipeline_event"
-}
-
 if __name__ == "__main__":
     print("Sample Harness CI/CD Events:")
     print("=" * 50)

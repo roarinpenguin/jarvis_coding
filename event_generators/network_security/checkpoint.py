@@ -7,13 +7,6 @@ import time
 import uuid
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Check Point",
-    "product": "Next Generation Firewall",
-    "version": "1.0",
-    "category": "network_security"
-}
-
 # Check Point log fields and values
 ACTIONS = ["Accept", "Drop", "Reject", "Encrypt", "Decrypt", "Monitor", "Block", "Allow"]
 SERVICES = ["http", "https", "ssh", "ftp", "smtp", "dns", "telnet", "rdp", "smb", "ldap", "ntp", "snmp"]

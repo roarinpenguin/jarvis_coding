@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Google",
-    "dataSource.name": "Google Cloud DNS",
-    "dataSource.category": "network",
-}
-
 # DNS query types
 QUERY_TYPES = ["A", "AAAA", "MX", "NS", "PTR", "SOA", "TXT", "CNAME", "SRV", "CAA"]
 
@@ -112,8 +106,7 @@ def google_cloud_dns_log() -> Dict:
             "file": "dns_server.go",
             "line": random.randint(100, 500),
             "function": "handleDNSQuery"
-        },
-        **ATTR_FIELDS
+        }
     }
     
     # Add threat intelligence data for suspicious domains

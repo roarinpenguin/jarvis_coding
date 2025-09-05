@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.category": "security",
-    "dataSource.name": "Windows DHCP Server",
-    "dataSource.vendor": "Microsoft"
-}
-
 # DHCP Event IDs and descriptions
 DHCP_EVENTS = {
     10: "DNS Update Request",

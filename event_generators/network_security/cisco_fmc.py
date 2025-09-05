@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "Cisco FMC",
-    "dataSource.category": "security",
-}
-
 # Event types
 EVENT_TYPES = [
     {"type": "Intrusion", "subtype": "IPS_EVENT", "severity": "High"},
@@ -91,7 +85,6 @@ def cisco_fmc_log(overrides: dict = None) -> Dict:
         "packets_sent": random.randint(1, 1000),
         "packets_received": random.randint(1, 1000),
         "duration": random.randint(1, 7200),  # seconds
-        **ATTR_FIELDS
     }
     
     # Add event-specific fields

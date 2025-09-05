@@ -227,12 +227,6 @@ def paloalto_firewall_log(overrides: dict | None = None) -> str:
     return log_line
 
 # OCSF-style attributes for HEC
-ATTR_FIELDS = {
-    "dataSource.category": "security",
-    "dataSource.name": "Palo Alto Networks",
-    "dataSource.vendor": "Palo Alto Networks"
-}
-
 if __name__ == "__main__":
     # Generate sample logs
     print("Sample Palo Alto firewall logs:")

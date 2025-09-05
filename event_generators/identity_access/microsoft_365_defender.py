@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Microsoft",
-    "dataSource.name": "Microsoft 365 Defender",
-    "dataSource.category": "security",
-}
-
 # Action types
 ACTION_TYPES = [
     "ProcessCreated",
@@ -125,8 +119,7 @@ def microsoft_365_defender_log(overrides: dict = None) -> Dict:
         "DeviceId": device_id,
         "AccountName": account_name,
         "AccountDomain": account_domain,
-        "ActionType": action_type,
-        **ATTR_FIELDS
+        "ActionType": action_type
     }
     
     # Add specific fields based on action type

@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "AWS",
-    "product": "Elastic Load Balancer",
-    "version": "1.0",
-    "category": "network_security"
-}
-
 def aws_elasticloadbalancer_log():
     """Generate a synthetic Aws Elasticloadbalancer Logs log event."""
     

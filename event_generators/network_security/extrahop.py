@@ -11,12 +11,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "ExtraHop",
-    "dataSource.name": "Extrahop Reveal(x) 360",
-    "dataSource.category": "security"
-}
-
 # Detection types
 DETECTION_TYPES = [
     "suspicious_connection",

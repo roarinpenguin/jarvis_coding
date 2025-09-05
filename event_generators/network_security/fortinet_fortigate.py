@@ -8,16 +8,6 @@ from time import time_ns
 import random
 
 # ───────────────────────── static OCSF attribute block ────────────────────
-ATTR_FIELDS = {
-    "dataSource.category": "security",
-    "dataSource.name": "FortiGate",
-    "dataSource.vendor": "Fortinet",
-    "metadata.version": "1.0.0",
-    "metadata.product.vendor_name": "Fortinet",
-    "metadata.product.name": "FortiGate",
-    "severity_id": 99,
-}
-
 # ───────────────────────── helpers ──────────────────────────
 def _eventtime() -> str:
     """19-digit epoch-microseconds string."""

@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Zscaler",
-    "dataSource.name": "Zscaler Firewall", 
-    "dataSource.category": "security",
-}
-
 # Actions taken by firewall
 ACTIONS = ["Allow", "Block", "Drop", "Redirect"]
 
@@ -101,8 +95,7 @@ def zscaler_firewall_log() -> str:
         "user": f"user{random.randint(1, 100)}@company.com",
         "vendor": "Zscaler",
         "product": "ZIA",
-        "version": "1.0",
-        **ATTR_FIELDS
+        "version": "1.0"
     }
     
     # Add threat detection fields for blocked traffic

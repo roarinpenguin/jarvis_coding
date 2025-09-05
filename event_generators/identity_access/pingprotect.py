@@ -7,12 +7,6 @@ import random
 from datetime import datetime, timezone, timedelta
 import uuid
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "Ping Identity",
-    "dataSource.name": "PingProtect",
-    "dataSource.category": "security",
-}
-
 CLIENT_IDS = ["adminui", "auth-service", "mobile-app"]
 USER_IDS = [str(uuid.uuid4()) for _ in range(5)]
 ACTION_TYPES = ["SECRET.READ", "ROLE_ASSIGNMENT.DELETED", "MFA.CHALLENGE"]
@@ -43,8 +37,7 @@ def pingprotect_log() -> dict:
         "actors.client.id": client_id,
         "actors.user.id": user_id,
         "source.ip": source_ip,
-        "action.type": action_type,
-        **ATTR_FIELDS
+        "action.type": action_type
     }
     
     if action_type == "SECRET.READ":

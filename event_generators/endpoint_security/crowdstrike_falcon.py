@@ -10,15 +10,6 @@ import hashlib
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "CrowdStrike",
-    "dataSource.name": "CrowdStrike Endpoint",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "CrowdStrike",
-    "metadata.product.name": "CrowdStrike Falcon",
-    "metadata.version": "1.0.0",
-}
-
 # Event types with their details
 EVENT_TYPES = [
     {

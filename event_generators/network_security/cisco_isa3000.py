@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "Cisco ISA3000",
-    "dataSource.category": "security",
-}
-
 # Event types specific to industrial environments
 EVENT_TYPES = [
     {"type": "FIREWALL", "action": "ALLOW", "severity": "INFO"},
@@ -88,7 +82,6 @@ def cisco_isa3000_log() -> Dict:
         "bytes_sent": random.randint(64, 10000),
         "bytes_received": random.randint(64, 10000),
         "duration": random.randint(1, 3600),  # seconds
-        **ATTR_FIELDS
     }
     
     # Add event-specific fields

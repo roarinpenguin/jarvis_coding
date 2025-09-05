@@ -6,13 +6,6 @@ import json
 import csv, io, random, time, uuid
 from datetime import datetime, timezone, timedelta
 
-ATTR_FIELDS = {
-    "dataSource_vendor": "Cisco",
-    "dataSource_name": "Cisco Umbrella",
-    "dataSource_category": "security",
-    "LogType": "proxylogs",
-}
-
 def _ts():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
 

@@ -23,25 +23,6 @@ import uuid
 # ────────────────────── AI‑SIEM attributes ─────────────────────
 # These attributes are injected by hec_sender.py under the `fields`
 # envelope key so the CloudTrail parser can populate constant values.
-ATTR_FIELDS = {
-    "metadata.product.vendor_name": "AWS",
-    "metadata.product.name": "AWS CloudTrail",
-    "metadata.version": "1.0.0-rc3",
-    "dataSource.vendor": "AWS",
-    "dataSource.name": "CloudTrail",
-    "dataSource.category": "security",
-    "category_uid": 4,
-    "category_name": "Network Activity",
-    "class_uid": 4002,
-    "class_name": "HTTP Activity",
-    "type_uid": 400299,
-    "type_name": "HTTP Activity: Other",
-    "activity_id": 99,
-    "severity_id": 99,
-    "status_id": 99,
-    "status": "Other",
-}
-
 # ───────────────────────── helpers ─────────────────────────
 _NOW   = lambda: datetime.now(timezone.utc)
 _ISO   = lambda dt: dt.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -446,7 +427,6 @@ def _template() -> dict:
 
     return record
 
-
 # ───────────────────── public factory ──────────────────────
 def cloudtrail_log(overrides: dict | None = None) -> str:
     """
@@ -459,7 +439,6 @@ def cloudtrail_log(overrides: dict | None = None) -> str:
     if overrides:
         record.update(overrides)
     return record  # Return as dict for hec_sender.py
-
 
 # ─────────────────── standalone sanity run ─────────────────
 if __name__ == "__main__":

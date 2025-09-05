@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Microsoft",
-    "dataSource.name": "Microsoft IIS",
-    "dataSource.category": "network",
-}
-
 # HTTP methods
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"]
 
@@ -121,7 +115,6 @@ def iis_w3c_log() -> Dict:
         "referer": random.choice(["-", "https://google.com", "https://contoso.com"]),
         "cookie": "-",
         "time_taken": random.randint(10, 5000),  # milliseconds
-        **ATTR_FIELDS
     }
     
     return event

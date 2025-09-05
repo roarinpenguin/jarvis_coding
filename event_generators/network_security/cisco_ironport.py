@@ -115,12 +115,6 @@ def cisco_ironport_log() -> dict:
     return log_event
 
 # ATTR_FIELDS for AI-SIEM compatibility
-ATTR_FIELDS = {
-    "vendor": "cisco",
-    "product": "ironport",
-    "log_type": "email_security"
-}
-
 if __name__ == "__main__":
     # Generate sample events
     print("Sample Cisco IronPort Email Security Events (JSON):")

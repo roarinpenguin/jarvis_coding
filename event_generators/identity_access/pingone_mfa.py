@@ -7,12 +7,6 @@ import random
 from datetime import datetime, timezone, timedelta
 import uuid
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "Ping Identity",
-    "dataSource.name": "PingOne MFA",
-    "dataSource.category": "security",
-}
-
 USERS = ["jane.doe@example.com", "john.doe@example.com", "admin@example.com", "service@example.com"]
 ACTION_TYPES = ["MFA.AUTHENTICATE", "MFA.ENROLL"]
 FACTORS = ["PUSH", "TOTP", "SMS", "EMAIL"]
@@ -65,8 +59,7 @@ def pingone_mfa_log() -> dict:
         "factor": factor,
         "result.status": status,
         "description": description,
-        "sessionId": session_id,
-        **ATTR_FIELDS
+        "sessionId": session_id
     }
     
     return log_dict

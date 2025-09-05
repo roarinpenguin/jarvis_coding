@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Microsoft",
-    "dataSource.name": "Microsoft 365 Collaboration",
-    "dataSource.category": "security",
-}
-
 # Operations
 OPERATIONS = [
     "FileDownloaded",
@@ -139,8 +133,7 @@ def microsoft_365_collaboration_log(overrides: dict = None) -> Dict:
         "ClientIP": f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}",
         "Workload": "SharePoint" if "sharepoint" in site_url else "OneDrive",
         "RecordType": random.choice([6, 14, 25]),  # SharePoint/OneDrive record types
-        "Version": "1",
-        **ATTR_FIELDS
+        "Version": "1"
     }
     
     # Add conditional fields based on operation

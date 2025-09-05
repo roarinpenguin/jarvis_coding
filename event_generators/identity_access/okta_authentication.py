@@ -41,15 +41,6 @@ from typing import Dict, Any, List
 #: Attributes injected alongside each event.  These mirror the values
 #: expected by the SentinelOne AI‑SIEM Okta parser and identify
 #: the source of the data.  Update vendor/product names as needed.
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Okta",
-    "dataSource.name": "System Log",
-    "dataSource.category": "authentication",
-    "metadata.product.vendor_name": "Okta",
-    "metadata.product.name": "Okta System Log",
-    "metadata.version": "1.0.0",
-}
-
 # Helper lambdas for brevity
 _NOW = lambda: datetime.now(timezone.utc)
 _ISO = lambda dt: dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
@@ -104,7 +95,6 @@ def _random_user() -> Dict[str, Any]:
         "displayName": get_display_name_from_email(username),
     }
 
-
 def _random_client() -> Dict[str, Any]:
     """Generate client information for the event.
 
@@ -134,7 +124,6 @@ def _random_client() -> Dict[str, Any]:
         },
         "ipAddress": _IP(),
     }
-
 
 def okta_authentication_log() -> str:
     """
@@ -218,7 +207,6 @@ def okta_authentication_log() -> str:
         }]
     
     return json.dumps(event)
-
 
 if __name__ == "__main__":  # pragma: no cover
     # Simple demo: print a few sample events to stdout

@@ -229,12 +229,6 @@ def vmware_vcenter_log(overrides: dict | None = None) -> str:
     return log_line
 
 # OCSF-style attributes for HEC
-ATTR_FIELDS = {
-    "dataSource.category": "security",
-    "dataSource.name": "VMware vCenter",
-    "dataSource.vendor": "VMware"
-}
-
 if __name__ == "__main__":
     # Generate sample logs
     print("Sample VMware vCenter logs:")

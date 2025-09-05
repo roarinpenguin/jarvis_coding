@@ -10,12 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Teleport",
-    "dataSource.name": "Teleport",
-    "dataSource.category": "security",
-}
-
 # Teleport event types
 EVENT_TYPES = [
     "session.start",
@@ -67,8 +61,7 @@ def teleport_log() -> Dict:
         "uid": str(uuid.uuid4()),
         "time": event_time.isoformat() + "Z",
         "user": random.choice(USERS),
-        "cluster_name": "teleport.company.com",
-        **ATTR_FIELDS
+        "cluster_name": "teleport.company.com"
     }
     
     # Add event-specific fields

@@ -6,12 +6,6 @@ Generates synthetic Imperva Sonar database security events
 import random
 from datetime import datetime, timezone, timedelta
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "Imperva",
-    "dataSource.name": "Imperva Sonar",
-    "dataSource.category": "security",
-}
-
 EVENT_TYPES = ["DB_LOGIN", "SQL_QUERY", "POLICY_VIOLATION"]
 DB_USERS = ["report_user", "admin_user", "contractor_user", "app_user", "backup_user"]
 DATABASES = ["finance", "hr", "inventory", "customer", "audit"]
@@ -48,8 +42,7 @@ def imperva_sonar_log() -> dict:
         "eventType": event_type,
         "databaseUser": db_user,
         "sourceIP": source_ip,
-        "database": database,
-        **ATTR_FIELDS
+        "database": database
     }
     
     if event_type == "DB_LOGIN":

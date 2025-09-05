@@ -9,16 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "metadata.version": "1.0.0",
-    "dataSource.category": "security",
-    "dataSource.name": "Forcepoint Firewall", 
-    "category_uid": "4",
-    "category_name": "Network Activity",
-    "class_uid": "4001",
-    "class_name": "Network Activity"
-}
-
 # Firewall actions and verdicts
 ACTIONS = ["Allow", "Block", "Drop", "Reject", "Deny", "Permit"]
 VERDICTS = ["Allowed", "Blocked", "Dropped", "Rejected", "Denied", "Permitted"]

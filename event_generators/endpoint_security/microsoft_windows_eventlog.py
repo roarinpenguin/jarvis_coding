@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Microsoft",
-    "dataSource.name": "Windows Event Log",
-    "dataSource.category": "security",
-}
-
 # Common Windows Event IDs by category
 SECURITY_EVENTS = [
     {"id": 4624, "name": "Successful Logon", "level": "Information"},

@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "CyberArk",
-    "dataSource.name": "CyberArk Conjur",
-    "dataSource.category": "security",
-}
-
 # Operations
 OPERATIONS = ["authenticate", "check", "fetch", "create", "update", "delete", "list"]
 
@@ -102,8 +96,7 @@ def cyberark_conjur_log() -> Dict:
         "secret_id": resource if operation == "fetch" else None,
         "privileges": privilege if operation == "check" else None,
         "message": f"{user} {result} {operation} on {resource}" + 
-                  (f" with {authenticator}" if operation == "authenticate" else ""),
-        **ATTR_FIELDS
+                  (f" with {authenticator}" if operation == "authenticate" else "")
     }
     
     # Remove None values

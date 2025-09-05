@@ -10,15 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Mimecast",
-    "dataSource.name": "Mimecast",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Mimecast",
-    "metadata.product.name": "Mimecast Email Security",
-    "metadata.version": "1.0.0",
-}
-
 # Mimecast log types
 LOG_TYPES = {
     "audit": "Audit",

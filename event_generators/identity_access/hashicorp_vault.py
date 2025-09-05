@@ -10,15 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "HashiCorp",
-    "dataSource.name": "HashiCorp Vault",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "HashiCorp",
-    "metadata.product.name": "HashiCorp Vault",
-    "metadata.version": "1.0.0",
-}
-
 # Vault operations
 OPERATIONS = [
     "read", "create", "update", "delete", "list", "login", "logout",

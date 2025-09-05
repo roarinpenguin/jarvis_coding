@@ -10,15 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Microsoft",
-    "dataSource.name": "Azure Eventhub Defender Email",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Microsoft",
-    "metadata.product.name": "Microsoft Defender for Office 365",
-    "metadata.version": "1.0.0",
-}
-
 # Threat types and verdicts
 THREAT_TYPES = ["Phish", "Malware", "Spam", "Bulk", "None"]
 DETECTION_METHODS = ["ATP Safe Attachments", "ATP Safe Links", "Anti-phishing", "Anti-malware", "Anti-spam", "User reported"]

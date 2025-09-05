@@ -9,22 +9,6 @@ import time
 from datetime import datetime, timezone
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "Cisco Duo Security",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Cisco",
-    "metadata.product.name": "Cisco Duo Security",
-    "metadata.version": "1.0.0",
-    "class_uid": "3002",
-    "class_name": "Authentication",
-    "category_uid": "3",
-    "category_name": "Identity & Access Management",
-    "activity_id": "1",
-    "activity_name": "Logon",
-    "type_uid": "300201"
-}
-
 def cisco_duo_log() -> Dict:
     """Generate Cisco Duo MFA authentication event"""
     
@@ -171,13 +155,10 @@ def cisco_duo_log() -> Dict:
                 "type": "Other",
                 "value": factor["name"]
             }
-        ],
-        
-        **ATTR_FIELDS
+        ]
     }
     
     return event
-
 
 if __name__ == "__main__":
     # Generate sample events

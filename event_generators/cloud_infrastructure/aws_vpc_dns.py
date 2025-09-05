@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "AWS",
-    "dataSource.name": "AWS VPC DNS",
-    "dataSource.category": "network",
-}
-
 # DNS query types
 QUERY_TYPES = ["A", "AAAA", "MX", "NS", "PTR", "SOA", "TXT", "CNAME", "SRV"]
 
@@ -88,8 +82,7 @@ def aws_vpc_dns_log() -> Dict:
         "firewall_subnet_id": f"subnet-{random.randint(10000000, 99999999):08x}",
         "firewall_rule_action": "PASS",
         "threat_list_name": "malware-domains" if is_suspicious else "",
-        "threat_list_id": f"tl-{random.randint(10000000, 99999999):08x}" if is_suspicious else "",
-        **ATTR_FIELDS
+        "threat_list_id": f"tl-{random.randint(10000000, 99999999):08x}" if is_suspicious else ""
     }
     
     return event

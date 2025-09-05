@@ -7,12 +7,6 @@ import random
 from datetime import datetime, timezone, timedelta
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "dataSource.vendor": "Cohesity",
-    "dataSource.name": "Cohesity Backup",
-    "dataSource.category": "system"
-}
-
 # Job names
 JOB_NAMES = [
     "Daily_VM_Backup", "Weekly_SQL_Backup", "Monthly_Archive", "Adhoc_DB_Backup",

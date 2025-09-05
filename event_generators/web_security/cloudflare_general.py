@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cloudflare",
-    "dataSource.name": "Cloudflare",
-    "dataSource.category": "security",
-}
-
 # HTTP methods
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"]
 
@@ -111,8 +105,7 @@ def cloudflare_general_log() -> Dict:
             "cf-ray": f"{random.randint(100000000000000000, 999999999999999999):016x}",
             "cf-visitor": '{"scheme":"https"}',
             "x-forwarded-proto": "https"
-        },
-        **ATTR_FIELDS
+        }
     }
     
     # Add firewall events details

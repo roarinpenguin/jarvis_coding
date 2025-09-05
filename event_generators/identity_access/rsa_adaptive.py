@@ -6,12 +6,6 @@ Generates synthetic RSA Adaptive risk-based authentication events
 import random
 from datetime import datetime, timezone, timedelta
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "RSA Security",
-    "dataSource.name": "RSA Adaptive Authentication",
-    "dataSource.category": "security",
-}
-
 USERS = ["carol@example.com", "dan@example.com", "eve@example.com", "admin@example.com"]
 DEVICES = ["iOS", "Android", "Windows", "Web", "Mac"]
 DECISIONS = ["APPROVE", "CHALLENGE", "DENY"]
@@ -71,8 +65,7 @@ def rsa_adaptive_log() -> dict:
         "decision": decision,
         "factor": factor,
         "result": result,
-        "message": message,
-        **ATTR_FIELDS
+        "message": message
     }
     
     return log_dict

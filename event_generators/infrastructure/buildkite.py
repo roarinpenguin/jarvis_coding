@@ -10,12 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Buildkite",
-    "dataSource.name": "Buildkite Audit",
-    "dataSource.category": "security",
-}
-
 # Event types in Buildkite
 EVENT_TYPES = [
     "pipeline.created",
@@ -71,8 +65,7 @@ def buildkite_log() -> Dict:
         "organizationSlug": "acme-corp",
         "actorUuid": f"user_{uuid.uuid4().hex[:8]}",
         "actorName": random.choice(USERS),
-        "actorType": "User",
-        **ATTR_FIELDS
+        "actorType": "User"
     }
     
     # Add event-specific fields

@@ -11,12 +11,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Armis",
-    "dataSource.name": "Armis",
-    "dataSource.category": "security"
-}
-
 # Event types
 EVENT_TYPES = [
     "Alert",

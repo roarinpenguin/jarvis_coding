@@ -47,17 +47,10 @@ def f5_vpn_log() -> dict:
     
     # Return dict with raw log and ATTR_FIELDS for HEC compatibility
     return {
-        "raw": log,
-        **ATTR_FIELDS
+        "raw": log
     }
 
 # ATTR_FIELDS for AI-SIEM compatibility
-ATTR_FIELDS = {
-    "vendor": "f5",
-    "product": "vpn",
-    "log_type": "vpn_access"
-}
-
 if __name__ == "__main__":
     print("Sample F5 VPN Events:")
     print("=" * 50)

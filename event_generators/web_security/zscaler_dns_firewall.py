@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Zscaler",
-    "dataSource.name": "Zscaler DNS Firewall",
-    "dataSource.category": "security",
-}
-
 # DNS query types
 QUERY_TYPES = ["A", "AAAA", "MX", "NS", "PTR", "SOA", "TXT", "CNAME", "SRV"]
 
@@ -110,8 +104,7 @@ def zscaler_dns_firewall_log() -> Dict:
         "action": action,
         "bytes_sent": random.randint(50, 1000),
         "bytes_received": random.randint(50, 1000),
-        "response_time_ms": random.randint(1, 500),
-        **ATTR_FIELDS
+        "response_time_ms": random.randint(1, 500)
     }
     
     # Add threat-related fields if applicable

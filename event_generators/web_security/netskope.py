@@ -11,15 +11,6 @@ import hashlib
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Netskope",
-    "dataSource.name": "Netskope",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Netskope",
-    "metadata.product.name": "Netskope Security Cloud",
-    "metadata.version": "1.0.0",
-}
-
 # Event types and activities
 EVENT_TYPES = [
     "page", "download", "upload", "login", "logout", "share", "delete", 

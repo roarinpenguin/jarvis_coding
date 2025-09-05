@@ -8,12 +8,6 @@ import random
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Akamai",
-    "dataSource.name": "Akamai SiteDefender",
-    "dataSource.category": "security",
-}
-
 # WAF rule types and messages
 WAF_RULES = [
     {"rule": "981176", "ruleAction": "BLOCK", "ruleMessage": "SQL Injection Detected", "ruleTag": "SQL_Injection"},
@@ -104,8 +98,7 @@ def akamai_sitedefender_log() -> Dict:
         "userRiskData": {
             "botScore": bot_score
         },
-        "time": event_time.isoformat().replace('+00:00', 'Z'),
-        **ATTR_FIELDS
+        "time": event_time.isoformat().replace('+00:00', 'Z')
     }
     
     return event

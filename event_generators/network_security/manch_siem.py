@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Manchester",
-    "dataSource.name": "Manchester SIEM",
-    "dataSource.category": "security",
-}
-
 # Event types
 EVENT_TYPES = [
     {"type": "CORRELATION_ALERT", "severity": "HIGH", "category": "Detection"},
@@ -99,8 +93,7 @@ def manch_siem_log() -> Dict:
         "rule_description": f"Detection rule for {event_info['type'].replace('_', ' ').lower()}",
         "asset_criticality": random.choice(["Low", "Medium", "High", "Critical"]),
         "analyst_assigned": f"analyst{random.randint(1, 20)}@company.com",
-        "investigation_notes": "",
-        **ATTR_FIELDS
+        "investigation_notes": ""
     }
     
     # Add event-specific fields

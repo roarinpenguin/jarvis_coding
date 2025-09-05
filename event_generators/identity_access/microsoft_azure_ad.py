@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Microsoft",
-    "product": "Azure AD",
-    "version": "1.0",
-    "category": "identity_security"
-}
-
 def microsoft_azure_ad_log():
     """Generate a synthetic Microsoft Azure Ad Logs log event."""
     

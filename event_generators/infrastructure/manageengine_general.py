@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "ManageEngine",
-    "dataSource.name": "ManageEngine",
-    "dataSource.category": "security",
-}
-
 # ManageEngine products
 PRODUCTS = [
     "ADManager Plus",
@@ -122,8 +116,7 @@ def manageengine_general_log() -> Dict:
         "operating_system": random.choice(OPERATING_SYSTEMS),
         "agent_version": f"{random.randint(10, 14)}.{random.randint(0, 9)}.{random.randint(0, 9)}.{random.randint(1000, 9999)}",
         "location": random.choice(["HQ", "Branch-A", "Branch-B", "Remote", "Data Center"]),
-        "department": random.choice(["IT", "Finance", "HR", "Sales", "Marketing", "Operations"]),
-        **ATTR_FIELDS
+        "department": random.choice(["IT", "Finance", "HR", "Sales", "Marketing", "Operations"])
     }
     
     # Add category-specific fields

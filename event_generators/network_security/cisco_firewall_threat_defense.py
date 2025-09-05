@@ -11,13 +11,6 @@ import uuid
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Cisco",
-    "product": "Firewall Threat Defense",
-    "version": "1.0",
-    "category": "network_security"
-}
-
 def cisco_firewall_threat_defense_log():
     """Generate a synthetic Cisco FTD syslog event matching official parser expectations."""
     

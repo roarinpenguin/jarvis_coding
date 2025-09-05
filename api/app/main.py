@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from app.core.config import settings
-from app.routers import generators, parsers, validation, health, scenarios, export, metrics, search
+from app.routers import generators, parsers, validation, health, scenarios, export, metrics, search, categories
 from app.utils.logging import setup_logging
 from app.core.simple_auth import validate_api_keys_config
 
@@ -206,6 +206,12 @@ app.include_router(
     search.router,
     prefix=f"{settings.API_V1_STR}/search",
     tags=["search"]
+)
+
+app.include_router(
+    categories.router,
+    prefix=f"{settings.API_V1_STR}/categories",
+    tags=["categories"]
 )
 
 if __name__ == "__main__":

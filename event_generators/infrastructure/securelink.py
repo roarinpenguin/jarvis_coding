@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "SecureLink",
-    "dataSource.name": "SecureLink",
-    "dataSource.category": "security",
-}
-
 # Event types
 EVENT_TYPES = [
     {"type": "SESSION_START", "severity": "INFO", "category": "Access"},
@@ -100,8 +94,7 @@ def securelink_log() -> Dict:
         "risk_level": random.choice(RISK_LEVELS),
         "approval_status": random.choice(["Approved", "Pending", "Denied", "Emergency Override"]),
         "approver": f"manager{random.randint(1, 20)}@company.com",
-        "duration_minutes": random.randint(5, 480) if "END" in event_info["type"] else None,
-        **ATTR_FIELDS
+        "duration_minutes": random.randint(5, 480) if "END" in event_info["type"] else None
     }
     
     # Add event-specific fields

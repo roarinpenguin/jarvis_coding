@@ -7,12 +7,6 @@ import random
 from datetime import datetime, timezone, timedelta
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "dataSource.vendor": "Akamai",
-    "dataSource.name": "Akamai CDN",
-    "dataSource.category": "network"
-}
-
 # HTTP methods
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"]
 

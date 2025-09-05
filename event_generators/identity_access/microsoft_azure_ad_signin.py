@@ -10,15 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Microsoft",
-    "dataSource.name": "Azure Eventhub Signin",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Microsoft",
-    "metadata.product.name": "Microsoft Azure AD",
-    "metadata.version": "1.0.0",
-}
-
 # Azure AD Applications
 AZURE_APPLICATIONS = [
     ("00000003-0000-0000-c000-000000000000", "Microsoft Graph"),

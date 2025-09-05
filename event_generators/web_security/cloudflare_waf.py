@@ -213,12 +213,6 @@ def cloudflare_waf_log(overrides: dict | None = None) -> str:
     return json_to_gron(event)
 
 # OCSF-style attributes for HEC
-ATTR_FIELDS = {
-    "dataSource.category": "security",
-    "dataSource.name": "Cloudflare WAF",
-    "dataSource.vendor": "Cloudflare"
-}
-
 if __name__ == "__main__":
     # Generate sample logs
     print("Sample Cloudflare WAF logs:")

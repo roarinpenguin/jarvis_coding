@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Palo Alto Networks",
-    "dataSource.name": "Prisma SASE",
-    "dataSource.category": "security",
-}
-
 # Event types
 EVENT_TYPES = [
     {"type": "TRAFFIC", "subtype": "end", "action": "allow"},
@@ -117,8 +111,7 @@ def paloalto_prismasase_log() -> Dict:
         "srcloc": random.choice(COUNTRIES),
         "dstloc": random.choice(COUNTRIES),
         "pkts_sent": random.randint(1, 500),
-        "pkts_received": random.randint(1, 500),
-        **ATTR_FIELDS
+        "pkts_received": random.randint(1, 500)
     }
     
     # Add event-specific fields

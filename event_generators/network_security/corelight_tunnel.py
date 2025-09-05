@@ -11,23 +11,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Corelight",
-    "dataSource.name": "Corelight",
-    "dataSource.category": "security",
-    "class_uid": "4001",
-    "category_uid": "4",
-    "severity_id": "1",
-    "severity": "Informational",
-    "class_name": "Network Activity",
-    "category_name": "Network Activity",
-    "metadata.product.name": "Zeek",
-    "metadata.product.vendor_name": "Zeek",
-    "metadata.version": "1.1.0",
-    "metadata.log_name": "tunnel",
-    "app_name": "Zeek"
-}
-
 # Tunnel types
 TUNNEL_TYPES = [
     "Tunnel::VXLAN",

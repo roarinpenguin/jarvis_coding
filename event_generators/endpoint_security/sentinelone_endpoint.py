@@ -13,15 +13,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "SentinelOne",
-    "dataSource.name": "SentinelOne",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "SentinelOne",
-    "metadata.product.name": "EDR",
-    "metadata.version": "1.0.0",
-}
-
 # Endpoint types and platforms
 ENDPOINT_TYPES = ["server", "workstation", "laptop", "kubernetes"]
 OPERATING_SYSTEMS = [

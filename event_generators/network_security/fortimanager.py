@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Fortinet",
-    "product": "FortiManager",
-    "version": "1.0",
-    "category": "security_management"
-}
-
 def fortimanager_log():
     """Generate a synthetic FortiManager log event."""
     

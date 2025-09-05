@@ -11,24 +11,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Corelight",
-    "dataSource.name": "Corelight",
-    "dataSource.category": "security",
-    "category_uid": "4",
-    "category_name": "Network Activity",
-    "class_uid": "4002",
-    "class_name": "HTTP Activity",
-    "severity_id": "1",
-    "severity": "Informational",
-    "metadata.product.name": "Zeek",
-    "metadata.product.vendor_name": "Corelight",
-    "metadata.version": "1.1.0",
-    "metadata.log_name": "http",
-    "app_name": "Zeek",
-    "activity_id": "0"
-}
-
 # HTTP methods
 HTTP_METHODS = ["GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS", "CONNECT", "PATCH"]
 

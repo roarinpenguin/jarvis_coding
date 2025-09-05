@@ -7,12 +7,6 @@ import random
 from datetime import datetime, timezone, timedelta
 import uuid
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "Veeam",
-    "dataSource.name": "Veeam Backup",
-    "dataSource.category": "system",
-}
-
 JOB_NAMES = [
     "Daily_Exchange_Backup", "Weekly_SQL_Backup", "VMware_Prod_Backup",
     "File_Server_Backup", "Monthly_Archive", "DR_Replication"
@@ -83,8 +77,7 @@ def veeam_backup_log() -> dict:
         "Description": description,
         "Duration": duration,
         "ObjectsProcessed": objects_processed,
-        "TotalSize": total_size,
-        **ATTR_FIELDS
+        "TotalSize": total_size
     }
     
     # Add result-specific fields

@@ -10,12 +10,6 @@ import hashlib
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "Cisco ISE",
-    "dataSource.category": "security",
-}
-
 # Authentication results
 AUTH_RESULTS = [
     ("Passed", "User authentication succeeded"),
@@ -91,8 +85,7 @@ def cisco_ise_log() -> str:
         "Location": random.choice(LOCATIONS),
         "DeviceRegistrationStatus": random.choice(["Registered", "NotRegistered", "Pending"]),
         "MDMServerName": random.choice(["", "Intune", "AirWatch", "MobileIron"]),
-        "MDMComplianceStatus": random.choice(["Compliant", "NonCompliant", "NotApplicable"]),
-        **ATTR_FIELDS
+        "MDMComplianceStatus": random.choice(["Compliant", "NonCompliant", "NotApplicable"])
     }
     
     # Add VLAN assignment for successful authentications

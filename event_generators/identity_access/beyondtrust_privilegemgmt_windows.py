@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.category": "security",
-    "dataSource.name": "BeyondTrust Privilege Management SaaS Windows Edition",
-    "dataSource.vendor": "BeyondTrust"
-}
-
 # Event types and activities
 ACTIVITY_IDS = [
     "EPM_ALLOW", "EPM_BLOCK", "EPM_ELEVATE", "EPM_PROMPT", "EPM_AUDIT", 

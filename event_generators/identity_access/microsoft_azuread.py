@@ -149,12 +149,10 @@ _MALICIOUS_APIS: List[Dict[str, Any]] = [
     },
 ]
 
-
 def _random_dt() -> str:
     """Random ISO‑8601 timestamp within the past 12 hours."""
     delta = timedelta(seconds=random.randint(0, 12 * 3600))
     return (_NOW - delta).isoformat(timespec="seconds")
-
 
 def _base_event() -> Dict[str, Any]:
     """Common skeleton."""
@@ -168,13 +166,11 @@ def _base_event() -> Dict[str, Any]:
         "targetResources": [],
     }
 
-
 def _attach_user(ev: Dict[str, Any], user: Dict[str, str]) -> None:
     """Populate initiatedBy.* flattened fields."""
     ev["initiatedByUserId"] = user["userId"]
     ev["initiatedByUserIpAddress"] = user["ip"]
     ev["initiatedByUserUserPrincipalName"] = user["userPrincipalName"]
-
 
 def _build_target(res_type: str, display: str) -> Dict[str, Any]:
     """Simple targetResources entry."""
@@ -185,7 +181,6 @@ def _build_target(res_type: str, display: str) -> Dict[str, Any]:
         "modifiedProperties": [],
         "userPrincipalName": None,
     }
-
 
 def azure_ad_log(overrides: dict | None = None) -> str:
     """Return **one** flat Azure AD audit‑log event."""
@@ -220,13 +215,6 @@ def azure_ad_log(overrides: dict | None = None) -> str:
     # Return JSON string instead of complex HEC wrapper
     return ev
 
-
 # Sent inside the "fields" object of the HEC wrapper
-ATTR_FIELDS = {
-    "dataSource.category": "security",
-    "dataSource.name": "Azure AD",
-    "dataSource.vendor": "Azure",
-}
-
 # Alias expected by hec_sender.py
 azuread_log = azure_ad_log

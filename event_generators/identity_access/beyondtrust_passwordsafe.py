@@ -10,15 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "BeyondTrust",
-    "dataSource.name": "BeyondTrust Password Safe",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "BeyondTrust",
-    "metadata.product.name": "BeyondTrust Password Safe",
-    "metadata.version": "1.0.0",
-}
-
 # Event types
 EVENT_TYPES = [
     "AccountCheckout", "AccountCheckin", "AccountView", "AccountPasswordChange",

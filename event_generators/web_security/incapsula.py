@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Imperva",
-    "dataSource.name": "Incapsula",
-    "dataSource.category": "security",
-}
-
 # HTTP methods
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"]
 
@@ -135,8 +129,7 @@ def incapsula_log() -> Dict:
         "severity": random.choice(["Low", "Medium", "High", "Critical"]) if action in ["Block", "Challenge", "Alert"] else "",
         "confidence": random.randint(1, 10) if action in ["Block", "Challenge", "Alert"] else None,
         "session_id": f"sess_{random.randint(100000000, 999999999)}",
-        "visit_id": f"visit_{random.randint(100000000, 999999999)}",
-        **ATTR_FIELDS
+        "visit_id": f"visit_{random.randint(100000000, 999999999)}"
     }
     
     # Add bot detection fields

@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "Cisco IOS",
-    "dataSource.category": "network",
-}
-
 # IOS device types
 DEVICE_TYPES = ["Router", "Switch", "Firewall", "ASA"]
 
@@ -105,8 +99,7 @@ def cisco_ios_log() -> Dict:
         "ios_version": f"{random.randint(12, 17)}.{random.randint(0, 9)}.{random.randint(0, 9)}",
         "hardware_platform": random.choice(["C9300", "C9400", "C2960", "ISR4321", "ASR1001", "Cat6500"]),
         "uptime": f"{random.randint(1, 365)} days, {random.randint(0, 23)} hours, {random.randint(0, 59)} minutes",
-        "location": random.choice(["Building-A", "Building-B", "DataCenter-1", "Branch-Office", "Remote-Site"]),
-        **ATTR_FIELDS
+        "location": random.choice(["Building-A", "Building-B", "DataCenter-1", "Branch-Office", "Remote-Site"])
     }
     
     # Add event-specific fields

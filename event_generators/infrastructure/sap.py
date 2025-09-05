@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "SAP",
-    "dataSource.name": "SAP",
-    "dataSource.category": "application",
-}
-
 # SAP modules and transaction codes
 SAP_MODULES = {
     "FI": ["FB01", "FB02", "FB03", "F-02", "F-03", "F-04", "F-05", "F-06", "F-07", "F-08"],
@@ -99,8 +93,7 @@ def sap_log() -> Dict:
         "ip_address": generate_ip(),
         "program": f"SAPL{random.choice(['RFBU', 'MMBE', 'RVAD', 'COSP'])}{random.randint(100, 999)}",
         "transaction_code": "",
-        "language": random.choice(["EN", "DE", "FR", "ES", "PT", "JA", "ZH"]),
-        **ATTR_FIELDS
+        "language": random.choice(["EN", "DE", "FR", "ES", "PT", "JA", "ZH"])
     }
     
     # Add event-specific fields

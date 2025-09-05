@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Juniper",
-    "dataSource.name": "Juniper Networks",
-    "dataSource.category": "network",
-}
-
 # Device types  
 DEVICE_TYPES = ["SRX", "EX", "QFX", "MX", "PTX", "ACX"]
 
@@ -75,8 +69,7 @@ def juniper_networks_log() -> Dict:
         "software_version": f"Junos {random.randint(15, 22)}.{random.randint(1, 4)}R{random.randint(1, 9)}",
         "model": f"{device_type}{random.randint(100, 5000)}",
         "serial_number": f"{''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=11))}",
-        "uptime": f"{random.randint(1, 365)} days, {random.randint(0, 23)}:{random.randint(0, 59)}:{random.randint(0, 59)}",
-        **ATTR_FIELDS
+        "uptime": f"{random.randint(1, 365)} days, {random.randint(0, 23)}:{random.randint(0, 59)}:{random.randint(0, 59)}"
     }
     
     # Add category-specific fields

@@ -6,13 +6,6 @@ from datetime import datetime, timedelta
 import uuid
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "AWS",
-    "product": "WAF",
-    "version": "1.0",
-    "category": "web_security"
-}
-
 def aws_waf_log():
     current_time = datetime.utcnow()
     

@@ -8,12 +8,6 @@ import json
 from datetime import datetime, timezone, timedelta
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "dataSource.vendor": "AWS",
-    "dataSource.name": "AWS Route 53",
-    "dataSource.category": "network"
-}
-
 # DNS query types
 QUERY_TYPES = ["A", "AAAA", "MX", "NS", "PTR", "SOA", "TXT", "CNAME", "SRV"]
 
@@ -84,9 +78,7 @@ def aws_route53_log(overrides: dict = None) -> dict:
         "region": "us-east-1"
     }
     
-    # Add SentinelOne AI-SIEM attributes
-    event.update(ATTR_FIELDS)
-    
+    # Add SentinelOne AI-SIEM attributes    
     # Apply overrides if provided (for scenario customization)
     if overrides:
         if "domain" in overrides:

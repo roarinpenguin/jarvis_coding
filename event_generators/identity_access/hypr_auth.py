@@ -51,17 +51,10 @@ def hypr_auth_log() -> dict:
     
     # Return dict with raw log and ATTR_FIELDS for HEC compatibility
     return {
-        "raw": log,
-        **ATTR_FIELDS
+        "raw": log
     }
 
 # ATTR_FIELDS for AI-SIEM compatibility
-ATTR_FIELDS = {
-    "vendor": "hypr",
-    "product": "auth",
-    "log_type": "authentication"
-}
-
 if __name__ == "__main__":
     print("Sample HYPR Authentication Events:")
     print("=" * 50)

@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Abnormal",
-    "dataSource.name": "Abnormal Security",
-    "dataSource.category": "security",
-}
-
 # Threat types detected by Abnormal
 THREAT_TYPES = [
     "Credential Phishing",
@@ -88,8 +82,7 @@ def abnormal_security_log() -> Dict:
         "messages_delivered": random.randint(0, 10),
         "messages_remediated": random.randint(0, 10),
         "first_seen": (event_time - timedelta(hours=random.randint(1, 72))).isoformat(),
-        "last_seen": event_time.isoformat(),
-        **ATTR_FIELDS
+        "last_seen": event_time.isoformat()
     }
     
     return event

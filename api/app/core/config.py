@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     
     # Server Settings
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = int(os.getenv("PORT", "9001"))  # Changed default to 9001 to avoid conflicts
     RELOAD: bool = True
     LOG_LEVEL: str = "info"
     

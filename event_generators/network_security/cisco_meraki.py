@@ -6,15 +6,6 @@ from __future__ import annotations
 import random, time, uuid
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "Meraki",
-    "dataSource.category": "network",
-    "metadata.product.vendor_name": "Cisco",
-    "metadata.product.name": "Cisco Meraki",
-    "metadata.version": "1.0.0",
-}
-
 _PRI = "<134>"       # local0.notice
 _DEV = "meraki-mx64"
 
@@ -52,8 +43,7 @@ def cisco_meraki_log(log_type: str | None = None) -> dict:
         "dst_ip": dst_ip,
         "protocol": proto,
         "src_port": sport,
-        "dst_port": dport,
-        **ATTR_FIELDS
+        "dst_port": dport
     }
 
     if log_type == "vpn_firewall":
@@ -79,7 +69,6 @@ def cisco_meraki_log(log_type: str | None = None) -> dict:
         })
 
     return log_entry
-
 
 if __name__ == "__main__":
     import json

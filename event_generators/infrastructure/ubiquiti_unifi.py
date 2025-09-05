@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Ubiquiti",
-    "dataSource.name": "UniFi",
-    "dataSource.category": "network",
-}
-
 # Device types
 DEVICE_TYPES = ["UAP", "USW", "UDM", "USG", "UCK"]
 
@@ -66,8 +60,7 @@ def ubiquiti_unifi_log() -> Dict:
         "category": event_info["category"],
         "severity": event_info["severity"],
         "admin": f"admin@unifi.local",
-        "is_negative": event_info["severity"] in ["warning", "alert", "error"],
-        **ATTR_FIELDS
+        "is_negative": event_info["severity"] in ["warning", "alert", "error"]
     }
     
     # Add device-specific fields

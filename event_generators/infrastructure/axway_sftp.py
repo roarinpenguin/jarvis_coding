@@ -52,12 +52,6 @@ def axway_sftp_log() -> str:
     return log
 
 # ATTR_FIELDS for AI-SIEM compatibility
-ATTR_FIELDS = {
-    "vendor": "axway",
-    "product": "sftp",
-    "log_type": "file_transfer"
-}
-
 if __name__ == "__main__":
     # Generate sample events
     print("Sample Axway SFTP Events:")

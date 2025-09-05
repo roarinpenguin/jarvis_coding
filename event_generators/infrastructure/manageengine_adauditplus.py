@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "ManageEngine",
-    "product": "AD Audit Plus",
-    "version": "1.0",
-    "category": "identity_audit"
-}
-
 def manageengine_adauditplus_log():
     """Generate a synthetic Manageengine Adauditplus Logs log event."""
     

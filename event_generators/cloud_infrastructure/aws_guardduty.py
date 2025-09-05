@@ -3,12 +3,6 @@ import json, random, time, uuid
 from typing import Dict, Any
 
 # Metadata used by hec_sender.py
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.category": "security",
-    "dataSource.name": "AWS",
-    "dataSource.vendor": "AWS Guard Duty",
-}
-
 def _ipv4() -> str:
     """Return a random IPv4 address."""
     return ".".join(str(random.randint(1, 254)) for _ in range(4))

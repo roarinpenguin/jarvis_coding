@@ -9,22 +9,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Wiz",
-    "dataSource.name": "Wiz Cloud Security",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Wiz",
-    "metadata.product.name": "Wiz Cloud Security",
-    "metadata.version": "1.0.0",
-    "class_uid": "8002",
-    "class_name": "Cloud Activity",
-    "category_uid": "8",
-    "category_name": "System Activity",
-    "activity_id": "1",
-    "activity_name": "Cloud Audit",
-    "type_uid": "800201"
-}
-
 def wiz_cloud_log() -> Dict:
     """Generate Wiz Cloud Security audit event"""
     
@@ -263,9 +247,7 @@ def wiz_cloud_log() -> Dict:
                 "type": "Other",
                 "value": action_info["action"]
             }
-        ],
-        
-        **ATTR_FIELDS
+        ]
     }
     
     # Wrap in Record and body structure as expected by parser
@@ -294,7 +276,6 @@ def wiz_cloud_log() -> Dict:
     }
     
     return event
-
 
 if __name__ == "__main__":
     import json

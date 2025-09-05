@@ -11,15 +11,6 @@ import base64
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Proofpoint",
-    "dataSource.name": "Proofpoint",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Proofpoint",
-    "metadata.product.name": "Proofpoint Email Protection",
-    "metadata.version": "1.0.0",
-}
-
 # Email domains
 SAFE_DOMAINS = ["starfleet.corp", "gmail.com", "outlook.com", "yahoo.com", "federation.gov", "enterprise.starfleet"]
 SUSPICIOUS_DOMAINS = [

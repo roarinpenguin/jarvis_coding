@@ -6,12 +6,6 @@ Generates synthetic ISC DHCP server logs
 import random
 from datetime import datetime, timezone, timedelta
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "ISC",
-    "dataSource.name": "ISC DHCP",
-    "dataSource.category": "network",
-}
-
 DHCP_TYPES = ["DHCPDISCOVER", "DHCPOFFER", "DHCPREQUEST", "DHCPACK", "DHCPRELEASE"]
 INTERFACES = ["eth0", "eth1", "wlan0", "br0"]
 HOSTNAMES = ["desktop01", "laptop02", "printer01", "phone03", "tablet01", None]
@@ -46,8 +40,7 @@ def isc_dhcp_log() -> dict:
         "client_mac": mac,
         "client_ip": ip,
         "interface": interface,
-        "client_hostname": hostname,
-        **ATTR_FIELDS
+        "client_hostname": hostname
     }
     
     # Add type-specific fields and message

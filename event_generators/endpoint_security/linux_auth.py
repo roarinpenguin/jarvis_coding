@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Linux",
-    "dataSource.name": "Linux Auth",
-    "dataSource.category": "security",
-}
-
 # Process names
 PROCESS_NAMES = ["sshd", "sudo", "su", "login", "gdm-session-worker", "polkit"]
 
@@ -104,8 +98,7 @@ def linux_auth_log() -> Dict:
         "status": status,
         "status_detail": status_detail,
         "message": message,
-        "session_id": generate_session_id() if "session" in auth_event else None,
-        **ATTR_FIELDS
+        "session_id": generate_session_id() if "session" in auth_event else None
     }
     
     # Remove None values

@@ -7,12 +7,6 @@ import random
 from datetime import datetime, timezone, timedelta
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "dataSource.vendor": "GitHub",
-    "dataSource.name": "GitHub Audit",
-    "dataSource.category": "audit"
-}
-
 # Actions
 ACTIONS = [
     "repo.create", "repo.destroy", "repo.archive", "repo.unarchive",
@@ -88,8 +82,7 @@ def github_audit_log():
         "action": action,
         "outcome": outcome,
         "description": description,
-        "source_ip": ip,
-        **ATTR_FIELDS
+        "source_ip": ip
     }
 
 if __name__ == "__main__":

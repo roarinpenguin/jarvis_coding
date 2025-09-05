@@ -6,19 +6,6 @@ from __future__ import annotations
 import json, random, time, uuid
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "AWS",
-    "dataSource.name": "AWS VPC Flow",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "AWS",
-    "metadata.product.name": "AWS VPC Flow Logs",
-    "metadata.version": "1.0.0-rc.3",
-    "category_uid": "4",
-    "category_name": "Network Activity",
-    "class_uid": "4001",
-    "class_name": "Network Activity",
-}
-
 def _flow_record() -> str:
     """
     Create one VPC Flow Log line in *version 2 IPv4* format:

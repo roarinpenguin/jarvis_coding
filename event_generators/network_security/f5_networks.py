@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "F5",
-    "dataSource.name": "F5 Networks",
-    "dataSource.category": "security",
-}
-
 # Module types
 MODULES = ["LTM", "GTM", "ASM", "APM", "AFM", "AVR", "DNS"]
 
@@ -93,8 +87,7 @@ def f5_networks_log() -> str:
         "server_ip": f"10.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}",
         "client_port": random.randint(32768, 65535),
         "server_port": random.choice([80, 443, 8080, 8443]),
-        "protocol": random.choice(["TCP", "UDP", "HTTP", "HTTPS"]),
-        **ATTR_FIELDS
+        "protocol": random.choice(["TCP", "UDP", "HTTP", "HTTPS"])
     }
     
     # Add module-specific fields

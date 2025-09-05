@@ -7,15 +7,6 @@ import random, time
 from datetime import datetime, timezone
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "ASA",
-    "dataSource.category": "network",
-    "metadata.product.vendor_name": "Cisco",
-    "metadata.product.name": "Cisco ASA",
-    "metadata.version": "1.0.0",
-}
-
 _PRI = "<166>"                       # local4.info
 _HOST = "asa-demo"
 

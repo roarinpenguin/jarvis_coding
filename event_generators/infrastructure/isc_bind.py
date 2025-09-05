@@ -6,12 +6,6 @@ Generates synthetic ISC BIND DNS query logs
 import random
 from datetime import datetime, timezone, timedelta
 
-ATTR_FIELDS = {
-    "dataSource.vendor": "ISC",
-    "dataSource.name": "ISC BIND",
-    "dataSource.category": "network",
-}
-
 HOSTNAMES = [
     "www.akamai.com", "mail.example.org", "update.example.org", 
     "api.github.com", "cdn.jsdelivr.net", "dns.google.com",
@@ -60,8 +54,7 @@ def isc_bind_log() -> dict:
         "query_class": "IN",
         "query_type": query_type,
         "query_opcode": opcode,
-        "message": f"client @{conn_uid} {src_ip}#{src_port} ({hostname}): query: {hostname} IN {query_type} + ({opcode})",
-        **ATTR_FIELDS
+        "message": f"client @{conn_uid} {src_ip}#{src_port} ({hostname}): query: {hostname} IN {query_type} + ({opcode})"
     }
     
     return log_entry

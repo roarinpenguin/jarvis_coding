@@ -10,15 +10,6 @@ import hashlib
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "CyberArk",
-    "dataSource.name": "CyberArk Endpoint Privileged Manager(EPM)",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "CyberArk",
-    "metadata.product.name": "CyberArk PAS",
-    "metadata.version": "1.0.0",
-}
-
 # Policy names and categories
 POLICIES = [
     ("Elevate to Administrator", "elevation"),

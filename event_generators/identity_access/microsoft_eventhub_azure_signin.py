@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Microsoft",
-    "product": "EventHub Azure Signin",
-    "version": "1.0",
-    "category": "identity_security"
-}
-
 def microsoft_eventhub_azure_signin_log():
     """Generate a synthetic Microsoft Eventhub Azure Signin Logs log event."""
     

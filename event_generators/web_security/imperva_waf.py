@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Imperva",
-    "dataSource.name": "Imperva WAF",
-    "dataSource.category": "security",
-}
-
 # HTTP methods
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"]
 
@@ -114,8 +108,7 @@ def imperva_waf_log() -> Dict:
         "sourcePort": random.randint(32768, 65535),
         "applicationName": random.choice(["WebApp1", "API Gateway", "Admin Portal", "Customer Portal"]),
         "siteName": f"site_{random.randint(1, 5)}",
-        "serverGroup": f"group_{random.randint(1, 3)}",
-        **ATTR_FIELDS
+        "serverGroup": f"group_{random.randint(1, 3)}"
     }
     
     # Add attack-specific details

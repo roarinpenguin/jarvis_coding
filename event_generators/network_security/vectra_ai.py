@@ -11,20 +11,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Vectra AI",
-    "dataSource.name": "Vectra AI",
-    "dataSource.category": "security",
-    "severity_id": "1",
-    "severity": "Informational",
-    "metadata.product.name": "Vectra AI",
-    "metadata.product.vendor_name": "Vectra AI",
-    "metadata.version": "1.1.0",
-    "metadata.log_name": "Scoring",
-    "app_name": "Cognito Brain",
-    "activity_id": "0"
-}
-
 # Detection categories
 DETECTION_CATEGORIES = [
     "Command & Control",

@@ -10,12 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Google",
-    "dataSource.name": "Google Workspace",
-    "dataSource.category": "security",
-}
-
 # Event types by service
 EVENT_TYPES = {
     "login": [
@@ -119,8 +113,7 @@ def google_workspace_log() -> Dict:
             "type": event_info["type"],
             "name": event_info["name"],
             "parameters": []
-        }],
-        **ATTR_FIELDS
+        }]
     }
     
     # Add event-specific parameters

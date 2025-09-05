@@ -7,12 +7,6 @@ import random
 from datetime import datetime, timezone, timedelta
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "dataSource.vendor": "Jamf",
-    "dataSource.name": "Jamf Protect",
-    "dataSource.category": "security"
-}
-
 # Event types (matching parser expectations)
 EVENT_TYPES = [
     "ProcessExecution", 

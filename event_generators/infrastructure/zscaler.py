@@ -32,28 +32,14 @@ _UNSCANNABLES = ["", "Corrupted archive", "Encrypted file",
                  "Unsupported format", "Password protected"]
 
 # ───────────────────────── static OCSF attribute block ────────────────────
-ATTR_FIELDS = {
-    "category_uid": "4",
-    "category_name": "Network Activity",
-    "dataSource.category": "security",
-    "dataSource.name": "Zscaler Internet Access",
-    "dataSource.vendor": "Zscaler",
-    "metadata.version": "1.0.0",
-    "metadata.product.vendor_name": "Zscaler",
-    "metadata.product.name": "Zscaler Internet Access",
-    "severity_id": 99,
-}
-
 # ───────────────────────── helpers ──────────────────────────
 def _now_iso() -> str:
     """Return current UTC time in Zscaler/ISO format."""
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-
 def _rand_ip() -> str:
     """Return a pseudo‑random IPv4 address."""
     return str(IPv4Address(random.getrandbits(32)))
-
 
 # ───────────────────── base template ───────────────────────
 _ZS_TEMPLATE: dict[str, object] = {
@@ -90,7 +76,6 @@ _ZS_TEMPLATE: dict[str, object] = {
     "unscannabletype": "",
     "url": "https://www.google.com/search?q=demo",
 }
-
 
 # Potentially malicious URL samples
 _BAD_URLS = [
@@ -185,7 +170,6 @@ def zscaler_log(overrides: dict | None = None) -> str:
 
     return json.dumps(record)
 
-
 def zscaler_nss_log(overrides: dict | None = None) -> str:
     """
     Return a single Zscaler NSS-Web event in URL-encoded format for marketplace parser.
@@ -207,7 +191,6 @@ def zscaler_nss_log(overrides: dict | None = None) -> str:
             params.append(f"{encoded_key}={encoded_value}")
     
     return "&".join(params)
-
 
 # ─────────────────── standalone sanity run ──────────────────
 if __name__ == "__main__":

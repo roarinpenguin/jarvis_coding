@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Cisco",
-    "dataSource.name": "Cisco Networks",
-    "dataSource.category": "network",
-}
-
 # Device types
 DEVICE_TYPES = ["Switch", "Router", "Access Point", "Firewall", "Load Balancer"]
 
@@ -73,8 +67,7 @@ def cisco_networks_log() -> Dict:
         "uptime": f"{random.randint(1, 365)}d {random.randint(0, 23)}h {random.randint(0, 59)}m",
         "software_version": f"IOS {random.randint(12, 17)}.{random.randint(0, 9)}.{random.randint(0, 9)}",
         "hardware_platform": random.choice(["C9300", "C9400", "C2960", "ISR4321", "ASR1001"]),
-        "location": random.choice(["Building-A", "Building-B", "DataCenter-1", "Branch-Office"]),
-        **ATTR_FIELDS
+        "location": random.choice(["Building-A", "Building-B", "DataCenter-1", "Branch-Office"])
     }
     
     # Add interface-specific details

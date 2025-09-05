@@ -13,15 +13,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "SentinelOne",
-    "dataSource.name": "SentinelOne Identity",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "SentinelOne",
-    "metadata.product.name": "SentinelOne Identity",
-    "metadata.version": "1.0.0",
-}
-
 # Identity event types
 IDENTITY_EVENT_TYPES = [
     {

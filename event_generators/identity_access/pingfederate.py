@@ -9,12 +9,6 @@ import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Ping Identity",
-    "dataSource.name": "PingFederate",
-    "dataSource.category": "security",
-}
-
 # Log levels
 LOG_LEVELS = ["INFO", "WARN", "ERROR", "DEBUG"]
 
@@ -91,8 +85,7 @@ def pingfederate_log() -> Dict:
         "operation": operation,
         "username": username,
         "client_ip": client_ip,
-        "status": status,
-        **ATTR_FIELDS
+        "status": status
     }
     
     # Add specific fields based on operation

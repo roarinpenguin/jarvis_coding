@@ -94,12 +94,6 @@ def apache_http_log(overrides: dict | None = None) -> str:
     return log_entry
 
 # OCSF-style attributes for HEC
-ATTR_FIELDS = {
-    "dataSource.category": "security",
-    "dataSource.name": "Apache HTTP Server",
-    "dataSource.vendor": "Apache"
-}
-
 if __name__ == "__main__":
     # Generate sample logs
     for _ in range(5):

@@ -10,15 +10,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Microsoft",
-    "dataSource.name": "Microsoft O365 Graph Api",
-    "dataSource.category": "security",
-    "metadata.product.vendor_name": "Microsoft",
-    "metadata.product.name": "Microsoft 365 Management API",
-    "metadata.version": "1.0.0",
-}
-
 # Activity group names for security alerts
 ACTIVITY_GROUPS = [
     "Suspicious email forwarding",

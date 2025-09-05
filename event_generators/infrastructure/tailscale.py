@@ -11,18 +11,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List
 
-ATTR_FIELDS: Dict[str, str] = {
-    "dataSource.vendor": "Tailscale",
-    "dataSource.name": "Tailscale VPN",
-    "dataSource.category": "security",
-    "category_name": "Identity & Access Management",
-    "category_uid": "3",
-    "class_name": "entity_management",
-    "class_uid": "3004",
-    "event.type": "Configuration",
-    "severity_id": "1"
-}
-
 # Event types
 EVENT_TYPES = ["configuration", "network"]
 

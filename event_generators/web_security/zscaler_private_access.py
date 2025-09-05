@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone, timedelta
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Zscaler",
-    "product": "Private Access",
-    "version": "1.0",
-    "category": "zero_trust_access"
-}
-
 def zscaler_private_access_log():
     """Generate a synthetic Zscaler Private Access log event in JSON format."""
     

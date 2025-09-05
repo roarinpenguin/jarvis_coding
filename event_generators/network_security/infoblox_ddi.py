@@ -10,13 +10,6 @@ import json
 from datetime import datetime, timezone
 
 # SentinelOne AI-SIEM specific field attributes
-ATTR_FIELDS = {
-    "vendor": "Infoblox",
-    "product": "DDI",
-    "version": "1.0",
-    "category": "network_infrastructure"
-}
-
 def infoblox_ddi_log():
     """Generate a synthetic Infoblox DDI log event."""
     
