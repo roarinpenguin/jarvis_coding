@@ -7,24 +7,27 @@
 *.mdown
 *.mkd
 
-# Test and Verification Scripts
+# Testing Directories and Files
 # =============================
-# Keep all test/verification artifacts local only
+# Keep ALL testing local only - don't push to remote
+testing/
+tests/
+test/
 *test*.py
+*test*.json
 *validation*.py
-*verify*.py
-*analysis*.py
+*validation*.json
+verify_*.py
 debug_*.py
 remove_*.py
 sdl_*.py
 simulated_*.py
 quick_*.py
 focused_*.py
-e2e_*.py
-final_*.py
-comprehensive_*.py
 phase*_*.py
 api_validation_report.py
+comprehensive_*.py
+comprehensive_*.json
 
 # Security and Sensitive Data
 # ==========================
