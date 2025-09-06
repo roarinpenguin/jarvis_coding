@@ -1074,7 +1074,8 @@ if __name__ == "__main__":
 
     mod_name, func_names = PROD_MAP[product]
     gen_mod = importlib.import_module(mod_name)
-    attr_fields = getattr(gen_mod, "ATTR_FIELDS")
+    # ATTR_FIELDS removed - generators now produce realistic fields only
+    attr_fields = {}  # Empty dict since we removed ATTR_FIELDS
     generators = [getattr(gen_mod, fn) for fn in func_names]
 
     events = [generators[i % len(generators)]() for i in range(args.count)]
