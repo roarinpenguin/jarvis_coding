@@ -321,6 +321,12 @@ agent_force/
 *agent_force*
 .agent_force/
 
+# Coral Collective - Keep local only
+.coral/
+.coral*
+*coral*
+coral_*
+
 # Keep important example files
 !README.md
 !requirements.txt
