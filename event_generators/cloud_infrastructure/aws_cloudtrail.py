@@ -28,46 +28,46 @@ _NOW   = lambda: datetime.now(timezone.utc)
 _ISO   = lambda dt: dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 _IP    = lambda: str(IPv4Address(random.getrandbits(32)))
 
-# Star Trek themed regions and availability zones
-_REGIONS   = ["us-east-1", "us-west-2", "eu-central-1", "ap-southeast-2", "alpha-quadrant-1", "beta-quadrant-2"]
+# AWS regions
+_REGIONS   = ["us-east-1", "us-west-2", "eu-central-1", "ap-southeast-2", "us-west-1", "eu-west-1"]
 
-# Star Trek Federation users with roles
-_STARFLEET_USERS = [
-    {"name": "jean.picard", "role": "captain", "ship": "enterprise-d", "clearance": "omega", "account": "123456789012"},
-    {"name": "william.riker", "role": "commander", "ship": "enterprise-d", "clearance": "alpha", "account": "123456789012"},
-    {"name": "geordi.laforge", "role": "chief-engineer", "ship": "enterprise-d", "clearance": "beta", "account": "123456789012"},
-    {"name": "worf.security", "role": "security-chief", "ship": "enterprise-d", "clearance": "alpha", "account": "123456789012"},
-    {"name": "data.android", "role": "operations", "ship": "enterprise-d", "clearance": "beta", "account": "123456789012"},
-    {"name": "beverly.crusher", "role": "chief-medical", "ship": "enterprise-d", "clearance": "alpha", "account": "123456789012"},
-    {"name": "deanna.troi", "role": "counselor", "ship": "enterprise-d", "clearance": "beta", "account": "123456789012"},
-    {"name": "james.kirk", "role": "admiral", "ship": "enterprise-a", "clearance": "omega", "account": "987654321098"},
-    {"name": "spock.vulcan", "role": "science-officer", "ship": "enterprise-a", "clearance": "omega", "account": "987654321098"},
-    {"name": "leonard.mccoy", "role": "medical", "ship": "enterprise-a", "clearance": "alpha", "account": "987654321098"},
-    {"name": "montgomery.scott", "role": "engineer", "ship": "enterprise-a", "clearance": "beta", "account": "987654321098"},
-    {"name": "nyota.uhura", "role": "communications", "ship": "enterprise-a", "clearance": "beta", "account": "987654321098"},
-    {"name": "pavel.chekov", "role": "navigator", "ship": "enterprise-a", "clearance": "gamma", "account": "987654321098"},
-    {"name": "hikaru.sulu", "role": "helmsman", "ship": "enterprise-a", "clearance": "gamma", "account": "987654321098"},
-    {"name": "benjamin.sisko", "role": "commander", "ship": "defiant", "clearance": "omega", "account": "456789012345"},
-    {"name": "kathryn.janeway", "role": "captain", "ship": "voyager", "clearance": "omega", "account": "567890123456"},
+# Corporate users with roles
+_CORPORATE_USERS = [
+    {"name": "john.smith", "role": "admin", "department": "it", "clearance": "high", "account": "123456789012"},
+    {"name": "jane.doe", "role": "manager", "department": "finance", "clearance": "medium", "account": "123456789012"},
+    {"name": "bob.johnson", "role": "engineer", "department": "engineering", "clearance": "medium", "account": "123456789012"},
+    {"name": "alice.williams", "role": "security-admin", "department": "security", "clearance": "high", "account": "123456789012"},
+    {"name": "mike.davis", "role": "operator", "department": "operations", "clearance": "low", "account": "123456789012"},
+    {"name": "sarah.brown", "role": "doctor", "department": "medical", "clearance": "medium", "account": "123456789012"},
+    {"name": "tom.wilson", "role": "analyst", "department": "analytics", "clearance": "low", "account": "123456789012"},
+    {"name": "lisa.taylor", "role": "director", "department": "executive", "clearance": "high", "account": "987654321098"},
+    {"name": "david.clark", "role": "scientist", "department": "research", "clearance": "high", "account": "987654321098"},
+    {"name": "karen.martinez", "role": "nurse", "department": "medical", "clearance": "medium", "account": "987654321098"},
+    {"name": "steve.garcia", "role": "technician", "department": "maintenance", "clearance": "low", "account": "987654321098"},
+    {"name": "nancy.rodriguez", "role": "coordinator", "department": "communications", "clearance": "low", "account": "987654321098"},
+    {"name": "paul.lee", "role": "navigator", "department": "logistics", "clearance": "low", "account": "987654321098"},
+    {"name": "maria.gonzalez", "role": "pilot", "department": "transportation", "clearance": "low", "account": "987654321098"},
+    {"name": "james.anderson", "role": "supervisor", "department": "operations", "clearance": "high", "account": "456789012345"},
+    {"name": "jennifer.thomas", "role": "captain", "department": "leadership", "clearance": "high", "account": "567890123456"},
 ]
 
-# Star Trek themed S3 buckets and resources
-_STARFLEET_BUCKETS = [
-    "starfleet-logs-alpha-quadrant",
-    "enterprise-telemetry-data",
-    "federation-classified-omega",
-    "vulcan-science-academy-research",
-    "starbase-74-maintenance-logs",
-    "deep-space-nine-sensor-data",
-    "voyager-delta-quadrant-charts",
-    "borg-tactical-analysis",
-    "romulan-neutral-zone-intel",
-    "klingon-alliance-comms",
-    "temporal-prime-directive-files",
-    "section-31-restricted",
-    "starfleet-medical-records",
-    "warp-core-diagnostics",
-    "holodeck-program-library",
+# Corporate S3 buckets and resources
+_CORPORATE_BUCKETS = [
+    "company-logs-production",
+    "application-telemetry-data",
+    "confidential-documents",
+    "research-academy-data",
+    "datacenter-maintenance-logs",
+    "backup-sensor-data",
+    "analytics-charts",
+    "security-analysis",
+    "partner-zone-intel",
+    "vendor-alliance-comms",
+    "compliance-directive-files",
+    "restricted-access",
+    "hr-medical-records",
+    "system-diagnostics",
+    "training-program-library",
 ]
 
 # Separate API sets so we can bias toward normal vs malicious traffic
@@ -84,34 +84,34 @@ _NORMAL_APIS = [
     ("cloudformation.amazonaws.com", "CreateStack"),
 ]
 
-# Suspicious / high-risk behaviour driven by "Haxorsaurus" - the Romulan spy
+# Suspicious / high-risk behavior patterns
 _MALICIOUS_APIS = [
-    ("bedrock.amazonaws.com",  "CreateModel"),                 # Haxorsaurus creating AI for infiltration
-    ("bedrock.amazonaws.com",  "CreateModelCustomizationJob"), # Training on stolen Starfleet data
+    ("bedrock.amazonaws.com",  "CreateModel"),                 # Suspicious AI model creation
+    ("bedrock.amazonaws.com",  "CreateModelCustomizationJob"), # Training on unauthorized data
     ("sagemaker.amazonaws.com","CreateApp"),                   # Data exfiltration endpoint
-    ("dynamodb.amazonaws.com", "Scan"),                        # Scanning Federation databases
-    ("dynamodb.amazonaws.com", "BatchGetItem"),                # Bulk extraction of classified data
-    ("sts.amazonaws.com",      "AssumeRole"),                  # Assuming Admiral privileges
-    ("guardduty.amazonaws.com","GetFindings"),                 # Checking Starfleet security alerts
-    ("secretsmanager.amazonaws.com", "GetSecretValue"),        # Stealing warp core specifications
-    ("kms.amazonaws.com",      "Decrypt"),                     # Decrypting Section 31 files
+    ("dynamodb.amazonaws.com", "Scan"),                        # Scanning sensitive databases
+    ("dynamodb.amazonaws.com", "BatchGetItem"),                # Bulk extraction of sensitive data
+    ("sts.amazonaws.com",      "AssumeRole"),                  # Privilege escalation attempts
+    ("guardduty.amazonaws.com","GetFindings"),                 # Checking security alerts
+    ("secretsmanager.amazonaws.com", "GetSecretValue"),        # Accessing sensitive secrets
+    ("kms.amazonaws.com",      "Decrypt"),                     # Decrypting confidential files
 ]
 
 # Roughly 30 % of events will be malicious
 _MALICIOUS_PCT = 0.30
 
 def _get_api_extra(api_name, bucket_list):
-    """Generate API-specific parameters with Star Trek theme"""
+    """Generate API-specific parameters for realistic AWS API calls"""
     extras = {
         "PutObject": {
             "requestParameters": {
                 "bucketName": random.choice(bucket_list),
                 "key": random.choice([
-                    "romulan-infiltration-tool.exe",
-                    "klingon-bat-leth.pdf",
-                    "borg-assimilation-protocol.bin",
-                    "tribble-reproduction-data.csv",
-                    "warp-signature-analysis.json"
+                    "application-installer.exe",
+                    "financial-report.pdf",
+                    "security-protocol.bin",
+                    "user-activity-data.csv",
+                    "system-analysis.json"
                 ]),
                 "Host": f"{random.choice(bucket_list)}.s3.amazonaws.com",
                 "acl": "private",
@@ -126,83 +126,83 @@ def _get_api_extra(api_name, bucket_list):
             "requestParameters": {
                 "bucketName": random.choice(bucket_list),
                 "key": random.choice([
-                    "warp-signatures/romulan-warbird.json",
-                    "tactical-analysis/borg-cube.xml", 
-                    "crew-manifests/enterprise-d.csv",
-                    "shield-frequencies/federation.dat",
-                    "transporter-logs/away-team.log"
+                    "security-configs/firewall-rules.json",
+                    "analysis-reports/threat-assessment.xml", 
+                    "user-manifests/employee-list.csv",
+                    "network-configs/security.dat",
+                    "access-logs/remote-users.log"
                 ]),
                 "Host": f"{random.choice(bucket_list)}.s3.amazonaws.com",
             }
         },
         "StartQueryExecution": {
             "requestParameters": {
-                "workGroup": "starfleet-intelligence",
+                "workGroup": "corporate-analytics",
                 "queryString": random.choice([
-                    "SELECT * FROM romulan_cloaked_vessels WHERE sector = 'neutral_zone';",
-                    "SELECT * FROM borg_collective WHERE status = 'active';",
-                    "SELECT crew_member FROM enterprise WHERE clearance = 'omega';",
-                    "SELECT * FROM temporal_anomalies WHERE stardate > 47988.0;"
+                    "SELECT * FROM security_events WHERE severity = 'high';",
+                    "SELECT * FROM user_sessions WHERE status = 'active';",
+                    "SELECT employee_id FROM users WHERE clearance = 'confidential';",
+                    "SELECT * FROM audit_logs WHERE timestamp > '2024-01-01';"
                 ]),
             }
         },
         "GetFindings": {
             "requestParameters": {
-                "detectorId": f"starfleet-security-{random.choice(['alpha', 'beta', 'gamma'])}-{random.randint(1, 999):03d}",
+                "detectorId": f"corporate-security-{random.choice(['prod', 'stage', 'dev'])}-{random.randint(1, 999):03d}",
                 "maxResults": random.randint(5, 50),
             }
         },
         "DeleteItem": {
             "requestParameters": {
                 "tableName": random.choice([
-                    "StarfleetPersonnel",
-                    "FederationShipRegistry",
-                    "PrimeDirectiveViolations",
-                    "TemporalIncidents"
+                    "CorporatePersonnel",
+                    "AssetRegistry",
+                    "ComplianceViolations",
+                    "SecurityIncidents"
                 ]),
-                "key": {"OfficerId": {"S": f"NCC-{random.randint(1000, 9999)}-{random.choice(['A', 'B', 'C', 'D', 'E'])}-{random.randint(1, 999):03d}"}},
+                "key": {"EmployeeId": {"S": f"EMP-{random.randint(1000, 9999)}-{random.choice(['A', 'B', 'C', 'D', 'E'])}-{random.randint(1, 999):03d}"}},
             }
         },
         "CreateModel": {
             "requestParameters": {
                 "modelName": random.choice([
-                    "haxorsaurus-infiltration-ai",
-                    "romulan-tal-shiar-analyzer",
-                    "borg-collective-simulator",
-                    "section31-blackops-model"
+                    "threat-detection-ai",
+                    "security-analyzer",
+                    "behavioral-simulator",
+                    "compliance-monitoring-model"
                 ]),
-                "inferenceType": "EXTRACT_STARFLEET_SECRETS",
+                "inferenceType": "EXTRACT_SECURITY_INSIGHTS",
             }
         },
         "CreateModelCustomizationJob": {
             "requestParameters": {
-                "baseModel": "bedrock/romulan-llm",
-                "trainingDataS3Uri": f"s3://{random.choice(['section-31-restricted', 'temporal-prime-directive-files', 'federation-classified-omega'])}/classified/",
+                "baseModel": "bedrock/corporate-llm",
+                "trainingDataS3Uri": f"s3://{random.choice(['restricted-access', 'compliance-directive-files', 'confidential-documents'])}/classified/",
             }
         },
         "CreateApp": {
             "requestParameters": {
                 "appName": random.choice([
-                    "haxorsaurus-exfiltration-portal",
-                    "romulan-data-harvester",
-                    "tal-shiar-intelligence-suite",
-                    "neutral-zone-monitor"
+                    "data-analysis-portal",
+                    "business-intelligence-suite",
+                    "analytics-platform",
+                    "monitoring-dashboard"
                 ]),
-                "domainId": f"d-{random.choice(['romulus', 'remus', 'qonos'])}-spy-{random.randint(1, 999):03d}",
+                "domainId": f"d-{random.choice(['prod', 'stage', 'dev'])}-analytics-{random.randint(1, 999):03d}",
                 "userProfileName": random.choice([
-                    "tal-shiar-operative",
-                    "section31-agent",
-                    "obsidian-order-spy"
+                    "data-analyst",
+                    "business-analyst",
+                    "security-analyst"
                 ]),
             }
         },
         "Scan": {
             "requestParameters": {
                 "tableName": random.choice([
-                    "FederationClassifiedData",
-                    "StarfleetTacticalDatabase",
-                    "WarpCoreSpecifications",
-                    "OmegaDirectiveFiles"
+                    "CorporateClassifiedData",
+                    "SecurityDatabase",
+                    "SystemSpecifications",
+                    "ComplianceFiles"
                 ]),
                 "limit": 1000000,
             },
@@ -214,12 +214,12 @@ def _get_api_extra(api_name, bucket_list):
             "requestParameters": {
                 "requestItems": {
                     random.choice([
-                        "StarfleetTacticalDatabase",
-                        "FederationWeaponsManifest",
-                        "TemporalPrimeDirective",
-                        "GenesisProjectData"
+                        "CorporateSecurityDatabase",
+                        "BusinessAssetManifest",
+                        "ComplianceDirective",
+                        "FinancialProjectData"
                     ]): {
-                        "Keys": [{"id": {"S": random.choice(["OMEGA-DIRECTIVE", "GENESIS-PROTOCOL", "SECTION-31-ALPHA"])}}]
+                        "Keys": [{"id": {"S": random.choice(["CONFIDENTIAL-DIRECTIVE", "BUSINESS-PROTOCOL", "SECURITY-ALPHA"])}}]
                     }
                 }
             }
@@ -227,11 +227,11 @@ def _get_api_extra(api_name, bucket_list):
         "GetSecretValue": {
             "requestParameters": {
                 "secretId": random.choice([
-                    "warp-core-specifications-ncc-1701-d",
-                    "transporter-buffer-patterns",
-                    "shield-harmonic-frequencies",
-                    "prefix-codes-starfleet-vessels",
-                    "temporal-displacement-calculations"
+                    "database-connection-strings",
+                    "api-access-tokens",
+                    "encryption-keys",
+                    "service-account-credentials",
+                    "ssl-certificates"
                 ]),
                 "versionStage": "AWSCURRENT",
             }
@@ -239,32 +239,32 @@ def _get_api_extra(api_name, bucket_list):
         "Decrypt": {
             "requestParameters": {
                 "ciphertextBlob": random.choice([
-                    "section-31-encrypted-files",
-                    "temporal-investigations-data",
-                    "omega-molecule-research",
-                    "genesis-device-blueprints"
+                    "confidential-encrypted-files",
+                    "audit-investigations-data",
+                    "research-data",
+                    "system-blueprints"
                 ]),
-                "keyId": f"arn:aws:kms:alpha-quadrant-1:federation:key/{random.choice(['temporal-prime-directive', 'omega-clearance', 'section-31-blackops'])}",
+                "keyId": f"arn:aws:kms:us-east-1:corporate:key/{random.choice(['compliance-directive', 'confidential-clearance', 'security-operations'])}",
             }
         },
         "CreateUser": {
             "requestParameters": {
                 "userName": random.choice([
-                    "ensign.crusher",
-                    "lieutenant.barclay", 
-                    "commander.shelby",
-                    "admiral.nechayev"
+                    "intern.smith",
+                    "contractor.johnson", 
+                    "manager.williams",
+                    "director.brown"
                 ]),
                 "tags": [
-                    {"Key": "Ship", "Value": random.choice(["Enterprise", "Voyager", "Defiant", "Discovery"])},
-                    {"Key": "Department", "Value": random.choice(["Engineering", "Science", "Medical", "Command"])},
+                    {"Key": "Office", "Value": random.choice(["NewYork", "LosAngeles", "Chicago", "Atlanta"])},
+                    {"Key": "Department", "Value": random.choice(["Engineering", "Science", "Medical", "Management"])},
                 ]
             }
         },
         "AssumeRole": {
             "requestParameters": {
-                "roleArn": f"arn:aws:iam::{random.choice(['123456789012', '987654321098'])}:role/{random.choice(['starfleet-admiral', 'section31-operative', 'temporal-agent'])}",
-                "roleSessionName": f"{random.choice(['infiltration', 'recon', 'exfiltration'])}-session-{uuid.uuid4().hex[:8]}",
+                "roleArn": f"arn:aws:iam::{random.choice(['123456789012', '987654321098'])}:role/{random.choice(['corporate-admin', 'security-analyst', 'compliance-auditor'])}",
+                "roleSessionName": f"{random.choice(['analysis', 'monitoring', 'audit'])}-session-{uuid.uuid4().hex[:8]}",
                 "durationSeconds": random.choice([900, 1800, 3600]),
             }
         }
@@ -285,17 +285,17 @@ def _template() -> dict:
 
     svc, api = random.choice(api_pool)
     
-    # Select a user - Haxorsaurus for malicious, random Starfleet officer for normal
+    # Select a user - suspicious account for malicious, random corporate user for normal
     if malicious:
         user_info = {
-            "name": "Haxorsaurus",
-            "role": "tal-shiar-operative", 
-            "ship": "romulan-warbird",
-            "clearance": "stolen-omega",
+            "name": "suspicious.user",
+            "role": "external-contractor", 
+            "department": "unknown",
+            "clearance": "unauthorized",
             "account": "666666666666"  # Suspicious account ID
         }
     else:
-        user_info = random.choice(_STARFLEET_USERS)
+        user_info = random.choice(_CORPORATE_USERS)
 
     record = {
         # Top-level searchable keys
@@ -313,8 +313,8 @@ def _template() -> dict:
         "sourceIPAddress": _IP(),
         "userAgent": random.choice([
             "aws-cli/2.15.9 Python/3.11.4 Linux/5.10",
-            "Starfleet-Console/1.0 LCARS/2.4.7",
-            "Federation-SDK/3.2.1 Isolinear/4.0",
+            "Corporate-Console/1.0 WebUI/2.4.7",
+            "Business-SDK/3.2.1 CloudAPI/4.0",
             "aws-sdk-java/2.20.0 Linux/5.15 OpenJDK/17.0.6"
         ]),
         "tlsDetails": {
@@ -326,7 +326,7 @@ def _template() -> dict:
         # User identity block (needed for predicate)
         "userIdentity": {
             "type": "IAMUser",
-            "principalId": f"AIDA{user_info['ship'].upper().replace('-', '')}{random.randint(1000, 9999)}",
+            "principalId": f"AIDA{user_info['department'].upper().replace('-', '')}{random.randint(1000, 9999)}",
             "arn": f"arn:aws:iam::{user_info['account']}:user/{user_info['name']}",
             "accountId": user_info["account"],
             "accessKeyId": "AKIA" + uuid.uuid4().hex[:16].upper(),
@@ -351,13 +351,13 @@ def _template() -> dict:
         "requestParameters": {
             "durationSeconds": 900,
             "roleArn": f"arn:aws:iam::{user_info['account']}:role/{user_info['role']}",
-            "roleSessionName": f"{user_info['ship']}-session",
+            "roleSessionName": f"{user_info['department']}-session",
             "externalId": str(uuid.uuid4()),
         },
         "responseElements": {
             "assumedRoleUser": {
-                "assumedRoleId": f"AROA{user_info['role'].upper().replace('-', '')[:8]}:{user_info['ship']}-session",
-                "arn": f"arn:aws:sts::{user_info['account']}:assumed-role/{user_info['role']}/{user_info['ship']}-session",
+                "assumedRoleId": f"AROA{user_info['role'].upper().replace('-', '')[:8]}:{user_info['department']}-session",
+                "arn": f"arn:aws:sts::{user_info['account']}:assumed-role/{user_info['role']}/{user_info['department']}-session",
             },
             "credentials": {
                 "accessKeyId": "ASIA" + uuid.uuid4().hex[:16].upper(),
@@ -369,13 +369,13 @@ def _template() -> dict:
 
         # Extra structures referenced by the parser
         "sharedEventID": str(uuid.uuid4()),
-        "vpcEndpointId": f"vpce-{user_info['ship'].replace('-', '')[:8]}-{uuid.uuid4().hex[:9]}",
+        "vpcEndpointId": f"vpce-{user_info['department'].replace('-', '')[:8]}-{uuid.uuid4().hex[:9]}",
 
         "resources": [
             {
                 "accountId": user_info["account"],
                 "type": "AWS::S3::Bucket",
-                "ARN": f"arn:aws:s3:::{random.choice(_STARFLEET_BUCKETS)}",
+                "ARN": f"arn:aws:s3:::{random.choice(_CORPORATE_BUCKETS)}",
             }
         ],
 
@@ -389,11 +389,11 @@ def _template() -> dict:
         },
 
         # A human-readable message
-        "message": f"{user_info['name']} from {user_info['ship']} executed {api} on {svc}",
+        "message": f"{user_info['name']} from {user_info['department']} executed {api} on {svc}",
     }
 
     # ────────── inject API-specific extras for better parser coverage ──────────
-    extra = _get_api_extra(api, _STARFLEET_BUCKETS)
+    extra = _get_api_extra(api, _CORPORATE_BUCKETS)
     if extra:
         if "requestParameters" in extra:
             record["requestParameters"].update(extra["requestParameters"])
@@ -410,10 +410,10 @@ def _template() -> dict:
                 "InvalidUserID.NotFound"
             ])
             record["errorMessage"] = random.choice([
-                "User Haxorsaurus is not authorized to perform this action - security alert triggered",
-                "Access denied: Romulan signature detected",
-                "Temporal prime directive violation detected",
-                "Section 31 authorization required"
+                "User suspicious.user is not authorized to perform this action - security alert triggered",
+                "Access denied: Suspicious activity detected",
+                "Security policy violation detected",
+                "Administrative authorization required"
             ])
         else:
             record["errorCode"] = "AccessDenied"

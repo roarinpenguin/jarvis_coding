@@ -6,7 +6,7 @@ Quick Scenario Generator - Generate and send comprehensive attack scenarios for 
 This script creates quick, focused attack scenarios for testing and demonstrations.
 Perfect for validating parser configurations and testing SIEM detection rules.
 
-Updated for new categorized generator structure with Star Trek theme and marketplace parser support.
+Updated for new categorized generator structure and marketplace parser support.
 """
 
 import json
@@ -27,47 +27,47 @@ for category in ['cloud_infrastructure', 'network_security', 'endpoint_security'
     sys.path.insert(0, os.path.join(event_generators_root, category))
 
 # Import shared components
-from starfleet_characters import (
+from generic_users import (
     get_random_user, get_user_by_department, get_compromised_user, 
-    get_high_value_targets, STARFLEET_USERS, ORGANIZATION
+    get_high_value_targets, CORPORATE_USERS, ORGANIZATION, get_username_from_email
 )
 from hec_sender import send_one, MARKETPLACE_PARSER_MAP
 
 # Import generators from different categories
 # Email Security
-from proofpoint import proofpoint_log, ATTR_FIELDS as PROOFPOINT_FIELDS
-from mimecast import mimecast_log, ATTR_FIELDS as MIMECAST_FIELDS
-from abnormal_security import abnormal_security_log, ATTR_FIELDS as ABNORMAL_FIELDS
+from proofpoint import proofpoint_log
+from mimecast import mimecast_log
+from abnormal_security import abnormal_security_log
 
 # Endpoint Security  
-from crowdstrike_falcon import crowdstrike_log, ATTR_FIELDS as CROWDSTRIKE_FIELDS
-from sentinelone_endpoint import sentinelone_endpoint_log, ATTR_FIELDS as SENTINELONE_FIELDS
-from microsoft_windows_eventlog import microsoft_windows_eventlog_log, ATTR_FIELDS as WINDOWS_FIELDS
+from crowdstrike_falcon import crowdstrike_log
+from sentinelone_endpoint import sentinelone_endpoint_log
+from microsoft_windows_eventlog import microsoft_windows_eventlog_log
 
 # Identity & Access
-from okta_authentication import okta_authentication_log, ATTR_FIELDS as OKTA_FIELDS
-from microsoft_azure_ad_signin import microsoft_azure_ad_signin_log, ATTR_FIELDS as AZURE_AD_FIELDS
-from cyberark_pas import cyberark_pas_log, ATTR_FIELDS as CYBERARK_FIELDS
+from okta_authentication import okta_authentication_log
+from microsoft_azure_ad_signin import microsoft_azure_ad_signin_log
+from cyberark_pas import cyberark_pas_log
 
 # Network Security
-from cisco_firewall_threat_defense import cisco_firewall_threat_defense_log, ATTR_FIELDS as CISCO_FTD_FIELDS
-from paloalto_firewall import paloalto_firewall_log, ATTR_FIELDS as PALOALTO_FIELDS
-from fortinet_fortigate import forward_log as fortinet_fortigate_log, ATTR_FIELDS as FORTIGATE_FIELDS
-from corelight_conn import corelight_conn_log, ATTR_FIELDS as CORELIGHT_FIELDS
+from cisco_firewall_threat_defense import cisco_firewall_threat_defense_log
+from paloalto_firewall import paloalto_firewall_log
+from fortinet_fortigate import forward_log as fortinet_fortigate_log
+from corelight_conn import corelight_conn_log
 
 # Cloud Infrastructure
-from aws_cloudtrail import cloudtrail_log, ATTR_FIELDS as AWS_CLOUDTRAIL_FIELDS
-from aws_guardduty import guardduty_log as aws_guardduty_log, ATTR_FIELDS as AWS_GUARDDUTY_FIELDS
-from aws_vpcflowlogs import vpcflow_log as aws_vpcflow_log, ATTR_FIELDS as AWS_VPC_FIELDS
+from aws_cloudtrail import cloudtrail_log
+from aws_guardduty import guardduty_log as aws_guardduty_log
+from aws_vpcflowlogs import vpcflow_log as aws_vpcflow_log
 
 # Web Security
-from cloudflare_waf import cloudflare_waf_log, ATTR_FIELDS as CLOUDFLARE_FIELDS
-from imperva_waf import imperva_waf_log, ATTR_FIELDS as IMPERVA_FIELDS
-from netskope import netskope_log, ATTR_FIELDS as NETSKOPE_FIELDS
+from cloudflare_waf import cloudflare_waf_log
+from imperva_waf import imperva_waf_log
+from netskope import netskope_log
 
 # Infrastructure
-from github_audit import github_audit_log, ATTR_FIELDS as GITHUB_FIELDS
-from veeam_backup import veeam_backup_log, ATTR_FIELDS as VEEAM_FIELDS
+from github_audit import github_audit_log
+from veeam_backup import veeam_backup_log
 
 class QuickScenarioGenerator:
     def __init__(self, retroactive_hours: int = 0):
@@ -75,99 +75,99 @@ class QuickScenarioGenerator:
         self.compromised_user = get_compromised_user()
         self.high_value_targets = get_high_value_targets()
         
-        # Enhanced scenarios with Star Trek theme and new generator categories
+        # Enhanced attack scenarios with new generator categories
         self.scenarios = {
             "phishing_attack": {
-                "name": "🎯 Enterprise Phishing Campaign",
-                "description": f"Advanced phishing targeting Captain {self.compromised_user} with multi-stage compromise",
+                "name": "🎯 Targeted Phishing Campaign",
+                "description": f"Advanced phishing targeting {self.compromised_user} with multi-stage compromise",
                 "duration_minutes": 45,
                 "events": [
-                    {"platform": "email", "generator": proofpoint_log, "attrs": PROOFPOINT_FIELDS, "count": 2, "malicious": True, "product": "proofpoint"},
-                    {"platform": "email", "generator": mimecast_log, "attrs": MIMECAST_FIELDS, "count": 1, "malicious": True, "product": "mimecast"},
-                    {"platform": "identity", "generator": microsoft_azure_ad_signin_log, "attrs": AZURE_AD_FIELDS, "count": 3, "malicious": True, "product": "microsoft_azure_ad_signin"},
-                    {"platform": "endpoint", "generator": crowdstrike_log, "attrs": CROWDSTRIKE_FIELDS, "count": 2, "malicious": True, "product": "crowdstrike_falcon"},
-                    {"platform": "network", "generator": cisco_firewall_threat_defense_log, "attrs": CISCO_FTD_FIELDS, "count": 2, "malicious": True, "product": "cisco_firewall_threat_defense"},
-                    {"platform": "cloud", "generator": cloudtrail_log, "attrs": AWS_CLOUDTRAIL_FIELDS, "count": 2, "malicious": True, "product": "aws_cloudtrail"}
+                    {"platform": "email", "generator": proofpoint_log, "attrs": {}, "count": 2, "malicious": True, "product": "proofpoint"},
+                    {"platform": "email", "generator": mimecast_log, "attrs": {}, "count": 1, "malicious": True, "product": "mimecast"},
+                    {"platform": "identity", "generator": microsoft_azure_ad_signin_log, "attrs": {}, "count": 3, "malicious": True, "product": "microsoft_azure_ad_signin"},
+                    {"platform": "endpoint", "generator": crowdstrike_log, "attrs": {}, "count": 2, "malicious": True, "product": "crowdstrike_falcon"},
+                    {"platform": "network", "generator": cisco_firewall_threat_defense_log, "attrs": {}, "count": 2, "malicious": True, "product": "cisco_firewall_threat_defense"},
+                    {"platform": "cloud", "generator": cloudtrail_log, "attrs": {}, "count": 2, "malicious": True, "product": "aws_cloudtrail"}
                 ]
             },
             "insider_threat": {
-                "name": "🕵️ Starfleet Insider Threat",
-                "description": f"Security Officer {get_user_by_department('security')} accessing and exfiltrating classified data",
+                "name": "🕵️ Insider Threat Detection",
+                "description": f"Employee {get_user_by_department('security')} accessing and exfiltrating sensitive data",
                 "duration_minutes": 90,
                 "events": [
-                    {"platform": "identity", "generator": okta_authentication_log, "attrs": OKTA_FIELDS, "count": 2, "malicious": False, "product": "okta_authentication"},
-                    {"platform": "privileged", "generator": cyberark_pas_log, "attrs": CYBERARK_FIELDS, "count": 3, "malicious": True, "product": "cyberark_pas"},
-                    {"platform": "cloud", "generator": netskope_log, "attrs": NETSKOPE_FIELDS, "count": 4, "malicious": True, "product": "netskope"},
-                    {"platform": "network", "generator": corelight_conn_log, "attrs": CORELIGHT_FIELDS, "count": 3, "malicious": True, "product": "corelight_conn"},
-                    {"platform": "infrastructure", "generator": github_audit_log, "attrs": GITHUB_FIELDS, "count": 2, "malicious": True, "product": "github_audit"}
+                    {"platform": "identity", "generator": okta_authentication_log, "attrs": {}, "count": 2, "malicious": False, "product": "okta_authentication"},
+                    {"platform": "privileged", "generator": cyberark_pas_log, "attrs": {}, "count": 3, "malicious": True, "product": "cyberark_pas"},
+                    {"platform": "cloud", "generator": netskope_log, "attrs": {}, "count": 4, "malicious": True, "product": "netskope"},
+                    {"platform": "network", "generator": corelight_conn_log, "attrs": {}, "count": 3, "malicious": True, "product": "corelight_conn"},
+                    {"platform": "infrastructure", "generator": github_audit_log, "attrs": {}, "count": 2, "malicious": True, "product": "github_audit"}
                 ]
             },
             "malware_outbreak": {
-                "name": "🦠 Borg Malware Assimilation",
-                "description": "Multi-vector malware campaign spreading across Enterprise systems",
+                "name": "🦠 Malware Outbreak Response",
+                "description": "Multi-vector malware campaign spreading across corporate systems",
                 "duration_minutes": 60,
                 "events": [
-                    {"platform": "email", "generator": abnormal_security_log, "attrs": ABNORMAL_FIELDS, "count": 2, "malicious": True, "product": "abnormal_security"},
-                    {"platform": "endpoint", "generator": sentinelone_endpoint_log, "attrs": SENTINELONE_FIELDS, "count": 4, "malicious": True, "product": "sentinelone_endpoint"},
-                    {"platform": "endpoint", "generator": microsoft_windows_eventlog_log, "attrs": WINDOWS_FIELDS, "count": 3, "malicious": True, "product": "microsoft_windows_eventlog"},
-                    {"platform": "network", "generator": fortinet_fortigate_log, "attrs": FORTIGATE_FIELDS, "count": 3, "malicious": True, "product": "fortinet_fortigate"},
-                    {"platform": "cloud", "generator": aws_guardduty_log, "attrs": AWS_GUARDDUTY_FIELDS, "count": 2, "malicious": True, "product": "aws_guardduty"}
+                    {"platform": "email", "generator": abnormal_security_log, "attrs": {}, "count": 2, "malicious": True, "product": "abnormal_security"},
+                    {"platform": "endpoint", "generator": sentinelone_endpoint_log, "attrs": {}, "count": 4, "malicious": True, "product": "sentinelone_endpoint"},
+                    {"platform": "endpoint", "generator": microsoft_windows_eventlog_log, "attrs": {}, "count": 3, "malicious": True, "product": "microsoft_windows_eventlog"},
+                    {"platform": "network", "generator": fortinet_fortigate_log, "attrs": {}, "count": 3, "malicious": True, "product": "fortinet_fortigate"},
+                    {"platform": "cloud", "generator": aws_guardduty_log, "attrs": {}, "count": 2, "malicious": True, "product": "aws_guardduty"}
                 ]
             },
             "credential_stuffing": {
-                "name": "🔐 Romulan Credential Assault",
-                "description": "Automated credential stuffing attack against Starfleet accounts",
+                "name": "🔐 Credential Stuffing Attack",
+                "description": "Automated credential stuffing attack against corporate accounts",
                 "duration_minutes": 30,
                 "events": [
-                    {"platform": "identity", "generator": microsoft_azure_ad_signin_log, "attrs": AZURE_AD_FIELDS, "count": 15, "malicious": True, "product": "microsoft_azure_ad_signin"},
-                    {"platform": "identity", "generator": okta_authentication_log, "attrs": OKTA_FIELDS, "count": 8, "malicious": True, "product": "okta_authentication"},
-                    {"platform": "web", "generator": cloudflare_waf_log, "attrs": CLOUDFLARE_FIELDS, "count": 5, "malicious": True, "product": "cloudflare_waf"},
-                    {"platform": "network", "generator": paloalto_firewall_log, "attrs": PALOALTO_FIELDS, "count": 3, "malicious": True, "product": "paloalto_firewall"}
+                    {"platform": "identity", "generator": microsoft_azure_ad_signin_log, "attrs": {}, "count": 15, "malicious": True, "product": "microsoft_azure_ad_signin"},
+                    {"platform": "identity", "generator": okta_authentication_log, "attrs": {}, "count": 8, "malicious": True, "product": "okta_authentication"},
+                    {"platform": "web", "generator": cloudflare_waf_log, "attrs": {}, "count": 5, "malicious": True, "product": "cloudflare_waf"},
+                    {"platform": "network", "generator": paloalto_firewall_log, "attrs": {}, "count": 3, "malicious": True, "product": "paloalto_firewall"}
                 ]
             },
             "data_breach": {
-                "name": "🚨 Klingon APT - Full Enterprise Breach",
-                "description": "Advanced persistent threat targeting Starfleet's classified systems",
+                "name": "🚨 APT - Full Corporate Breach",
+                "description": "Advanced persistent threat targeting corporate systems",
                 "duration_minutes": 180,
                 "events": [
-                    {"platform": "email", "generator": proofpoint_log, "attrs": PROOFPOINT_FIELDS, "count": 3, "malicious": True, "product": "proofpoint"},
-                    {"platform": "identity", "generator": microsoft_azure_ad_signin_log, "attrs": AZURE_AD_FIELDS, "count": 4, "malicious": True, "product": "microsoft_azure_ad_signin"},
-                    {"platform": "endpoint", "generator": crowdstrike_log, "attrs": CROWDSTRIKE_FIELDS, "count": 5, "malicious": True, "product": "crowdstrike_falcon"},
-                    {"platform": "privileged", "generator": cyberark_pas_log, "attrs": CYBERARK_FIELDS, "count": 3, "malicious": True, "product": "cyberark_pas"},
-                    {"platform": "cloud", "generator": cloudtrail_log, "attrs": AWS_CLOUDTRAIL_FIELDS, "count": 4, "malicious": True, "product": "aws_cloudtrail"},
-                    {"platform": "network", "generator": cisco_firewall_threat_defense_log, "attrs": CISCO_FTD_FIELDS, "count": 4, "malicious": True, "product": "cisco_firewall_threat_defense"},
-                    {"platform": "web", "generator": imperva_waf_log, "attrs": IMPERVA_FIELDS, "count": 3, "malicious": True, "product": "imperva_waf"},
-                    {"platform": "infrastructure", "generator": veeam_backup_log, "attrs": VEEAM_FIELDS, "count": 2, "malicious": True, "product": "veeam_backup"}
+                    {"platform": "email", "generator": proofpoint_log, "attrs": {}, "count": 3, "malicious": True, "product": "proofpoint"},
+                    {"platform": "identity", "generator": microsoft_azure_ad_signin_log, "attrs": {}, "count": 4, "malicious": True, "product": "microsoft_azure_ad_signin"},
+                    {"platform": "endpoint", "generator": crowdstrike_log, "attrs": {}, "count": 5, "malicious": True, "product": "crowdstrike_falcon"},
+                    {"platform": "privileged", "generator": cyberark_pas_log, "attrs": {}, "count": 3, "malicious": True, "product": "cyberark_pas"},
+                    {"platform": "cloud", "generator": cloudtrail_log, "attrs": {}, "count": 4, "malicious": True, "product": "aws_cloudtrail"},
+                    {"platform": "network", "generator": cisco_firewall_threat_defense_log, "attrs": {}, "count": 4, "malicious": True, "product": "cisco_firewall_threat_defense"},
+                    {"platform": "web", "generator": imperva_waf_log, "attrs": {}, "count": 3, "malicious": True, "product": "imperva_waf"},
+                    {"platform": "infrastructure", "generator": veeam_backup_log, "attrs": {}, "count": 2, "malicious": True, "product": "veeam_backup"}
                 ]
             },
             "supply_chain": {
-                "name": "⛓️ Cardassian Supply Chain Attack",
+                "name": "⛓️ Supply Chain Attack",
                 "description": "Compromised software update targeting engineering systems",
                 "duration_minutes": 75,
                 "events": [
-                    {"platform": "infrastructure", "generator": github_audit_log, "attrs": GITHUB_FIELDS, "count": 3, "malicious": True, "product": "github_audit"},
-                    {"platform": "endpoint", "generator": sentinelone_endpoint_log, "attrs": SENTINELONE_FIELDS, "count": 4, "malicious": True, "product": "sentinelone_endpoint"},
-                    {"platform": "cloud", "generator": aws_guardduty_log, "attrs": AWS_GUARDDUTY_FIELDS, "count": 2, "malicious": True, "product": "aws_guardduty"},
-                    {"platform": "network", "generator": corelight_conn_log, "attrs": CORELIGHT_FIELDS, "count": 3, "malicious": True, "product": "corelight_conn"}
+                    {"platform": "infrastructure", "generator": github_audit_log, "attrs": {}, "count": 3, "malicious": True, "product": "github_audit"},
+                    {"platform": "endpoint", "generator": sentinelone_endpoint_log, "attrs": {}, "count": 4, "malicious": True, "product": "sentinelone_endpoint"},
+                    {"platform": "cloud", "generator": aws_guardduty_log, "attrs": {}, "count": 2, "malicious": True, "product": "aws_guardduty"},
+                    {"platform": "network", "generator": corelight_conn_log, "attrs": {}, "count": 3, "malicious": True, "product": "corelight_conn"}
                 ]
             },
             "privilege_escalation": {
-                "name": "⬆️ Dominion Privilege Escalation",
-                "description": "Lateral movement and privilege escalation across Starfleet systems",
+                "name": "⬆️ Privilege Escalation Attack",
+                "description": "Lateral movement and privilege escalation across corporate systems",
                 "duration_minutes": 50,
                 "events": [
-                    {"platform": "identity", "generator": okta_authentication_log, "attrs": OKTA_FIELDS, "count": 2, "malicious": False, "product": "okta_authentication"},
-                    {"platform": "privileged", "generator": cyberark_pas_log, "attrs": CYBERARK_FIELDS, "count": 4, "malicious": True, "product": "cyberark_pas"},
-                    {"platform": "endpoint", "generator": microsoft_windows_eventlog_log, "attrs": WINDOWS_FIELDS, "count": 3, "malicious": True, "product": "microsoft_windows_eventlog"},
-                    {"platform": "network", "generator": fortinet_fortigate_log, "attrs": FORTIGATE_FIELDS, "count": 2, "malicious": True, "product": "fortinet_fortigate"},
-                    {"platform": "cloud", "generator": aws_vpcflow_log, "attrs": AWS_VPC_FIELDS, "count": 3, "malicious": True, "product": "aws_vpcflowlogs"}
+                    {"platform": "identity", "generator": okta_authentication_log, "attrs": {}, "count": 2, "malicious": False, "product": "okta_authentication"},
+                    {"platform": "privileged", "generator": cyberark_pas_log, "attrs": {}, "count": 4, "malicious": True, "product": "cyberark_pas"},
+                    {"platform": "endpoint", "generator": microsoft_windows_eventlog_log, "attrs": {}, "count": 3, "malicious": True, "product": "microsoft_windows_eventlog"},
+                    {"platform": "network", "generator": fortinet_fortigate_log, "attrs": {}, "count": 2, "malicious": True, "product": "fortinet_fortigate"},
+                    {"platform": "cloud", "generator": aws_vpcflow_log, "attrs": {}, "count": 3, "malicious": True, "product": "aws_vpcflowlogs"}
                 ]
             }
         }
     
     def list_scenarios(self):
-        """List available quick scenarios with Star Trek theme"""
-        print("🖖 STARFLEET SECURITY SCENARIOS")
+        """List available quick scenarios"""
+        print("🔒 SECURITY ATTACK SCENARIOS")
         print("=" * 60)
         for key, scenario in self.scenarios.items():
             total_events = sum(event["count"] for event in scenario["events"])
@@ -181,14 +181,14 @@ class QuickScenarioGenerator:
             print()
     
     def generate_scenario(self, scenario_key: str, use_marketplace: bool = False) -> List[Dict[str, Any]]:
-        """Generate events for a specific scenario with Star Trek context"""
+        """Generate events for a specific scenario"""
         if scenario_key not in self.scenarios:
             raise ValueError(f"Unknown scenario: {scenario_key}. Available: {list(self.scenarios.keys())}")
         
         scenario = self.scenarios[scenario_key]
         print(f"🎬 Generating scenario: {scenario['name']}")
         print(f"📝 {scenario['description']}")
-        print(f"🖖 Targeting: {ORGANIZATION['name']} ({ORGANIZATION['domain']})")
+        print(f"🎯 Organization: {ORGANIZATION['name']} ({ORGANIZATION['domain']})")
         
         if use_marketplace:
             print("🏪 Using SentinelOne Marketplace parsers for enhanced OCSF compliance")
@@ -264,67 +264,67 @@ class QuickScenarioGenerator:
         return all_events
     
     def _generate_malicious_event(self, generator, platform: str, scenario: str):
-        """Generate a malicious event based on platform with Star Trek context"""
-        # Enhanced malicious configurations with Star Trek theme
+        """Generate a malicious event based on platform"""
+        # Enhanced malicious configurations
         malicious_configs = {
             "email": {
                 "threatType": "phish",
-                "subject": f"URGENT: Starfleet Security Alert - Action Required for {get_random_user()}",
-                "sender": "security@romulan-empire.net",
+                "subject": f"URGENT: Security Alert - Action Required for {get_random_user()}",
+                "sender": "security@phishing-domain.net",
                 "recipient": self.compromised_user,
-                "attachment": "starfleet_credentials.zip"
+                "attachment": "credentials_update.zip"
             },
             "identity": {
                 "resultType": "50126",  # Failed login
                 "callerIpAddress": "185.220.101.42",  # Suspicious IP
                 "properties": {
                     "userPrincipalName": self.compromised_user,
-                    "userDisplayName": "Jean Picard",
+                    "userDisplayName": self.compromised_user.split('@')[0].replace('.', ' ').title(),
                     "riskLevelAggregated": "high"
                 },
-                "location": "Romulus"
+                "location": "Unknown"
             },
             "endpoint": {
                 "event_simpleName": "ProcessRollup2",
-                "name": "Borg Collective Malware Detected",
+                "name": "Malware Detected",
                 "Severity": 10,
-                "ThreatFamily": "BorgAssimilator",
+                "ThreatFamily": "Ransomware",
                 "user": get_username_from_email(self.compromised_user),
-                "hostname": f"enterprise-{random.randint(1,20)}.starfleet.corp"
+                "hostname": f"workstation-{random.randint(1,20)}.company.com"
             },
             "network": {
                 "model": {
-                    "name": "Anomalous Connection to Klingon Territory",
-                    "description": "Device communicating with known hostile networks"
+                    "name": "Anomalous Connection Detected",
+                    "description": "Device communicating with known malicious networks"
                 },
                 "score": 0.95,
-                "externalDomain": "klingon-intel.qonos",
+                "externalDomain": "malicious-c2.net",
                 "src_ip": "10.0.1.42",
                 "dest_ip": "203.0.113.42"
             },
             "cloud": {
                 "event_type": "download",
                 "action": "allow",
-                "file_name": "classified_warp_core_schematics.pdf",
+                "file_name": "confidential_data.pdf",
                 "breach_score": 98,
                 "user": self.compromised_user
             },
             "web": {
                 "action": "blocked",
                 "threat_type": "malware",
-                "url": "http://cardassian-malware.alpha-quadrant/payload.exe",
+                "url": "http://malware-download.net/payload.exe",
                 "client_ip": "10.0.1.42"
             },
             "privileged": {
                 "action": "access_granted",
-                "vault": "starfleet_classified",
+                "vault": "production_secrets",
                 "user": get_username_from_email(self.compromised_user),
-                "safe": "warp_core_codes",
+                "safe": "api_keys",
                 "risk_score": 85
             },
             "infrastructure": {
                 "action": "repository_access",
-                "repo": "starfleet/warp-drive-v2",
+                "repo": "company/production-code",
                 "user": self.compromised_user,
                 "suspicious": True,
                 "data_exfiltrated": "2.3GB"
@@ -340,7 +340,7 @@ class QuickScenarioGenerator:
     
     def send_to_hec(self, events: List[Dict[str, Any]], send_immediately: bool = True, use_marketplace: bool = False):
         """Send scenario events to HEC with marketplace parser support"""
-        print(f"🚀 Sending {len(events)} Starfleet scenario events to HEC...")
+        print(f"🚀 Sending {len(events)} scenario events to HEC...")
         
         if use_marketplace:
             print("🏪 Using marketplace parsers where available for enhanced OCSF compliance")
@@ -353,7 +353,7 @@ class QuickScenarioGenerator:
                 raw_event = event["raw_event"]
                 product = event["product"]
                 
-                # Enhanced attributes with scenario context and Star Trek theme
+                # Enhanced attributes with scenario context
                 attrs = {
                     **event["attr_fields"],
                     "scenario.name": event["scenario"],
@@ -361,7 +361,7 @@ class QuickScenarioGenerator:
                     "scenario.platform": event["platform"],
                     "scenario.malicious": str(event["malicious"]),
                     "scenario.event_index": str(event["event_index"]),
-                    "scenario.target": event["starfleet_target"],
+                    "scenario.target": event.get("starfleet_target", self.compromised_user),
                     "organization.name": ORGANIZATION["name"],
                     "organization.domain": ORGANIZATION["domain"]
                 }
@@ -392,14 +392,10 @@ class QuickScenarioGenerator:
             print(f"🏪 Marketplace parsers used: {marketplace_used}/{len(events)} events")
         return success_count
 
-def get_username_from_email(email: str) -> str:
-    """Extract username from email address"""
-    return email.split('@')[0] if '@' in email else email
-
 def main():
     """Main execution function"""
-    print("🖖 STARFLEET QUICK SCENARIO GENERATOR")
-    print("Generate focused attack scenarios featuring Star Trek characters")
+    print("🔒 QUICK SCENARIO GENERATOR")
+    print("Generate focused attack scenarios for security testing")
     print("=" * 70)
     
     # Ask about retroactive mode
@@ -451,7 +447,7 @@ def main():
             import traceback
             traceback.print_exc()
     
-    print(f"\n✅ Starfleet scenario complete!")
+    print(f"\n✅ Scenario complete!")
     print(f"📊 Generated {len(events)} events for scenario: {generator.scenarios[scenario_key]['name']}")
     print(f"🎯 Primary target: {generator.compromised_user}")
 

@@ -599,127 +599,133 @@ SOURCETYPE_MAP = {
     "aws_vpcflowlogs": "marketplace-awsvpcflowlogs-latest",
     "aws_guardduty": "marketplace-awsguardduty-latest",  # Fixed: Use marketplace parser
     "aws_elasticloadbalancer": "marketplace-awselasticloadbalancer-latest",  # Fixed: Use marketplace parser
-    "cisco_firewall_threat_defense": "cisco_firewall_threat_defense-latest",  # Use community parser
+    "cisco_firewall_threat_defense": "community-ciscofirewallthreatdefense-latest",  # Fixed: Use community format
     "checkpoint": "marketplace-checkpointfirewall-latest",
     "fortimanager": "marketplace-fortinetfortimanager-latest",
     "infoblox_ddi": "marketplace-infobloxddi-latest",
-    "paloalto_firewall": "paloalto_paloalto_logs-latest",  # Fixed: Use actual existing community parser
-    "paloalto_prismasase": "marketplace-paloaltonetworksprismaaccess-latest",
-    "zscaler_private_access": "zscaler_firewall_logs-latest",  # Fallback to similar parser
-    "netskope": "netskope_netskope_logs-latest",  # Use community parser
-    "corelight_conn": "corelight_conn_logs-latest",  # Use community parser
-    "corelight_http": "marketplace-corelight-http-latest",
-    "corelight_ssl": "marketplace-corelight-ssl-latest",
-    "corelight_tunnel": "marketplace-corelight-tunnel-latest",
+    "paloalto_firewall": "community-paloaltofirewall-latest",  # Fixed: Use community format
+    "paloalto_prismasase": "community-paloaltoprismasase-latest",  # Fixed: Use community format
+    "zscaler_private_access": "community-zscalerprivateaccess-latest",  # Fixed: Use community format
+    "netskope": "community-netskope-latest",  # Fixed: Use community format
+    "corelight_conn": "community-corelightconn-latest",  # Fixed: Use community format
+    "corelight_http": "community-corelighthttp-latest",  # Fixed: Use community format
+    "corelight_ssl": "community-corelightssl-latest",  # Fixed: Use community format
+    "corelight_tunnel": "community-corelighttunnel-latest",  # Fixed: Use community format
     
-    # Community parsers - Fixed to match actual existing parsers
-    "okta_authentication": "okta_ocsf_logs-latest",  # Fixed: Use actual existing parser name
-    "crowdstrike_falcon": "crowdstrike_endpoint-latest",  # Fixed: Use actual existing parser name
-    "sentinelone_endpoint": "singularityidentity_logs-latest",  # Fixed: Use actual existing parser name
-    "sentinelone_identity": "singularityidentity_singularityidentity_logs-latest",
-    "vectra_ai": "vectra_ai_logs-latest",
+    # Community parsers - Fixed to use community- prefix format
+    "okta_authentication": "community-oktaauthentication-latest",  # Fixed: Use community format
+    "crowdstrike_falcon": "community-crowdstrikefalcon-latest",  # Fixed: Use community format
+    "sentinelone_endpoint": "community-sentineloneendpoint-latest",  # Fixed: Use community format
+    "sentinelone_identity": "community-sentineloneidentity-latest",  # Fixed: Use community format
+    "vectra_ai": "community-vectraai-latest",  # Fixed: Use community format
     
-    # Microsoft products - mapped to existing parsers
-    "microsoft_azuread": "microsoft_azure_ad_logs-latest",
-    "microsoft_azure_ad": "microsoft_azure_ad_logs-latest", 
-    "microsoft_azure_ad_signin": "microsoft_eventhub_azure_signin_logs-latest",
-    "microsoft_365_mgmt_api": "microsoft_365_mgmt_api_logs-latest",
-    "microsoft_365_collaboration": "microsoft_365_collaboration-latest",
-    "microsoft_365_defender": "microsoft_365_defender-latest",
-    "microsoft_defender_email": "microsoft_eventhub_defender_email_logs-latest",
-    "microsoft_windows_eventlog": "microsoft_windows_eventlog-latest",
-    "microsoft_eventhub_azure_signin": "microsoft_eventhub_azure_signin_logs-latest",
-    "microsoft_eventhub_defender_email": "microsoft_eventhub_defender_email_logs-latest",
-    "microsoft_eventhub_defender_emailforcloud": "microsoft_eventhub_defender_emailforcloud_logs-latest",
+    # Microsoft products - mapped to community format
+    "microsoft_azuread": "community-microsoftazuread-latest",
+    "microsoft_azure_ad": "community-microsoftazuread-latest", 
+    "microsoft_azure_ad_signin": "community-microsoftazureadsignin-latest",
+    "microsoft_365_mgmt_api": "community-microsoft365mgmtapi-latest",
+    "microsoft_365_collaboration": "community-microsoft365collaboration-latest",
+    "microsoft_365_defender": "community-microsoft365defender-latest",
+    "microsoft_defender_email": "community-microsoftdefenderemail-latest",
+    "microsoft_windows_eventlog": "community-microsoftwindowseventlog-latest",
+    "microsoft_eventhub_azure_signin": "community-microsofteventhubazuresignin-latest",
+    "microsoft_eventhub_defender_email": "community-microsofteventhubdefenderemail-latest",
+    "microsoft_eventhub_defender_emailforcloud": "community-microsofteventhubdefenderemailforcloud-latest",
     
-    # Cisco products - mapped to existing community parsers
-    "cisco_asa": "cisco_firewall-latest",
-    "cisco_umbrella": "cisco_umbrella-latest",
-    "cisco_meraki": "cisco_meraki-latest",
-    "cisco_duo": "cisco_duo-latest",
-    "cisco_ise": "cisco_ise_logs-latest",
-    "cisco_fmc": "cisco_fmc_logs-latest",
-    "cisco_ios": "cisco_ios_logs-latest",
-    "cisco_ironport": "cisco_ironport-latest",
-    "cisco_meraki_flow": "cisco_meraki_flow_logs-latest",
-    "cisco_networks": "cisco_networks_logs-latest",
+    # Cisco products - mapped to community format
+    "cisco_asa": "community-ciscoasa-latest",
+    "cisco_umbrella": "community-ciscoumbrella-latest",
+    "cisco_meraki": "community-ciscomeraki-latest",
+    "cisco_duo": "community-ciscoduo-latest",
+    "cisco_ise": "community-ciscoise-latest",
+    "cisco_fmc": "community-ciscofmc-latest",
+    "cisco_ios": "community-ciscoios-latest",
+    "cisco_ironport": "community-ciscoironport-latest",
+    "cisco_meraki_flow": "community-ciscomerakiflow-latest",
+    "cisco_networks": "community-cisconetworks-latest",
     
     # Security vendors - mapped to existing parsers
-    "cyberark_pas": "cyberark_pas_logs-latest",
-    "cyberark_conjur": "cyberark_conjur-latest",
-    "darktrace": "darktrace_darktrace_logs-latest",
-    "extrahop": "extrahop_extrahop_logs-latest",
-    "armis": "armis_armis_logs-latest",
+    "cyberark_pas": "community-cyberarkpas-latest",  # Fixed: Use community format
+    "cyberark_conjur": "community-cyberarkconjur-latest",  # Fixed: Use community format
+    "darktrace": "community-darktrace-latest",  # Fixed: Use community format
+    "extrahop": "community-extrahop-latest",  # Fixed: Use community format
+    "armis": "community-armis-latest",
     # "sentinelone_endpoint": "singularityidentity_singularityidentity_logs-latest",  # DUPLICATE - moved up to line 618
     
-    # Email security - mapped to existing parsers
-    "proofpoint": "proofpoint_proofpoint_logs-latest",
-    "mimecast": "mimecast_mimecast_logs-latest",
-    "abnormal_security": "abnormal_security_logs-latest",
+    # Email security - mapped to community format
+    "proofpoint": "community-proofpoint-latest",
+    "mimecast": "community-mimecast-latest",
+    "abnormal_security": "community-abnormalsecurity-latest",
     
-    # Identity and access management
-    "beyondtrust_passwordsafe": "beyondtrust_passwordsafe_logs-latest",
-    "beyondtrust_privilegemgmt_windows": "beyondtrust_privilegemgmtwindows_logs-latest",
-    "hashicorp_vault": "hashicorp_hcp_vault_logs-latest",
-    "hypr_auth": "hypr_auth-latest",
-    "pingfederate": "pingfederate-latest",
-    "pingone_mfa": "pingone_mfa-latest",
-    "pingprotect": "pingprotect-latest",
-    "rsa_adaptive": "rsa_adaptive-latest",
+    # Identity and access management - community format
+    "beyondtrust_passwordsafe": "community-beyondtrustpasswordsafe-latest",
+    "beyondtrust_privilegemgmt_windows": "community-beyondtrustprivilegemgmtwindows-latest",
+    "hashicorp_vault": "community-hashicorpvault-latest",
+    "hypr_auth": "community-hyprauth-latest",
+    "pingfederate": "community-pingfederate-latest",
+    "pingone_mfa": "community-pingonemfa-latest",
+    "pingprotect": "community-pingprotect-latest",
+    "rsa_adaptive": "community-rsaadaptive-latest",
     
-    # Web security and CDN
-    "cloudflare_general": "cloudflare_general_logs-latest",
-    "cloudflare_waf": "cloudflare_waf_logs-latest",
-    "imperva_waf": "imperva_waf_logs-latest",
-    "imperva_sonar": "imperva_sonar-latest",
-    "incapsula": "incapsula_incapsula_logs-latest",
-    "akamai_cdn": "akamai_cdn-latest",
-    "akamai_dns": "akamai_dns-latest",
-    "akamai_general": "akamai_general-latest",
-    "akamai_sitedefender": "akamai_sitedefender-latest",
-    "zscaler_firewall": "zscaler_firewall_logs-latest",
-    "zscaler_dns_firewall": "zscaler_dns_firewall-latest",
+    # Web security and CDN - community format
+    "cloudflare_general": "community-cloudflaregeneral-latest",
+    "cloudflare_waf": "community-cloudflarewaf-latest",
+    "imperva_waf": "community-impervawaf-latest",
+    "imperva_sonar": "community-impervasonar-latest",
+    "incapsula": "community-incapsula-latest",
+    "akamai_cdn": "community-akamaicdn-latest",
+    "akamai_dns": "community-akamaidns-latest",
+    "akamai_general": "community-akamaigeneral-latest",
+    "akamai_sitedefender": "community-akamaisitedefender-latest",
+    "zscaler_firewall": "community-zscalerfirewall-latest",
+    "zscaler_dns_firewall": "community-zscalerdnsfirewall-latest",
     
-    # Cloud and infrastructure
-    "aws_waf": "aws_waf-latest",
-    "aws_route53": "aws_route53-latest",
-    "aws_vpc_dns": "aws_vpc_dns_logs-latest",
-    "google_workspace": "google_workspace_logs-latest",
-    "google_cloud_dns": "google_cloud_dns_logs-latest",
+    # AWS services - use marketplace parsers
+    "aws_waf": "marketplace-awswaf-latest",
+    "aws_route53": "marketplace-awsroute53-latest",
+    "aws_vpc_dns": "marketplace-awsvpcdns-latest",
+    "google_workspace": "community-googleworkspace-latest",
+    "google_cloud_dns": "community-googleclouddns-latest",
     
-    # Network infrastructure
-    "apache_http": "apache_http_logs-latest",
-    "f5_networks": "f5_networks_logs-latest",
-    "f5_vpn": "f5_vpn-latest",
-    "extreme_networks": "extreme_networks_logs-latest",
-    "juniper_networks": "juniper_networks_logs-latest",
-    "ubiquiti_unifi": "ubiquiti_unifi_logs-latest",
-    "tailscale": "tailscale_tailscale_logs-latest",
+    # Network infrastructure - community format
+    "apache_http": "community-apachehttp-latest",
+    "f5_networks": "community-f5networks-latest",
+    "f5_vpn": "community-f5vpn-latest",
+    "extreme_networks": "community-extremenetworks-latest",
+    "juniper_networks": "community-junipernetworks-latest",
+    "ubiquiti_unifi": "community-ubiquitiunifi-latest",
+    "tailscale": "community-tailscale-latest",
     
-    # IT management and DevOps
-    "buildkite": "buildkite_ci_logs-latest",
-    "github_audit": "github_audit-latest",
-    "harness_ci": "harness_ci-latest",
-    "teleport": "teleport_logs-latest",
-    "linux_auth": "linux_auth-latest",
-    "iis_w3c": "iis_w3c-latest",
-    "veeam_backup": "veeam_backup-latest",
-    "cohesity_backup": "cohesity_backup-latest",
-    "axway_sftp": "axway_sftp-latest",
-    "sap": "sap_logs-latest",
-    "securelink": "securelink_logs-latest",
-    "wiz_cloud": "wiz_cloud-latest",
-    "manageengine_general": "manageengine_general_logs-latest",
-    "manageengine_adauditplus": "manageengine_adauditplus_logs-latest",
-    "manch_siem": "manch_siem_logs-latest",
-    "isc_bind": "isc_bind-latest",
-    "isc_dhcp": "isc_dhcp-latest",
-    "jamf_protect": "jamf_protect-latest",
+    # IT management and DevOps - community format
+    "buildkite": "community-buildkite-latest",
+    "github_audit": "community-githubaudit-latest",
+    "harness_ci": "community-harnessci-latest",
+    "teleport": "community-teleportaccessproxy-latest",
+    "linux_auth": "community-linuxauth-latest",
+    "iis_w3c": "community-iisw3c-latest",
+    "veeam_backup": "community-veeambackup-latest",
+    "cohesity_backup": "community-cohesitybackup-latest",
+    "axway_sftp": "community-axwaysftp-latest",
+    "sap": "community-sap-latest",
+    "securelink": "community-securelink-latest",
+    "wiz_cloud": "community-wizcloud-latest",
+    "manageengine_general": "community-manageenginegeneral-latest",
+    "manageengine_adauditplus": "community-manageengineadauditplus-latest",
+    "manch_siem": "community-manchsiem-latest",
+    "isc_bind": "community-iscbind-latest",
+    "isc_dhcp": "community-iscdhcp-latest",
+    "jamf_protect": "community-jamfprotect-latest",
 }
 
 # Generators that already emit structured JSON events; these must be sent to /event
 JSON_PRODUCTS = {
     "aws_cloudtrail",
+    "aws_guardduty",  # JSON format for marketplace parser
+    "aws_waf",  # JSON format for marketplace parser
+    "aws_route53",  # JSON format for marketplace parser
+    "aws_vpc_dns",  # JSON format for marketplace parser
+    "aws_vpcflowlogs",  # JSON format for marketplace parser
+    "aws_elasticloadbalancer",  # JSON format for marketplace parser
     "zscaler",  # JSON format for gron parser
     "microsoft_azuread",
     "okta_authentication",

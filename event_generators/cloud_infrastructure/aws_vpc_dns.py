@@ -21,21 +21,21 @@ RESPONSE_CODES = [
     "TIMEOUT"
 ]
 
-# Common domains with Star Trek themed enterprise domains
+# Common domains for corporate environments
 DOMAINS = [
-    "starfleet.corp",
-    "bridge.enterprise.starfleet.corp",
-    "engineering.starfleet.corp", 
-    "sickbay.starfleet.corp",
+    "company.corp",
+    "internal.company.corp",
+    "services.company.corp", 
+    "portal.company.corp",
     "google.com",
     "amazonaws.com",
     "microsoft.com",
     "cloudflare.com",
     "github.com",
     "stackoverflow.com",
-    "romulan-spy.org",
-    "borg-collective.net",
-    "ferengi-trading.com"
+    "suspicious-domain.org",
+    "threat-actor.net",
+    "malware-c2.com"
 ]
 
 def generate_vpc_ip() -> str:
@@ -56,8 +56,8 @@ def aws_vpc_dns_log() -> Dict:
     
     event = {
         "version": "1.100000",
-        "account-id": f"{random.randint(100000000000, 999999999999)}",
-        "interface-id": f"eni-{random.randint(10000000, 99999999):08x}",
+        "account_id": f"{random.randint(100000000000, 999999999999)}",
+        "interface_id": f"eni-{random.randint(10000000, 99999999):08x}",
         "srcaddr": generate_vpc_ip(),
         "dstaddr": f"169.254.169.253",  # VPC DNS resolver
         "srcport": random.randint(32768, 65535),
@@ -76,10 +76,10 @@ def aws_vpc_dns_log() -> Dict:
         "rdata": f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}" if response_code == "NOERROR" and query_type == "A" else "",
         "answers": random.randint(0, 5) if response_code == "NOERROR" else 0,
         "transport": "UDP",
-        "vpc-id": f"vpc-{random.randint(10000000, 99999999):08x}",
-        "subnet-id": f"subnet-{random.randint(10000000, 99999999):08x}",
-        "instance-id": f"i-{random.randint(10000000, 99999999):08x}",
-        "firewall_subnet_id": f"subnet-{random.randint(10000000, 99999999):08x}",
+        "vpc_id": f"vpc-{random.randint(10000000, 99999999):08x}",
+        "subnet_id": f"subnet-{random.randint(10000000, 99999999):08x}",
+        "instance_id": f"i-{random.randint(10000000, 99999999):08x}",
+        "query_timestamp": event_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "firewall_rule_action": "PASS",
         "threat_list_name": "malware-domains" if is_suspicious else "",
         "threat_list_id": f"tl-{random.randint(10000000, 99999999):08x}" if is_suspicious else ""

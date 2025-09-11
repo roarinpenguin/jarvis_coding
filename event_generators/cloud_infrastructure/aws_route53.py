@@ -20,23 +20,23 @@ RESPONSE_CODES = [
     "TIMEOUT"
 ]
 
-# Common domains with Star Trek themed enterprise domains
+# Common domains for corporate environments
 DOMAINS = [
-    "starfleet.corp",
-    "www.starfleet.corp", 
-    "api.starfleet.corp",
-    "bridge.enterprise.starfleet.corp",
-    "engineering.enterprise.starfleet.corp",
-    "sickbay.enterprise.starfleet.corp",
+    "company.corp",
+    "www.company.corp", 
+    "api.company.corp",
+    "internal.company.corp",
+    "services.company.corp",
+    "portal.company.corp",
     "google.com",
     "amazonaws.com",
     "microsoft.com",
     "cloudflare.com",
     "github.com",
     "stackoverflow.com",
-    "romulan-spy.org",
-    "borg-collective.net",
-    "ferengi-trading.com"
+    "suspicious-domain.org",
+    "threat-actor.net",
+    "malware-c2.com"
 ]
 
 # AWS edge locations
@@ -50,7 +50,7 @@ def generate_client_ip() -> str:
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
 def aws_route53_log(overrides: dict = None) -> dict:
-    """Generate a single AWS Route 53 DNS event log in JSON format"""
+    """Generate a single AWS Route 53 DNS event log as dict that can be formatted for parser"""
     now = datetime.now(timezone.utc)
     event_time = now - timedelta(minutes=random.randint(0, 10))
     
@@ -63,7 +63,7 @@ def aws_route53_log(overrides: dict = None) -> dict:
     timestamp = event_time.strftime("%Y-%m-%dT%H:%M:%SZ")
     resolver_endpoint_id = f"rslvr-endpt-{random.randint(1000, 9999)}"
     
-    # Generate JSON event structure
+    # Generate structured event data that hec_sender can format appropriately
     event = {
         "timestamp": timestamp,
         "source": "Route53",
@@ -75,20 +75,27 @@ def aws_route53_log(overrides: dict = None) -> dict:
         "resolverEndpointId": resolver_endpoint_id,
         "version": "1.0",
         "account": "123456789012",
-        "region": "us-east-1"
+        "region": "us-east-1",
+        # Add raw syslog format for parser compatibility
+        "_raw": f'{timestamp} Route53 queryName="{domain}" queryType="{query_type}" clientIp="{client_ip}" edgeLocation="{edge_location}" responseCode="{response_code}" resolverEndpointId="{resolver_endpoint_id}"'
     }
     
-    # Add SentinelOne AI-SIEM attributes    
     # Apply overrides if provided (for scenario customization)
     if overrides:
         if "domain" in overrides:
             event["queryName"] = overrides["domain"]
+            domain = overrides["domain"]
         if "query_type" in overrides:
             event["queryType"] = overrides["query_type"]
+            query_type = overrides["query_type"]
         if "response_code" in overrides:
             event["responseCode"] = overrides["response_code"]
+            response_code = overrides["response_code"]
         if "client_ip" in overrides:
             event["clientIp"] = overrides["client_ip"]
+            client_ip = overrides["client_ip"]
+        # Update raw format with overridden values
+        event["_raw"] = f'{timestamp} Route53 queryName="{domain}" queryType="{query_type}" clientIp="{client_ip}" edgeLocation="{edge_location}" responseCode="{response_code}" resolverEndpointId="{resolver_endpoint_id}"'
     
     return event
 

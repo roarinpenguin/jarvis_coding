@@ -13,8 +13,8 @@ def _ts_iso() -> str:
 
 def _sample_finding() -> Dict[str, Any]:
     """
-    Return a minimal yet valid GuardDuty finding that matches the user‑supplied
-    example.  Only the fields required by the parser are included.
+    Return a minimal yet valid GuardDuty finding that matches the parser
+    expectations. Only the fields required by the parser are included.
     """
     finding_id   = str(uuid.uuid4())
     account_id   = str(random.randint(111111111111, 999999999999))
@@ -83,10 +83,10 @@ def _sample_finding() -> Dict[str, Any]:
 # ---------------------------------------------------------------------------#
 # Public API
 # ---------------------------------------------------------------------------#
-def guardduty_log() -> str:
+def guardduty_log() -> Dict[str, Any]:
     """
-    Return the GuardDuty finding as a compact JSON string.  This will be sent
-    through the /raw endpoint, so the parser receives the flattened JSON
-    without the extra "message." prefix.
+    Return the GuardDuty finding as a dictionary.  This will be sent
+    through the /event endpoint as JSON, which the parser expects
+    with ${parse=dottedJson}.
     """
     return _sample_finding()
