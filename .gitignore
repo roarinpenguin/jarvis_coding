@@ -1,6 +1,7 @@
 # Markdown Documentation Files
 # =============================
 # IMPORTANT: Keep all documentation local only
+!README.md
 *.md
 !README.md.example
 *.markdown

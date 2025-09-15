@@ -95,31 +95,77 @@ def create_sentinelone_parsers():
     print("🚀 Creating SentinelOne Official Parser Directories")
     print("=" * 60)
     
-    # Read the official parsers file
-    try:
-        with open('sentinelone_parsers.json', 'r') as f:
-            content = f.read()
-    except FileNotFoundError:
-        print("❌ sentinelone_parsers.json not found!")
-        return
+    # Try multiple file locations
+    possible_files = [
+        'sentinelone_parsers.json',
+        'utilities/sentinelone_parsers.json',
+        'sentinelone_parsers_example.json',
+        'utilities/sentinelone_parsers_example.json'
+    ]
+    
+    content = None
+    used_file = None
+    
+    for file_path in possible_files:
+        try:
+            with open(file_path, 'r') as f:
+                content = f.read()
+                used_file = file_path
+                print(f"✅ Found parser file: {file_path}")
+                break
+        except FileNotFoundError:
+            continue
+    
+    if not content:
+        print("❌ No parser file found! Looked for:")
+        for f in possible_files:
+            print(f"   - {f}")
+        return 0
     
     print(f"📄 File size: {len(content):,} characters")
     
-    # Find all parser definitions
-    lines = content.split('\n')
+    # Try to parse as JSON first
     parsers_found = []
     
-    for i, line in enumerate(lines):
-        if '"dataSource.name":' in line and 'field' not in line:
-            # Extract parser name
-            match = re.search(r'"dataSource.name":\s*"([^"]+)"', line)
-            if match:
-                parser_name = match.group(1)
-                parsers_found.append((i + 1, parser_name))
+    try:
+        data = json.loads(content)
+        
+        # Handle different JSON structures
+        if isinstance(data, dict) and 'parsers' in data:
+            # Structure: {"parsers": [...]}
+            for parser in data['parsers']:
+                if 'attributes' in parser and 'dataSource.name' in parser['attributes']:
+                    parser_name = parser['attributes']['dataSource.name']
+                    parsers_found.append((parser, parser_name))
+        elif isinstance(data, list):
+            # Structure: [...]
+            for parser in data:
+                if 'attributes' in parser and 'dataSource.name' in parser['attributes']:
+                    parser_name = parser['attributes']['dataSource.name']
+                    parsers_found.append((parser, parser_name))
+        else:
+            # Single parser
+            if 'attributes' in data and 'dataSource.name' in data['attributes']:
+                parser_name = data['attributes']['dataSource.name']
+                parsers_found.append((data, parser_name))
+                
+    except json.JSONDecodeError:
+        # Fall back to line-by-line parsing
+        lines = content.split('\n')
+        for i, line in enumerate(lines):
+            if '"dataSource.name":' in line and 'field' not in line:
+                # Extract parser name
+                match = re.search(r'"dataSource.name":\s*"([^"]+)"', line)
+                if match:
+                    parser_name = match.group(1)
+                    parsers_found.append((i + 1, parser_name))
     
     print(f"📊 Found {len(parsers_found)} parser definitions:")
-    for line_num, parser_name in parsers_found:
-        print(f"  Line {line_num:4d}: {parser_name}")
+    for item, parser_name in parsers_found:
+        if isinstance(item, dict):
+            print(f"  Parser: {parser_name}")
+        else:
+            print(f"  Line {item:4d}: {parser_name}")
     
     # Create directory for each parser
     parsers_created = 0
