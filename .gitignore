@@ -282,6 +282,8 @@ site/
 *.old
 *_backup
 *_old
+backups/
+backup/
 
 # Custom Ignore Patterns
 # ======================
