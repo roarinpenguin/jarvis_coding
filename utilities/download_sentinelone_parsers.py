@@ -12,6 +12,7 @@ import re
 import requests
 import zipfile
 import io
+import time
 from pathlib import Path
 from datetime import datetime
 
@@ -21,8 +22,28 @@ GITHUB_BRANCH = "main"  # or "master" depending on the default branch
 BASE_URL = f"https://api.github.com/repos/{GITHUB_REPO}"
 RAW_URL = f"https://raw.githubusercontent.com/{GITHUB_REPO}/{GITHUB_BRANCH}"
 
+def download_with_retry(url, max_retries=5, delay=1):
+    """Download with retry logic and exponential backoff"""
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(url)
+            if response.status_code == 429:  # Rate limited
+                wait_time = delay * (2 ** attempt)  # Exponential backoff
+                print(f"    ⏳ Rate limited. Waiting {wait_time} seconds...")
+                time.sleep(wait_time)
+                continue
+            response.raise_for_status()
+            return response
+        except requests.exceptions.RequestException as e:
+            if attempt == max_retries - 1:
+                raise e
+            wait_time = delay * (2 ** attempt)
+            print(f"    ⚠️  Request failed. Retrying in {wait_time} seconds...")
+            time.sleep(wait_time)
+    return None
+
 def download_github_directory(path_in_repo, local_dir):
-    """Download all files from a GitHub directory"""
+    """Download all files from a GitHub directory with rate limiting"""
     print(f"📥 Downloading from: {path_in_repo}")
     
     # Create local directory
@@ -32,13 +53,19 @@ def download_github_directory(path_in_repo, local_dir):
     api_url = f"{BASE_URL}/contents/{path_in_repo}"
     
     try:
-        response = requests.get(api_url)
-        response.raise_for_status()
+        response = download_with_retry(api_url)
+        if not response:
+            print(f"  ❌ Failed to access: {path_in_repo}")
+            return 0
         
         contents = response.json()
         downloaded_count = 0
         
-        for item in contents:
+        for idx, item in enumerate(contents):
+            # Add a small delay between downloads to avoid rate limiting
+            if idx > 0:
+                time.sleep(0.5)  # 500ms delay between files
+            
             if item['type'] == 'file':
                 # Download file
                 file_url = item['download_url']
@@ -46,13 +73,13 @@ def download_github_directory(path_in_repo, local_dir):
                 local_path = Path(local_dir) / file_name
                 
                 print(f"    📄 {file_name}")
-                file_response = requests.get(file_url)
-                file_response.raise_for_status()
-                
-                with open(local_path, 'wb') as f:
-                    f.write(file_response.content)
-                
-                downloaded_count += 1
+                file_response = download_with_retry(file_url)
+                if file_response:
+                    with open(local_path, 'wb') as f:
+                        f.write(file_response.content)
+                    downloaded_count += 1
+                else:
+                    print(f"    ⚠️  Failed to download: {file_name}")
                 
             elif item['type'] == 'dir':
                 # Recursively download subdirectory
@@ -61,13 +88,18 @@ def download_github_directory(path_in_repo, local_dir):
                 local_subdir = Path(local_dir) / subdir_name
                 
                 print(f"  📁 Entering directory: {subdir_name}")
-                download_github_directory(subdir_path, local_subdir)
+                # Add delay before processing subdirectory
+                time.sleep(1)
+                sub_count = download_github_directory(subdir_path, local_subdir)
+                downloaded_count += sub_count
         
         return downloaded_count
         
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 404:
             print(f"  ⚠️  Directory not found: {path_in_repo}")
+        elif e.response.status_code == 429:
+            print(f"  ❌ Rate limit exceeded. Please try again later.")
         else:
             print(f"  ❌ HTTP Error: {e}")
         return 0
@@ -236,8 +268,10 @@ def list_github_parsers():
         api_url = f"{BASE_URL}/contents/parsers/{parser_type}"
         
         try:
-            response = requests.get(api_url)
-            response.raise_for_status()
+            response = download_with_retry(api_url)
+            if not response:
+                print(f"  ❌ Failed to list {parser_type} parsers")
+                continue
             
             contents = response.json()
             parsers = [item['name'] for item in contents if item['type'] == 'dir']
@@ -247,6 +281,9 @@ def list_github_parsers():
             
             print(f"  Total: {len(parsers)} parsers")
             print()
+            
+            # Add delay between parser types to avoid rate limiting
+            time.sleep(1)
             
         except Exception as e:
             print(f"  ❌ Error listing {parser_type} parsers: {e}")
