@@ -163,8 +163,8 @@ def zscaler_private_access_log():
 
 if __name__ == "__main__":
     # Generate and print sample events
-    print("Zscaler Private Access JSON Format Examples:")
-    print("=" * 60)
+    #print("Zscaler Private Access JSON Format Examples:")
+    #print("=" * 60)
     
     for i in range(100):
         event = zscaler_private_access_log()
