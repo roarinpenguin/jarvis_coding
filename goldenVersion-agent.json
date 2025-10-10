@@ -1,10 +1,10 @@
 // Configuration for the Scalyr Agent. For help:
 //
 // https://www.scalyr.com/help/scalyr-agent-2
- 
+
 {
   // Enter a "Write Logs" api key for your account. These are available at https://www.scalyr.com/keys
-  api_key: "1n498HHpWKcZjtsXBnuJPmKBrGuKB30pUF7b6OyVZrI3mPT722//Qq5q_PWadwG5c",
+  api_key: "1Ox5WYU_7asBjEFb5hfD5zfElw8fh5TXn0D6bSCknTj5FU_Y5y977X232GGwjEPhm",
 
   // Fields describing this server. These fields are attached to each log message, and
   // can be used to filter data from a particular server or group of servers.
