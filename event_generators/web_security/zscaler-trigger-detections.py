@@ -45,7 +45,7 @@ def generate_ip() -> str:
 def zscaler_firewall_log() -> str:
     """Generate a single Zscaler Firewall event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    event_time = now - timedelta(minutes=random.randint(0, 5))
     
     action = random.choice(ACTIONS)
     protocol = random.choice(PROTOCOLS)
@@ -95,11 +95,11 @@ def zscaler_firewall_log() -> str:
     }
     
     # Add threat detection fields for blocked traffic
-    if action in ["Block", "Drop"]:
+    if action in ["Allow"]:
         if random.choice([True, False]):  # 50% chance of threat detection
             event.update({
-                "threat_category": random.choice(THREAT_CATEGORIES),
-                "threat_name": random.choice([
+                "threatcat": random.choice(THREAT_CATEGORIES),
+                "threatname": random.choice([
                     "cobaltstrike",
                     "8base",
                     "abyss",
@@ -193,6 +193,6 @@ if __name__ == "__main__":
     # Generate sample events
     print("Sample Zscaler Firewall Events:")
     print("=" * 50)
-    for i in range(3):
+    for i in range(5):
         print(f"\nEvent {i+1}:")
         print(zscaler_firewall_log())

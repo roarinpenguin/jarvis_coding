@@ -49,7 +49,7 @@ def generate_ip() -> str:
 def zscaler_firewall_log() -> str:
     """Generate a single Zscaler Firewall event log"""
     now = datetime.now(timezone.utc)
-    event_time = now - timedelta(minutes=random.randint(0, 1440))
+    event_time = now - timedelta(minutes=random.randint(0, 5))
     
     action = random.choice(ACTIONS)
     protocol = random.choice(PROTOCOLS)
