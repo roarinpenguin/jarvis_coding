@@ -18,7 +18,7 @@
 
   // Log files to upload to Scalyr. You can use '*' wildcards here.
   logs: [
-     { path: "/home/ubuntu/sample-logs/web_security/zscaler_private_access.log", attributes: {parser: "marketplace-zscalerprivateaccessjson-latest"} },
+     { path: "/home/ubuntu/sample-logs/web_security/zscaler_private_access.log", attributes: {parser: "community-zscalerprivateaccess-latest"} },
      { path: "/home/ubuntu/sample-logs/web_security/zscaler-firewall.log", attributes: {parser: "community-zscalerfirewall-latest"} },
      { path: "/home/ubuntu/sample-logs/web_security/zscaler-dns-firewall.log", attributes: {parser: "community-zscalerdnsfirewall-latest"} },
 
