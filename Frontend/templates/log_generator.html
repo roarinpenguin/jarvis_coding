@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1277,8 +1277,14 @@
         });
 
         // Generate Trace ID button for scenarios
-        const genTraceIdBtn = document.getElementById('gen-trace-id');
-        const traceIdInput = document.getElementById('trace-id');
+        //const genTraceIdBtn = document.getElementById('gen-trace-id');
+        
+	if (!window.genTraceIdBtn) {
+  		window.genTraceIdBtn = document.getElementById("gen-trace-id");
+	}
+
+
+	const traceIdInput = document.getElementById('trace-id');
         if (genTraceIdBtn && traceIdInput) {
             genTraceIdBtn.addEventListener('click', () => {
                 const guid = crypto.randomUUID();
@@ -1627,4 +1633,3 @@
 
 </body>
 </html>
-
