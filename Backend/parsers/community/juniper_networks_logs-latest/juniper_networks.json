@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Juniper",
     "dataSource.name": "Juniper Networks",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "network_infrastructure",
     "source": "juniper_networks"
   },

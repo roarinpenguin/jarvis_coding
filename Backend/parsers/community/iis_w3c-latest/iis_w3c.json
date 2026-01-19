@@ -2,7 +2,7 @@
     "attributes": {
         "dataSource.name": "Microsoft IIS",
         "dataSource.vendor": "Microsoft",
-        "dataSource.category": "network",
+        "dataSource.category": "security",
         "metadata.product.name": "Internet Information Services",
         "metadata.product.vendor_name": "Microsoft",
         "metadata.version": "1.0.0"

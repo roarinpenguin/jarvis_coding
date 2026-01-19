@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.name": "DHCP Server",
     "dataSource.vendor": "ISC",
     "metadata.product.name": "DHCP Server",

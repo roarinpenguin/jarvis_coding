@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "GitHub",
     "dataSource.name": "GitHub Audit",
-    "dataSource.category": "audit",
+    "dataSource.category": "security",
     "dataSource.technology": "source_control"
   },
   

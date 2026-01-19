@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.name": "Meraki",
     "dataSource.vendor": "Cisco",
     "metadata.product.name": "Meraki",

@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "AWS",
     "dataSource.name": "VPC Flow Logs",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "AWS",
     "metadata.product.name": "AWS VPC Flow Logs",
     "metadata.version": "1.0.0"

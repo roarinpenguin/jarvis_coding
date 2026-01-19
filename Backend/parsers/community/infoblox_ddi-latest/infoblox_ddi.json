@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Infoblox",
     "dataSource.name": "Infoblox DDI",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Infoblox",
     "metadata.product.name": "Infoblox DDI",
     "metadata.version": "1.0.0"

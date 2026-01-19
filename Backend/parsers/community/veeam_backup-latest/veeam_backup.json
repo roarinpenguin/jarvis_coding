@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "dataSource.category": "system",
+    "dataSource.category": "security",
     "dataSource.name": "Veeam Backup",
     "dataSource.vendor": "Veeam",
     "metadata.product.name": "Veeam Backup",

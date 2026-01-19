@@ -38,7 +38,7 @@ services:
       dockerfile: Frontend/Dockerfile
     container_name: jarvis-frontend
     ports:
-      - "9001:8000"
+      - "9002:8000"
     environment:
       - API_BASE_URL=http://api:8000
       - BACKEND_API_KEY=${BACKEND_API_KEY}

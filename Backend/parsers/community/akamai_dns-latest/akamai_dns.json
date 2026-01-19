@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Akamai",
     "dataSource.name": "Akamai DNS", 
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "dns",
     "source": "akamai_dns"
   },

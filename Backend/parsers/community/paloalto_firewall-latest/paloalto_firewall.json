@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Palo Alto Networks",
     "dataSource.name": "Palo Alto Firewall",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Palo Alto Networks",
     "metadata.product.name": "Palo Alto Firewall",
     "metadata.version": "1.0.0"

@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "dataSource.category": "system",
+    "dataSource.category": "security",
     "dataSource.name": "Cohesity Backup",
     "dataSource.vendor": "Cohesity"
   },

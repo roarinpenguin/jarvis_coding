@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Cisco",
     "dataSource.name": "Cisco Identity Services Engine",
-    "dataSource.category": "identity_management",
+    "dataSource.category": "security",
     "dataSource.technology": "network_access_control",
     "source": "cisco_ise"
   },

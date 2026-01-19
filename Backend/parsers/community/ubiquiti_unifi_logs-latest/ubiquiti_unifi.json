@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Ubiquiti",
     "dataSource.name": "UniFi",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "wireless_networking",
     "source": "ubiquiti_unifi"
   },
