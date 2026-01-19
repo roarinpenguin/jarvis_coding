@@ -11,6 +11,7 @@ import json
 import sys
 import requests
 import time
+import uuid
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
@@ -30,8 +31,15 @@ if not os.getenv('S1_HEC_TOKEN'):
 from hec_sender import send_one, SOURCETYPE_MAP, JSON_PRODUCTS
 from enterprise_attack_scenario import generate_enhanced_attack_scenario
 
-def send_to_hec(event_data, source):
-    """Send event to SentinelOne HEC using proper routing"""
+def send_to_hec(event_data, source, trace_id=None, phase=None):
+    """Send event to SentinelOne HEC using proper routing
+    
+    Args:
+        event_data: The event payload to send
+        source: The source/product name
+        trace_id: Optional scenario trace ID for correlation
+        phase: Optional attack phase name for categorization
+    """
     # Map source to product name
     product = source.replace(' ', '_').lower()
     
@@ -70,6 +78,12 @@ def send_to_hec(event_data, source):
         "dataSource.category": "security"
     }
     
+    # Add scenario correlation fields if provided
+    if trace_id:
+        attr_fields["scenario.trace_id"] = trace_id
+    if phase:
+        attr_fields["scenario.phase"] = phase
+    
     try:
         # Use the send_one function from hec_sender which handles routing correctly
         result = send_one(event_data, product, attr_fields)
@@ -85,6 +99,10 @@ def send_enterprise_scenario():
     
     print("🚀 ENTERPRISE ATTACK SCENARIO SENDER - 330+ Events")
     print("=" * 80)
+    
+    # Use trace ID from environment (passed by frontend) or generate a new one
+    trace_id = os.getenv('S1_TRACE_ID') or str(uuid.uuid4())
+    print(f"🔗 Scenario Trace ID: {trace_id}")
     
     # Generate fresh scenario with current timestamps
     print("📝 Generating fresh enterprise attack scenario with current timestamps...")
@@ -118,8 +136,8 @@ def send_enterprise_scenario():
                 phase_counts[phase] = 0
             phase_counts[phase] += 1
         
-        # Send event
-        success = send_to_hec(event_data, source)
+        # Send event with trace_id and phase for correlation
+        success = send_to_hec(event_data, source, trace_id=trace_id, phase=phase)
         
         if success:
             with success_lock:
@@ -171,6 +189,10 @@ def send_enterprise_scenario():
     for phase, count in phase_counts.items():
         print(f"   {phase.replace('_', ' ').title():25s}: {count:3d} events")
     
+    print(f"\n🔍 SEARCH IN SENTINELONE:")
+    print(f"   🔗 All scenario events: scenario.trace_id=\"{trace_id}\"")
+    print("   🔍 By phase: scenario.phase=\"reconnaissance\" OR scenario.phase=\"initial_compromise\"")
+    
     print(f"\n🏆 SENTINELONE AI-SIEM CORRELATION INSIGHTS:")
     print("   🔗 Initial compromise via phishing (Proofpoint → Zscaler → CrowdStrike)")
     print("   🔗 Credential harvesting across identity providers (Okta → Azure AD → Duo)")
@@ -185,6 +207,8 @@ def send_enterprise_scenario():
             print(f"   • {technique}")
         if len(scenario['metadata']['mitre_techniques']) > 5:
             print(f"   ... and {len(scenario['metadata']['mitre_techniques']) - 5} more")
+    
+    print(f"\n💡 TIP: Use scenario.trace_id=\"{trace_id}\" to find all events from this attack simulation")
 
 if __name__ == "__main__":
     send_enterprise_scenario()

@@ -19,6 +19,7 @@ import json
 import random
 import time
 import uuid
+import argparse
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Tuple
 import importlib
@@ -618,35 +619,81 @@ class AttackScenarioOrchestrator:
             'raw_event': event_data
         }
 
+def is_interactive():
+    """Check if running in interactive mode with a TTY"""
+    return sys.stdin.isatty() if hasattr(sys.stdin, 'isatty') else False
+
+
 def main():
     """Main execution function"""
+    # Parse command-line arguments for non-interactive mode
+    parser = argparse.ArgumentParser(description='Attack Scenario Orchestrator')
+    parser.add_argument('--retroactive', '-r', action='store_true', 
+                        help='Generate retroactive scenario')
+    parser.add_argument('--retroactive-days', '-rd', type=int, default=14,
+                        help='Days in the past for retroactive scenario (default: 14)')
+    parser.add_argument('--days', '-d', type=int, default=14,
+                        help='Campaign duration in days (default: 14)')
+    parser.add_argument('--events-per-day', '-e', type=int, default=50,
+                        help='Events per day (default: 50)')
+    parser.add_argument('--send-to-hec', '-s', action='store_true',
+                        help='Send events to HEC endpoint')
+    parser.add_argument('--non-interactive', '-n', action='store_true',
+                        help='Run in non-interactive mode with defaults')
+    
+    args = parser.parse_args()
+    
     print("🚨 ATTACK SCENARIO ORCHESTRATOR")
     print("Operation Digital Heist - Advanced Persistent Threat Simulation")
     print("=" * 60)
     
-    # Ask about retroactive mode
-    retroactive = input("Generate retroactive scenario? (y/N): ").lower().startswith('y')
-    if retroactive:
-        retroactive_days = int(input("How many days in the past should the campaign start? (default 14): ") or "14")
+    # Determine if running interactively
+    interactive = is_interactive() and not args.non_interactive
+    
+    # Get configuration from args or interactive prompts
+    if interactive:
+        try:
+            retroactive = input("Generate retroactive scenario? (y/N): ").lower().startswith('y')
+            if retroactive:
+                retroactive_days = int(input("How many days in the past should the campaign start? (default 14): ") or "14")
+            else:
+                retroactive_days = 0
+        except EOFError:
+            # Fall back to non-interactive mode
+            interactive = False
+            retroactive = args.retroactive
+            retroactive_days = args.retroactive_days if args.retroactive else 0
     else:
-        retroactive_days = 0
+        retroactive = args.retroactive
+        retroactive_days = args.retroactive_days if args.retroactive else 0
+        print(f"Running in non-interactive mode: retroactive={retroactive}, days={args.days}, events_per_day={args.events_per_day}")
     
     # Initialize orchestrator
     orchestrator = AttackScenarioOrchestrator(retroactive_days=retroactive_days) 
     
-    # Generate scenario (can customize days and events per day)
-    if retroactive:
-        # For retroactive scenarios, default to the number of retroactive days
-        days = int(input(f"Enter campaign duration in days (default {retroactive_days}): ") or str(retroactive_days))
+    # Get scenario parameters
+    if interactive:
+        try:
+            if retroactive:
+                days = int(input(f"Enter campaign duration in days (default {retroactive_days}): ") or str(retroactive_days))
+            else:
+                days = int(input("Enter campaign duration in days (default 14): ") or "14")
+            events_per_day = int(input("Enter events per day (default 50): ") or "50")
+        except EOFError:
+            days = args.days
+            events_per_day = args.events_per_day
     else:
-        days = int(input("Enter campaign duration in days (default 14): ") or "14")
-    events_per_day = int(input("Enter events per day (default 50): ") or "50")
+        days = args.days
+        events_per_day = args.events_per_day
     
     # Generate the complete attack scenario
     scenario_events = orchestrator.generate_scenario(days=days, events_per_day=events_per_day)
     
-    # Save scenario to file
-    output_file = f"attack_scenario_{orchestrator.campaign_id}.json"
+    # Save scenario to file (use /app/data if available, else /tmp, else current dir)
+    data_dir = "/app/data" if os.path.isdir("/app/data") and os.access("/app/data", os.W_OK) else (
+        "/tmp" if os.access("/tmp", os.W_OK) else "."
+    )
+    output_file = os.path.join(data_dir, f"attack_scenario_{orchestrator.campaign_id}.json")
     with open(output_file, 'w') as f:
         json.dump(scenario_events, f, indent=2, default=str)
     
@@ -658,7 +705,14 @@ def main():
     print(f"   🔑 Stolen Credentials: {len(orchestrator.stolen_credentials)}")
     
     # Option to send events to HEC
-    send_to_hec = input("\nSend events to HEC endpoint? (y/N): ").lower().startswith('y')
+    if interactive:
+        try:
+            send_to_hec = input("\nSend events to HEC endpoint? (y/N): ").lower().startswith('y')
+        except EOFError:
+            send_to_hec = args.send_to_hec
+    else:
+        send_to_hec = args.send_to_hec
+    
     if send_to_hec:
         print("🚀 Sending events to HEC... (This would integrate with hec_sender.py)")
         # TODO: Integrate with hec_sender.py to actually send events

@@ -32,6 +32,7 @@ SCENARIO_SOURCE_TO_PARSER = {
     # Endpoint Security
     "crowdstrike_falcon": "crowdstrike_falcon-latest",
     "sentinelone_endpoint": "sentinelone_endpoint-latest",
+    "microsoft_windows_eventlog": "microsoft_windows_eventlog-latest",
     
     # Email Security
     "proofpoint": "proofpoint_proofpoint_logs-latest",
@@ -52,6 +53,10 @@ SCENARIO_SOURCE_TO_PARSER = {
     "cyberark_pas": "cyberark_pas_logs-latest",
     "beyondtrust_passwordsafe": "beyondtrust_passwordsafe_logs-latest",
     "hashicorp_vault": "hashicorp_vault-latest",
+    
+    # Backup & Recovery
+    "veeam_backup": "veeam_backup-latest",
+    "cohesity_backup": "cohesity_backup-latest",
 }
 
 
@@ -344,45 +349,33 @@ class ParserSyncService:
     
     def get_scenario_sources(self, scenario_id: str) -> List[str]:
         """
-        Get the list of sources used by a scenario
+        Get the list of sources used by a scenario.
+        
+        Dynamically extracts generator names from scenario phases.
         
         Args:
             scenario_id: The scenario identifier
             
         Returns:
-            List of source names used by the scenario
+            List of unique source names used by the scenario
         """
-        # Mapping of scenarios to their sources
-        scenario_sources = {
-            "finance_mfa_fatigue_scenario": [
-                "okta_authentication",
-                "microsoft_azuread",
-                "microsoft_365_collaboration"
-            ],
-            "insider_cloud_download_exfiltration": [
-                "okta_authentication",
-                "microsoft_365_collaboration",
-                "crowdstrike_falcon"
-            ],
-            "enterprise_attack_scenario": [
-                "proofpoint",
-                "microsoft_azuread",
-                "microsoft_365_collaboration",
-                "crowdstrike_falcon",
-                "darktrace",
-                "netskope"
-            ],
-            "showcase_attack_scenario": [
-                "mimecast",
-                "microsoft_azuread",
-                "crowdstrike_falcon",
-                "darktrace",
-                "netskope",
-                "cyberark_pas"
-            ]
-        }
+        # Import here to avoid circular imports
+        from app.services.scenario_service import ScenarioService
         
-        return scenario_sources.get(scenario_id, [])
+        scenario_service = ScenarioService()
+        scenario = scenario_service.scenario_templates.get(scenario_id)
+        
+        if not scenario:
+            logger.warning(f"Scenario not found: {scenario_id}")
+            return []
+        
+        # Extract unique generators from all phases
+        sources = set()
+        for phase in scenario.get("phases", []):
+            for generator in phase.get("generators", []):
+                sources.add(generator)
+        
+        return list(sources)
 
 
 # Singleton instance for use across the application
