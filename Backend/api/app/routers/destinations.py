@@ -25,8 +25,7 @@ class DestinationCreate(BaseModel):
     
     # Config API for parser management
     config_api_url: Optional[str] = Field(None, description="Config API URL for parser management (e.g., https://xdr.us1.sentinelone.net)")
-    config_read_token: Optional[str] = Field(None, description="Config Read API token for getFile (parser verification)")
-    config_write_token: Optional[str] = Field(None, description="Config Write API token for putFile (parser upload)")
+    config_write_token: Optional[str] = Field(None, description="Config API token for reading and writing parsers")
     
     # Syslog fields
     ip: Optional[str] = Field(None, description="Syslog IP (required for syslog destinations)")
@@ -40,7 +39,6 @@ class DestinationUpdate(BaseModel):
     url: Optional[str] = None
     token: Optional[str] = None
     config_api_url: Optional[str] = None
-    config_read_token: Optional[str] = None
     config_write_token: Optional[str] = None
     ip: Optional[str] = None
     port: Optional[int] = None
@@ -60,8 +58,7 @@ class DestinationResponse(BaseModel):
     updated_at: Optional[str] = None
     has_database_token: Optional[bool] = None  # True if token is in DB, False if LOCAL_STORAGE
     config_api_url: Optional[str] = None  # Config API URL for parser management
-    has_config_read_token: Optional[bool] = None  # True if config read token is set
-    has_config_write_token: Optional[bool] = None  # True if config write token is set
+    has_config_write_token: Optional[bool] = None  # True if config API token is set
 
 
 class DestinationWithToken(DestinationResponse):
@@ -137,7 +134,6 @@ async def create_destination(
             url=destination.url,
             token=destination.token,
             config_api_url=destination.config_api_url,
-            config_read_token=destination.config_read_token,
             config_write_token=destination.config_write_token,
             ip=destination.ip,
             port=destination.port,
@@ -270,7 +266,6 @@ async def update_destination(
             url=update.url,
             token=update.token,
             config_api_url=update.config_api_url,
-            config_read_token=update.config_read_token,
             config_write_token=update.config_write_token,
             ip=update.ip,
             port=update.port,
@@ -320,9 +315,9 @@ async def get_destination_config_tokens(
     auth_info: tuple = Depends(get_api_key)
 ):
     """
-    Get decrypted config tokens for a destination (internal use only)
+    Get decrypted config token for a destination (internal use only)
     
-    Returns the decrypted config read/write tokens for parser management
+    Returns the decrypted config API token for parser management
     """
     service = DestinationService(session)
     destination = await service.get_destination(dest_id)
@@ -339,15 +334,10 @@ async def get_destination_config_tokens(
         )
     
     result = {
-        "config_read_token": None,
         "config_write_token": None
     }
     
     try:
-        if destination.config_read_token_encrypted:
-            result["config_read_token"] = service.decrypt_token(
-                destination.config_read_token_encrypted
-            )
         if destination.config_write_token_encrypted:
             result["config_write_token"] = service.decrypt_token(
                 destination.config_write_token_encrypted
@@ -355,8 +345,8 @@ async def get_destination_config_tokens(
         
         return result
     except Exception as e:
-        logger.error(f"Failed to decrypt config tokens: {e}")
+        logger.error(f"Failed to decrypt config token: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to decrypt config tokens"
+            detail="Failed to decrypt config token"
         )

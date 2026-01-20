@@ -397,7 +397,10 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                     <div class="md:col-span-2 input-group">
                                         <label for="trace-id" class="text-sm font-semibold text-[#c8b3e8]">Trace ID (GUID)</label>
-                                        <input type="text" id="trace-id" placeholder="e.g. 3f2504e0-4f89-11d3-9a0c-0305e82c3301">
+                                        <div class="flex gap-2">
+                                            <input type="text" id="trace-id" placeholder="e.g. 3f2504e0-4f89-11d3-9a0c-0305e82c3301" class="flex-1">
+                                            <button type="button" id="copy-trace-id" class="btn" style="width:auto; padding:0.6rem 0.8rem;" title="Copy to clipboard">📋</button>
+                                        </div>
                                     </div>
                                     <div class="flex items-end">
                                         <button type="button" id="gen-trace-id" class="btn" style="width:auto; padding:0.6rem 1rem;">Generate</button>
@@ -405,6 +408,17 @@
                                 </div>
                                 <p class="text-xs text-[#b8a0d2]">If blank, a GUID can be auto-generated. Use this value to correlate the full run.</p>
                             </div>
+                        </div>
+                    </details>
+
+                    <details class="bg-[#241d3a] rounded-lg p-3 border border-[#3c325c]">
+                        <summary class="cursor-pointer text-sm font-semibold text-[#c8b3e8]">Output Options</summary>
+                        <div class="mt-3 space-y-2 text-sm">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="debug-mode">
+                                <span class="text-[#f3e8ff]">Verbose/Debug Mode</span>
+                            </label>
+                            <p class="text-xs text-[#b8a0d2]">When enabled, logs every event sent. When disabled, only shows phases, trace ID, and summary.</p>
                         </div>
                     </details>
 
@@ -424,13 +438,23 @@
                         </div>
                     </details>
 
-                    <button type="submit" id="run-scenario-btn" class="btn">
-                        Run Scenario
-                    </button>
+                    <div class="flex gap-3">
+                        <button type="submit" id="run-scenario-btn" class="btn flex-1">
+                            Run Scenario
+                        </button>
+                        <button type="button" id="stop-scenario-btn" class="btn" style="background: #dc2626; width:auto; padding:0.6rem 1.2rem; display:none;">
+                            ⏹ Stop
+                        </button>
+                    </div>
                 </form>
 
                 <div>
-                    <h3 class="text-lg font-bold mb-3 text-[#f3e8ff]">Scenario Output</h3>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-bold text-[#f3e8ff]">Scenario Output</h3>
+                        <button type="button" id="download-scenario-log" class="btn" style="width:auto; padding:0.4rem 0.8rem; font-size:0.75rem;" disabled>
+                            📥 Download Log
+                        </button>
+                    </div>
                     <div id="scenario-output-box">
                         <!-- Scenario progress will be streamed here -->
                     </div>
@@ -574,20 +598,13 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div class="input-group md:col-span-3">
                                         <label for="dest-config-api-url" class="text-sm font-semibold text-[#c8b3e8]">Config API URL</label>
-                                        <input type="text" id="dest-config-api-url" name="dest-config-api-url" placeholder="https://xdr.us1.sentinelone.net">
+                                        <input type="text" id="dest-config-api-url" name="dest-config-api-url" placeholder="https://xdr.us1.sentinelone.net" value="https://xdr.us1.sentinelone.net">
                                         <p class="text-xs text-[#8b7a9f] mt-1">Different from ingest URL (e.g., xdr.us1 instead of ingest.us1)</p>
                                     </div>
-                                    <div class="input-group">
-                                        <label for="dest-config-read-token" class="text-sm font-semibold text-[#c8b3e8]">Config Read Token</label>
+                                    <div class="input-group md:col-span-3">
+                                        <label for="dest-config-write-token" class="text-sm font-semibold text-[#c8b3e8]">Config API Token</label>
                                         <div class="relative">
-                                            <input type="password" id="dest-config-read-token" name="dest-config-read-token" autocomplete="off" placeholder="For checking if parsers exist" class="pr-10">
-                                            <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 text-[#8b7a9f] hover:text-[#f3e8ff]" data-target="dest-config-read-token" style="background:none;border:none;cursor:pointer;">👁</button>
-                                        </div>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="dest-config-write-token" class="text-sm font-semibold text-[#c8b3e8]">Config Write Token</label>
-                                        <div class="relative">
-                                            <input type="password" id="dest-config-write-token" name="dest-config-write-token" autocomplete="off" placeholder="For uploading missing parsers" class="pr-10">
+                                            <input type="password" id="dest-config-write-token" name="dest-config-write-token" autocomplete="off" placeholder="For checking and uploading parsers" class="pr-10">
                                             <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 text-[#8b7a9f] hover:text-[#f3e8ff]" data-target="dest-config-write-token" style="background:none;border:none;cursor:pointer;">👁</button>
                                         </div>
                                     </div>
@@ -661,6 +678,15 @@
                         </button>
                     </div>
                 </div>
+                
+                <div class="space-y-3 mt-6">
+                    <h3 class="text-xl font-bold text-[#f3e8ff]">Scenario Visibility</h3>
+                    <p class="text-sm text-[#b8a0d2]">Select which scenarios to hide from the dropdown menu. Hidden scenarios won't appear in the Scenarios tab.</p>
+                    <div id="scenario-visibility-list" class="space-y-2 max-h-64 overflow-y-auto p-3 bg-[#241d3a] rounded-lg border border-[#3c325c]">
+                        <p class="text-xs text-[#8b7a9f]">Loading scenarios...</p>
+                    </div>
+                    <button type="button" id="save-scenario-visibility" class="btn" style="width: auto;">Save Visibility Settings</button>
+                </div>
             </div>
         </div>
     </div>
@@ -703,23 +729,14 @@
                 <div class="space-y-3">
                     <div class="input-group">
                         <label for="edit-config-api-url" class="text-sm font-semibold text-[#c8b3e8]">Config API URL</label>
-                        <input type="text" id="edit-config-api-url" placeholder="https://xdr.us1.sentinelone.net">
+                        <input type="text" id="edit-config-api-url" placeholder="https://xdr.us1.sentinelone.net" value="https://xdr.us1.sentinelone.net">
                         <p class="text-xs text-[#8b7a9f] mt-1">Different from ingest URL (e.g., xdr.us1 instead of ingest.us1)</p>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div class="input-group">
-                            <label for="edit-config-read-token" class="text-sm font-semibold text-[#c8b3e8]">Config Read Token</label>
-                            <div class="relative">
-                                <input type="password" id="edit-config-read-token" placeholder="Leave blank to keep existing" class="pr-10">
-                                <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 text-[#8b7a9f] hover:text-[#f3e8ff]" data-target="edit-config-read-token" style="background:none;border:none;cursor:pointer;">👁</button>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <label for="edit-config-write-token" class="text-sm font-semibold text-[#c8b3e8]">Config Write Token</label>
-                            <div class="relative">
-                                <input type="password" id="edit-config-write-token" placeholder="Leave blank to keep existing" class="pr-10">
-                                <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 text-[#8b7a9f] hover:text-[#f3e8ff]" data-target="edit-config-write-token" style="background:none;border:none;cursor:pointer;">👁</button>
-                            </div>
+                    <div class="input-group">
+                        <label for="edit-config-write-token" class="text-sm font-semibold text-[#c8b3e8]">Config API Token</label>
+                        <div class="relative">
+                            <input type="password" id="edit-config-write-token" placeholder="Leave blank to keep existing" class="pr-10">
+                            <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 text-[#8b7a9f] hover:text-[#f3e8ff]" data-target="edit-config-write-token" style="background:none;border:none;cursor:pointer;">👁</button>
                         </div>
                     </div>
                 </div>
@@ -935,9 +952,9 @@
                             tokenIndicator.style.display = 'inline';
                         }
                         
-                        // Show parser sync indicator if config tokens are configured
+                        // Show parser sync indicator if config token is configured
                         const parserSyncIndicator = node.querySelector('.parser-sync-indicator');
-                        if (d.has_config_read_token && d.has_config_write_token) {
+                        if (d.has_config_write_token) {
                             parserSyncIndicator.style.display = 'inline';
                         }
                         
@@ -950,8 +967,7 @@
                                 document.getElementById('edit-dest-name-input').value = d.name;
                                 document.getElementById('edit-dest-url').value = d.url || '';
                                 document.getElementById('edit-dest-token').value = '';
-                                document.getElementById('edit-config-api-url').value = d.config_api_url || '';
-                                document.getElementById('edit-config-read-token').value = '';
+                                document.getElementById('edit-config-api-url').value = d.config_api_url || 'https://xdr.us1.sentinelone.net';
                                 document.getElementById('edit-config-write-token').value = '';
                                 document.getElementById('edit-dest-modal').style.display = 'flex';
                             });
@@ -1088,10 +1104,8 @@
                         
                         // Add config settings for parser sync (optional)
                         const configApiUrl = document.getElementById('dest-config-api-url')?.value?.trim();
-                        const configReadToken = document.getElementById('dest-config-read-token')?.value?.trim();
                         const configWriteToken = document.getElementById('dest-config-write-token')?.value?.trim();
                         if (configApiUrl) payload.config_api_url = configApiUrl;
-                        if (configReadToken) payload.config_read_token = configReadToken;
                         if (configWriteToken) payload.config_write_token = configWriteToken;
                     } else {
                         payload.ip = document.getElementById('dest-syslog-ip').value.trim();
@@ -1126,9 +1140,7 @@
                     const tokenEl = document.getElementById('dest-token'); 
                     if (tokenEl) tokenEl.value = '';
                     const configApiUrlEl = document.getElementById('dest-config-api-url');
-                    if (configApiUrlEl) configApiUrlEl.value = '';
-                    const configReadEl = document.getElementById('dest-config-read-token');
-                    if (configReadEl) configReadEl.value = '';
+                    if (configApiUrlEl) configApiUrlEl.value = 'https://xdr.us1.sentinelone.net';
                     const configWriteEl = document.getElementById('dest-config-write-token');
                     if (configWriteEl) configWriteEl.value = '';
                     
@@ -1156,6 +1168,89 @@
             });
         }
         
+        // Scenario visibility settings
+        let allScenarios = [];
+        let hiddenScenarios = [];
+        
+        async function loadScenarioVisibilitySettings() {
+            try {
+                // Fetch ALL scenarios (unfiltered) for settings UI
+                const scenariosRes = await fetch('/scenarios/all');
+                if (scenariosRes.ok) {
+                    allScenarios = await scenariosRes.json();
+                }
+                
+                // Fetch hidden scenarios from backend
+                const hiddenRes = await fetch('/api/v1/settings/hidden-scenarios');
+                if (hiddenRes.ok) {
+                    const data = await hiddenRes.json();
+                    hiddenScenarios = data.hidden_scenarios || [];
+                }
+                
+                renderScenarioVisibilityList();
+            } catch (err) {
+                console.error('Failed to load scenario visibility settings:', err);
+            }
+        }
+        
+        function renderScenarioVisibilityList() {
+            const container = document.getElementById('scenario-visibility-list');
+            if (!container || !allScenarios.length) return;
+            
+            container.innerHTML = allScenarios.map(s => `
+                <label class="flex items-center gap-2 p-2 hover:bg-[#3c325c]/50 rounded cursor-pointer">
+                    <input type="checkbox" class="scenario-hide-checkbox" data-id="${s.id}" ${hiddenScenarios.includes(s.id) ? 'checked' : ''}>
+                    <span class="text-sm ${hiddenScenarios.includes(s.id) ? 'text-[#8b7a9f] line-through' : 'text-[#f3e8ff]'}">${s.name}</span>
+                </label>
+            `).join('');
+            
+            // Update styling on change
+            container.querySelectorAll('.scenario-hide-checkbox').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const label = e.target.closest('label');
+                    const span = label.querySelector('span');
+                    if (e.target.checked) {
+                        span.classList.add('text-[#8b7a9f]', 'line-through');
+                        span.classList.remove('text-[#f3e8ff]');
+                    } else {
+                        span.classList.remove('text-[#8b7a9f]', 'line-through');
+                        span.classList.add('text-[#f3e8ff]');
+                    }
+                });
+            });
+        }
+        
+        const saveVisibilityBtn = document.getElementById('save-scenario-visibility');
+        if (saveVisibilityBtn) {
+            saveVisibilityBtn.addEventListener('click', async () => {
+                const checkboxes = document.querySelectorAll('.scenario-hide-checkbox:checked');
+                const newHidden = Array.from(checkboxes).map(cb => cb.dataset.id);
+                
+                try {
+                    const res = await fetch('/api/v1/settings/hidden-scenarios', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ hidden_scenarios: newHidden })
+                    });
+                    
+                    if (res.ok) {
+                        hiddenScenarios = newHidden;
+                        alert('✓ Scenario visibility settings saved');
+                        // Refresh scenario dropdown
+                        await fetchScenarios();
+                    } else {
+                        throw new Error('Failed to save');
+                    }
+                } catch (err) {
+                    console.error('Failed to save scenario visibility:', err);
+                    alert('Failed to save settings');
+                }
+            });
+        }
+        
+        // Load settings on page load
+        loadScenarioVisibilitySettings();
+        
         // Edit destination modal handlers
         const editModal = document.getElementById('edit-dest-modal');
         const closeEditModalBtn = document.getElementById('close-edit-modal');
@@ -1179,7 +1274,6 @@
             const url = document.getElementById('edit-dest-url').value.trim();
             const token = document.getElementById('edit-dest-token').value.trim();
             const configApiUrl = document.getElementById('edit-config-api-url').value.trim();
-            const configReadToken = document.getElementById('edit-config-read-token').value.trim();
             const configWriteToken = document.getElementById('edit-config-write-token').value.trim();
             
             try {
@@ -1188,7 +1282,6 @@
                 if (url) payload.url = url;
                 if (token) payload.token = token;
                 if (configApiUrl) payload.config_api_url = configApiUrl;
-                if (configReadToken) payload.config_read_token = configReadToken;
                 if (configWriteToken) payload.config_write_token = configWriteToken;
                 
                 if (Object.keys(payload).length === 0) {
@@ -1507,6 +1600,24 @@
             });
         }
         
+        // Copy Trace ID button
+        const copyTraceIdBtn = document.getElementById('copy-trace-id');
+        if (copyTraceIdBtn && traceIdInput) {
+            copyTraceIdBtn.addEventListener('click', async () => {
+                const traceId = traceIdInput.value.trim();
+                if (traceId) {
+                    try {
+                        await navigator.clipboard.writeText(traceId);
+                        const originalText = copyTraceIdBtn.innerText;
+                        copyTraceIdBtn.innerText = '✓';
+                        setTimeout(() => { copyTraceIdBtn.innerText = originalText; }, 1500);
+                    } catch (err) {
+                        console.error('Failed to copy:', err);
+                    }
+                }
+            });
+        }
+        
         scenarioForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -1526,11 +1637,54 @@
             runScenarioBtn.innerText = 'Running Scenario...';
             scenarioOutputBox.innerText = '';
             
+            // Get debug mode and download button
+            const debugMode = document.getElementById('debug-mode')?.checked || false;
+            const downloadBtn = document.getElementById('download-scenario-log');
+            const stopBtn = document.getElementById('stop-scenario-btn');
+            let fullLog = '';  // Store full log for download
+            downloadBtn.disabled = true;
+            
+            // Get trace ID early so it's available for download filename
+            let traceId = (document.getElementById('trace-id')?.value || '').trim();
+            
+            // Set up download button handler (will work once enabled)
+            const setupDownload = () => {
+                const blob = new Blob([fullLog], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `scenario_log_${traceId || Date.now()}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+            downloadBtn.onclick = setupDownload;
+            
+            // Show stop button and set up abort controller
+            stopBtn.style.display = 'block';
+            const abortController = new AbortController();
+            let stopped = false;
+            
+            stopBtn.onclick = async () => {
+                stopped = true;
+                abortController.abort();
+                // Also call backend to kill the process
+                try {
+                    await fetch('/scenarios/stop', { method: 'POST' });
+                } catch (e) { /* ignore */ }
+                scenarioOutputBox.innerText += '\n⏹ Scenario stopped by user\n';
+                fullLog += '\n⏹ Scenario stopped by user\n';
+                stopBtn.style.display = 'none';
+                runScenarioBtn.disabled = false;
+                runScenarioBtn.innerText = 'Run Scenario';
+                downloadBtn.disabled = false;
+            };
+            
             try {
                 // Metadata options
                 const tagPhase = document.getElementById('include-phase-tag')?.checked !== false;
                 const tagTrace = document.getElementById('include-trace-id')?.checked !== false;
-                let traceId = (document.getElementById('trace-id')?.value || '').trim();
                 // Auto-generate a GUID if tagging is enabled and no trace id provided
                 if (tagTrace && !traceId) {
                     traceId = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -1563,8 +1717,10 @@
                         trace_id: traceId,
                         generate_noise: generateNoise,
                         noise_events_count: noiseEventsCount,
-                        hec_token: localToken  // Pass local token if available
-                    })
+                        hec_token: localToken,  // Pass local token if available
+                        debug_mode: debugMode   // Pass debug mode for server-side filtering
+                    }),
+                    signal: abortController.signal
                 });
                 
                 if (!response.ok) {
@@ -1574,18 +1730,30 @@
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');
                 
+                // Server-side filtering is now active; just display what we receive
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
                     
                     const chunk = decoder.decode(value);
+                    fullLog += chunk;  // Always store full log for download
                     scenarioOutputBox.innerText += chunk;
                     scenarioOutputBox.scrollTop = scenarioOutputBox.scrollHeight;
                 }
+                
+                // Enable download button after completion (handler already set up)
+                downloadBtn.disabled = false;
+                
             } catch (error) {
-                console.error('Error:', error);
-                scenarioOutputBox.innerText += `\n--- Scenario execution failed! Error: ${error.message} ---`;
+                // Don't show error if it was an intentional abort
+                if (error.name !== 'AbortError' && !stopped) {
+                    console.error('Error:', error);
+                    scenarioOutputBox.innerText += `\n--- Scenario execution failed! Error: ${error.message} ---`;
+                    fullLog += `\n--- Scenario execution failed! Error: ${error.message} ---`;
+                }
+                downloadBtn.disabled = false;
             } finally {
+                stopBtn.style.display = 'none';
                 runScenarioBtn.disabled = false;
                 runScenarioBtn.innerText = 'Run Scenario';
             }

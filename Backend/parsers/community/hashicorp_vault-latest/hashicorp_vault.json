@@ -204,56 +204,56 @@
             "constant": {
               "value": 1,
               "field": "activity_id",
-              "predicate": "unmapped.error is null"
+              "predicate": "unmapped.error == \"\""
             }
           },
           {
             "constant": {
               "value": 2,
               "field": "activity_id",
-              "predicate": "unmapped.error is not null"
+              "predicate": "unmapped.error != \"\""
             }
           },
           {
             "constant": {
               "value": 1,
               "field": "severity_id",
-              "predicate": "unmapped.error is null"
+              "predicate": "unmapped.error == \"\""
             }
           },
           {
             "constant": {
               "value": 3,
               "field": "severity_id",
-              "predicate": "unmapped.error is not null"
+              "predicate": "unmapped.error != \"\""
             }
           },
           {
             "constant": {
               "value": 1,
               "field": "status_id",
-              "predicate": "unmapped.error is null"
+              "predicate": "unmapped.error == \"\""
             }
           },
           {
             "constant": {
               "value": 2,
               "field": "status_id",
-              "predicate": "unmapped.error is not null"
+              "predicate": "unmapped.error != \"\""
             }
           },
           {
             "constant": {
               "value": "Success",
               "field": "status",
-              "predicate": "unmapped.error is null"
+              "predicate": "unmapped.error == \"\""
             }
           },
           {
             "constant": {
               "value": "Failure",
               "field": "status",
-              "predicate": "unmapped.error is not null"
+              "predicate": "unmapped.error != \"\""
             }
           }
         ]
