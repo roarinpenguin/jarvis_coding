@@ -198,7 +198,7 @@
             "constant": {
               "value": "SHA256",
               "field": "email.attachments[0].hash.type_id",
-              "predicate": "unmapped.attachment_hash is not null"
+              "predicate": "unmapped.attachment_hash != \"\""
             }
           },
           {

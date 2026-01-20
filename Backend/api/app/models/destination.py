@@ -59,7 +59,6 @@ class Destination(Base):
             
             # Config API settings for parser management
             result['config_api_url'] = self.config_api_url
-            result['has_config_read_token'] = bool(self.config_read_token_encrypted)
             result['has_config_write_token'] = bool(self.config_write_token_encrypted)
         elif self.type == 'syslog':
             result['ip'] = self.ip

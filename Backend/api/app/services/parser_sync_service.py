@@ -32,11 +32,13 @@ SCENARIO_SOURCE_TO_PARSER = {
     # Endpoint Security
     "crowdstrike_falcon": "crowdstrike_falcon-latest",
     "sentinelone_endpoint": "sentinelone_endpoint-latest",
+    "sentinelone_identity": "sentinelone_identity-latest",
     "microsoft_windows_eventlog": "microsoft_windows_eventlog-latest",
     
     # Email Security
     "proofpoint": "proofpoint_proofpoint_logs-latest",
     "mimecast": "mimecast_mimecast_logs-latest",
+    "microsoft_defender_email": "microsoft_defender_email-latest",
     
     # Cloud Infrastructure
     "aws_cloudtrail": "aws_cloudtrail-latest",
@@ -57,6 +59,20 @@ SCENARIO_SOURCE_TO_PARSER = {
     # Backup & Recovery
     "veeam_backup": "veeam_backup-latest",
     "cohesity_backup": "cohesity_backup-latest",
+    
+    # MFA & Identity (additional)
+    "cisco_duo": "cisco_duo-latest",
+    "pingone_mfa": "pingone_mfa-latest",
+    "pingprotect": "pingprotect-latest",
+    
+    # Network & Infrastructure (additional)
+    "cisco_umbrella": "cisco_umbrella-latest",
+    # Note: cisco_ise, f5_networks, fortinet_fortigate, microsoft_windows_eventlog, zscaler
+    # are excluded - parsers use incompatible syntax or don't have JSON definitions
+    
+    # DevOps & CI/CD
+    "github_audit": "github_audit-latest",
+    "harness_ci": "harness_ci-latest",
 }
 
 
@@ -149,7 +165,7 @@ class ParserSyncService:
     
     def check_parser_exists(
         self,
-        config_read_token: str,
+        config_token: str,
         parser_path: str,
         timeout: int = 30
     ) -> Tuple[bool, Optional[str]]:
@@ -157,7 +173,7 @@ class ParserSyncService:
         Check if a parser exists in the destination SIEM using getFile API
         
         Args:
-            config_read_token: The config read API token
+            config_token: The config API token (write token can also read)
             parser_path: The parser path in SIEM (e.g., '/parsers/okta_authentication-latest')
             timeout: Request timeout in seconds
             
@@ -167,7 +183,7 @@ class ParserSyncService:
         try:
             url = f"{self.api_base_url}/getFile"
             payload = {
-                "token": config_read_token,
+                "token": config_token,
                 "path": parser_path
             }
             
@@ -271,7 +287,6 @@ class ParserSyncService:
     def ensure_parsers_for_sources(
         self,
         sources: List[str],
-        config_read_token: str,
         config_write_token: str
     ) -> Dict[str, dict]:
         """
@@ -279,8 +294,7 @@ class ParserSyncService:
         
         Args:
             sources: List of scenario sources (e.g., ['okta_authentication', 'microsoft_azuread'])
-            config_read_token: The config read API token
-            config_write_token: The config write API token
+            config_write_token: The config API token (used for both reading and writing)
             
         Returns:
             Dict with status for each source:
@@ -307,8 +321,8 @@ class ParserSyncService:
             
             parser_path = self.get_parser_path_in_siem(sourcetype)
             
-            # Check if parser exists
-            exists, _ = self.check_parser_exists(config_read_token, parser_path)
+            # Check if parser exists (write token can also read)
+            exists, _ = self.check_parser_exists(config_write_token, parser_path)
             
             if exists:
                 results[source] = {

@@ -16,8 +16,7 @@ class ParserSyncRequest(BaseModel):
     """Request model for parser sync"""
     scenario_id: str = Field(..., description="Scenario identifier")
     config_api_url: str = Field(..., description="Config API URL (e.g., https://xdr.us1.sentinelone.net)")
-    config_read_token: str = Field(..., description="Config Read API token for getFile")
-    config_write_token: str = Field(..., description="Config Write API token for putFile")
+    config_write_token: str = Field(..., description="Config API token for reading and writing parsers")
     sources: Optional[List[str]] = Field(None, description="Optional list of sources to sync (overrides scenario defaults)")
 
 
@@ -71,7 +70,6 @@ async def sync_parsers(
     # Perform parser sync
     results = service.ensure_parsers_for_sources(
         sources=sources,
-        config_read_token=request.config_read_token,
         config_write_token=request.config_write_token
     )
     
@@ -124,14 +122,14 @@ async def get_scenario_sources(
 @router.post("/check")
 async def check_parser_exists(
     parser_path: str,
-    config_read_token: str,
+    config_token: str,
     auth_info: tuple = Depends(get_api_key)
 ):
     """
     Check if a specific parser exists in the destination SIEM
     """
     service = get_parser_sync_service()
-    exists, content = service.check_parser_exists(config_read_token, parser_path)
+    exists, content = service.check_parser_exists(config_token, parser_path)
     
     return {
         "parser_path": parser_path,

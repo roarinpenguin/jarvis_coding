@@ -260,10 +260,17 @@ class AttackScenarioOrchestrator:
             # Ongoing email activities
             event_data = random.choice([proofpoint_log, mimecast_log, microsoft_defender_email_log])()
         
+        # Determine actual source/product name from event data
+        source = 'proofpoint'  # Default
+        if 'mimecast' in str(type(event_data).__module__).lower() or (isinstance(event_data, dict) and event_data.get('sender', {}).get('emailAddress', '').endswith('@mimecast.com')):
+            source = 'mimecast'
+        elif 'defender' in str(event_data).lower() or (isinstance(event_data, dict) and 'ThreatTypes' in event_data):
+            source = 'microsoft_defender_email'
+        
         return {
             **context,
-            'platform': 'email_security',
-            'raw_event': event_data
+            'source': source,
+            'event': event_data
         }
     
     def _generate_identity_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -295,8 +302,8 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'identity',
-            'raw_event': event_data
+            'source': 'microsoft_azure_ad_signin',
+            'event': event_data
         }
     
     def _generate_endpoint_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -332,8 +339,8 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'crowdstrike_falcon',
-            'raw_event': event_data
+            'source': 'crowdstrike_falcon',
+            'event': event_data
         }
     
     def _generate_network_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -377,8 +384,8 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'network',
-            'raw_event': event_data
+            'source': 'darktrace',
+            'event': event_data
         }
     
     def _generate_cloud_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -403,10 +410,15 @@ class AttackScenarioOrchestrator:
         else:
             event_data = netskope_log()
         
+        # Determine source based on event type
+        source = 'netskope'
+        if isinstance(event_data, dict) and event_data.get('category') == 'DataExfiltration':
+            source = 'microsoft_365_mgmt_api'
+        
         return {
             **context,
-            'platform': 'cloud',
-            'raw_event': event_data
+            'source': source,
+            'event': event_data
         }
     
     def _generate_privileged_access_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -428,10 +440,15 @@ class AttackScenarioOrchestrator:
         else:
             event_data = random.choice([cyberark_pas_log, beyondtrust_passwordsafe_log])()
         
+        # Determine source based on which generator was used
+        source = 'cyberark_pas'
+        if isinstance(event_data, dict) and 'beyondtrust' in str(event_data).lower():
+            source = 'beyondtrust_passwordsafe'
+        
         return {
             **context,
-            'platform': 'privileged_access',
-            'raw_event': event_data
+            'source': source,
+            'event': event_data
         }
     
     def _generate_secrets_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -453,8 +470,8 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'secrets',
-            'raw_event': event_data
+            'source': 'hashicorp_vault',
+            'event': event_data
         }
     
     def _generate_m365_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -470,8 +487,8 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'm365',
-            'raw_event': event_data
+            'source': 'microsoft_365_mgmt_api',
+            'event': event_data
         }
     
     def _generate_sentinelone_endpoint_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -543,8 +560,8 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'sentinelone_endpoint',
-            'raw_event': event_data
+            'source': 'sentinelone_endpoint',
+            'event': event_data
         }
     
     def _generate_sentinelone_identity_event(self, phase: str, event_time: datetime, context: Dict) -> Dict:
@@ -615,8 +632,8 @@ class AttackScenarioOrchestrator:
         
         return {
             **context,
-            'platform': 'sentinelone_identity',
-            'raw_event': event_data
+            'source': 'sentinelone_identity',
+            'event': event_data
         }
 
 def is_interactive():
@@ -689,11 +706,16 @@ def main():
     # Generate the complete attack scenario
     scenario_events = orchestrator.generate_scenario(days=days, events_per_day=events_per_day)
     
-    # Save scenario to file (use /app/data if available, else /tmp, else current dir)
-    data_dir = "/app/data" if os.path.isdir("/app/data") and os.access("/app/data", os.W_OK) else (
-        "/tmp" if os.access("/tmp", os.W_OK) else "."
+    # Save scenario to file (use SCENARIO_OUTPUT_DIR or /app/data if available, else /tmp, else current dir)
+    data_dir = os.getenv('SCENARIO_OUTPUT_DIR') or (
+        "/app/data" if os.path.isdir("/app/data") and os.access("/app/data", os.W_OK) else (
+            "/tmp" if os.access("/tmp", os.W_OK) else "."
+        )
     )
-    output_file = os.path.join(data_dir, f"attack_scenario_{orchestrator.campaign_id}.json")
+    # Ensure output directory exists
+    os.makedirs(data_dir, exist_ok=True)
+    # Use predictable filename for frontend auto-replay
+    output_file = os.path.join(data_dir, "attack_scenario_orchestrator.json")
     with open(output_file, 'w') as f:
         json.dump(scenario_events, f, indent=2, default=str)
     

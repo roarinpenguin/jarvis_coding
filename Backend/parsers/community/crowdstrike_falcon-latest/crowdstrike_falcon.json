@@ -57,9 +57,10 @@
             }
           },
           {
-            "cast": {
+            "replace": {
               "field": "time",
-              "type": "epochMillisecondsToEpochSec"
+              "regexp": "(\\d+)\\d{3}",
+              "replacement": "$1"
             }
           },
           {
@@ -282,21 +283,21 @@
             "constant": {
               "value": "SHA256",
               "field": "process.file.hashes[0].type_id",
-              "predicate": "unmapped.SHA256HashData is not null"
+              "predicate": "unmapped.SHA256HashData != \"\""
             }
           },
           {
             "constant": {
               "value": "SHA1",
               "field": "process.file.hashes[1].type_id",
-              "predicate": "unmapped.SHA1HashData is not null"
+              "predicate": "unmapped.SHA1HashData != \"\""
             }
           },
           {
             "constant": {
               "value": "MD5",
               "field": "process.file.hashes[2].type_id",
-              "predicate": "unmapped.MD5HashData is not null"
+              "predicate": "unmapped.MD5HashData != \"\""
             }
           },
           {
