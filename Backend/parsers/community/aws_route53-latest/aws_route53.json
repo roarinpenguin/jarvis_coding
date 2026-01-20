@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "AWS",
     "dataSource.name": "AWS Route 53",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "dns",
     "source": "aws_route53"
   },

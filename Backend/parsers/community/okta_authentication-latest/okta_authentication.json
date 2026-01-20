@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Okta",
     "dataSource.name": "Okta System Log",
-    "dataSource.category": "authentication",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Okta",
     "metadata.product.name": "Okta System Log",
     "metadata.version": "1.0.0"

@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Akamai",
     "dataSource.name": "Akamai CDN",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "content_delivery_network",
     "source": "akamai_cdn"
   },

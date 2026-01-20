@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Microsoft",
     "dataSource.name": "Azure AD SignIn",
-    "dataSource.category": "authentication",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Microsoft",
     "metadata.product.name": "Azure AD SignIn",
     "metadata.version": "1.0.0"

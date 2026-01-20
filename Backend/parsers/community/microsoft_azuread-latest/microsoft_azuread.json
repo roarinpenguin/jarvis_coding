@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Microsoft",
     "dataSource.name": "Azure AD",
-    "dataSource.category": "authentication",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Microsoft",
     "metadata.product.name": "Azure Active Directory",
     "metadata.version": "1.0.0"

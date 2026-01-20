@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Forcepoint",
     "dataSource.name": "Forcepoint Firewall",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Forcepoint",
     "metadata.product.name": "Forcepoint Firewall",
     "metadata.version": "1.0.0"

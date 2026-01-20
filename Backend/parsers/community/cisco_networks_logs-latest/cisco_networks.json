@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Cisco",
     "dataSource.name": "Cisco Networks",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "network_infrastructure",
     "source": "cisco_networks"
   },

@@ -18,6 +18,11 @@ class Destination(Base):
     url = Column(String, nullable=True)
     token_encrypted = Column(Text, nullable=True)  # Encrypted HEC token
     
+    # Config API for parser management (SentinelOne/Scalyr API)
+    config_api_url = Column(String, nullable=True)  # e.g., https://xdr.us1.sentinelone.net
+    config_read_token_encrypted = Column(Text, nullable=True)  # For getFile API
+    config_write_token_encrypted = Column(Text, nullable=True)  # For putFile API
+    
     # Syslog fields
     ip = Column(String, nullable=True)
     port = Column(Integer, nullable=True)
@@ -51,6 +56,11 @@ class Destination(Base):
                     result['has_database_token'] = False
             else:
                 result['has_database_token'] = bool(self.token_encrypted)
+            
+            # Config API settings for parser management
+            result['config_api_url'] = self.config_api_url
+            result['has_config_read_token'] = bool(self.config_read_token_encrypted)
+            result['has_config_write_token'] = bool(self.config_write_token_encrypted)
         elif self.type == 'syslog':
             result['ip'] = self.ip
             result['port'] = self.port

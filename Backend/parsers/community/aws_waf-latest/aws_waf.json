@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "AWS",
     "dataSource.name": "AWS Web Application Firewall", 
-    "dataSource.category": "web_security",
+    "dataSource.category": "security",
     "dataSource.technology": "web_application_firewall",
     "source": "aws_waf"
   },

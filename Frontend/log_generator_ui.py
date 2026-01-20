@@ -210,6 +210,48 @@ def update_destination_token(dest_id):
         logger.error(f"Failed to update destination token: {e}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/destinations/<dest_id>', methods=['PUT'])
+def update_destination(dest_id):
+    """Update destination fields"""
+    try:
+        data = request.json or {}
+        
+        payload = {}
+        if data.get('name'):
+            payload['name'] = data['name']
+        if data.get('url'):
+            payload['url'] = data['url']
+        if data.get('token'):
+            payload['token'] = data['token']
+        if data.get('config_api_url'):
+            payload['config_api_url'] = data['config_api_url']
+        if data.get('config_read_token'):
+            payload['config_read_token'] = data['config_read_token']
+        if data.get('config_write_token'):
+            payload['config_write_token'] = data['config_write_token']
+        
+        if not payload:
+            return jsonify({'error': 'No fields provided to update'}), 400
+        
+        response = requests.put(
+            f"{API_BASE_URL}/api/v1/destinations/{dest_id}",
+            headers=_get_api_headers(),
+            json=payload,
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            logger.info(f"Updated destination: {dest_id}")
+            return jsonify(response.json())
+        else:
+            error_text = response.text
+            logger.error(f"Backend returned {response.status_code}: {error_text}")
+            return jsonify({'error': f'Backend returned {response.status_code}'}), response.status_code
+            
+    except Exception as e:
+        logger.error(f"Failed to update destination: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/scenarios', methods=['GET'])
 def list_scenarios():
     """List available attack scenarios"""
@@ -335,6 +377,7 @@ def run_scenario():
     generate_noise = data.get('generate_noise', False)
     noise_events_count = int(data.get('noise_events_count', 1200))
     local_token = data.get('hec_token')  # Token from browser localStorage
+    sync_parsers = data.get('sync_parsers', True)  # Enable parser sync by default
     
     if not scenario_id:
         return jsonify({'error': 'scenario_id is required'}), 400
@@ -342,6 +385,8 @@ def run_scenario():
         return jsonify({'error': 'destination_id is required'}), 400
     
     # Resolve destination from backend API
+    config_read_token = None
+    config_write_token = None
     try:
         dest_resp = requests.get(
             f"{API_BASE_URL}/api/v1/destinations/{destination_id}",
@@ -377,6 +422,23 @@ def run_scenario():
         
         if not hec_url or not hec_token:
             return jsonify({'error': 'HEC destination incomplete or token missing'}), 400
+        
+        # Fetch config tokens and URL for parser sync if available
+        config_api_url = chosen.get('config_api_url')
+        if sync_parsers and chosen.get('has_config_read_token') and chosen.get('has_config_write_token') and config_api_url:
+            try:
+                config_resp = requests.get(
+                    f"{API_BASE_URL}/api/v1/destinations/{destination_id}/config-tokens",
+                    headers=_get_api_headers(),
+                    timeout=10
+                )
+                if config_resp.status_code == 200:
+                    config_tokens = config_resp.json()
+                    config_read_token = config_tokens.get('config_read_token')
+                    config_write_token = config_tokens.get('config_write_token')
+                    logger.info(f"Retrieved config tokens for parser sync (API URL: {config_api_url})")
+            except Exception as ce:
+                logger.warning(f"Failed to retrieve config tokens: {ce}")
     except Exception as e:
         logger.error(f"Failed to resolve destination: {e}")
         return jsonify({'error': f'Failed to resolve destination: {str(e)}'}), 500
@@ -384,6 +446,44 @@ def run_scenario():
     def generate_and_stream():
         try:
             yield "INFO: Starting scenario execution...\n"
+            
+            # Parser sync: Check and upload required parsers before running scenario
+            if sync_parsers and config_read_token and config_write_token and config_api_url:
+                yield "INFO: Checking required parsers in destination SIEM...\n"
+                try:
+                    # Call the parser sync API
+                    sync_resp = requests.post(
+                        f"{API_BASE_URL}/api/v1/parsers/sync",
+                        headers=_get_api_headers(),
+                        json={
+                            "scenario_id": scenario_id,
+                            "config_api_url": config_api_url,
+                            "config_read_token": config_read_token,
+                            "config_write_token": config_write_token
+                        },
+                        timeout=120
+                    )
+                    if sync_resp.status_code == 200:
+                        sync_result = sync_resp.json()
+                        for source, info in sync_result.get('results', {}).items():
+                            status = info.get('status', 'unknown')
+                            message = info.get('message', '')
+                            if status == 'exists':
+                                yield f"INFO: Parser exists: {source}\n"
+                            elif status == 'uploaded':
+                                yield f"INFO: Parser uploaded: {source}\n"
+                            elif status == 'failed':
+                                yield f"WARN: Parser sync failed: {source} - {message}\n"
+                            elif status == 'no_parser':
+                                yield f"WARN: No parser mapping: {source}\n"
+                        yield "INFO: Parser sync complete\n"
+                    else:
+                        yield f"WARN: Parser sync API returned {sync_resp.status_code}, continuing without sync\n"
+                except Exception as pe:
+                    yield f"WARN: Parser sync failed: {pe}, continuing without sync\n"
+            elif sync_parsers:
+                yield "INFO: Parser sync skipped (missing config_api_url or config tokens for destination)\n"
+            
             # Map scenario ids to filenames when they differ
             id_to_file = {
                 'attack_scenario_orchestrator': 'attack_scenario_orchestrator.py',

@@ -1,6 +1,6 @@
 {
   "attributes": {
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.name": "BIND DNS",
     "dataSource.vendor": "ISC",
     "metadata.product.name": "BIND DNS",

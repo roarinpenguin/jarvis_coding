@@ -7,7 +7,7 @@
     "category_name": "F5 HTTP Access Logs",
     "metadata.product.name": "F5 BIG-IP",
     "metadata.product.vendor_name": "F5 Networks",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.name": "F5 BIG-IP",
     "dataSource.vendor": "F5"
   },

@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Cisco",
     "dataSource.name": "Cisco IOS",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "network_device",
     "source": "cisco_ios"
   },

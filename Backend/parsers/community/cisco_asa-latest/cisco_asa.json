@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Cisco",
     "dataSource.name": "ASA",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Cisco",
     "metadata.product.name": "ASA Firewall",
     "metadata.version": "1.0.0"

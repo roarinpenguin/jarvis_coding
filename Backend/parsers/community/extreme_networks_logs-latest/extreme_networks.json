@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Extreme Networks",
     "dataSource.name": "Extreme Networks",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "dataSource.technology": "network_infrastructure",
     "source": "extreme_networks"
   },

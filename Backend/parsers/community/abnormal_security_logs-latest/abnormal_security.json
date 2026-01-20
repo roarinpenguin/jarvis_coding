@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Abnormal Security",
     "dataSource.name": "Abnormal Security Email Security",
-    "dataSource.category": "email_security",
+    "dataSource.category": "security",
     "dataSource.technology": "email_protection",
     "source": "abnormal_security"
   },

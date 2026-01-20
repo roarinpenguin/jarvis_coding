@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "SAP",
     "dataSource.name": "SAP",
-    "dataSource.category": "application",
+    "dataSource.category": "security",
     "dataSource.technology": "erp",
     "source": "sap"
   },

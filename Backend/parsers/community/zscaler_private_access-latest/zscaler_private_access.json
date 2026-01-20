@@ -2,7 +2,7 @@
   "attributes": {
     "dataSource.vendor": "Zscaler",
     "dataSource.name": "Zscaler Private Access",
-    "dataSource.category": "network",
+    "dataSource.category": "security",
     "metadata.product.vendor_name": "Zscaler",
     "metadata.product.name": "Zscaler Private Access",
     "metadata.version": "1.0.0"
