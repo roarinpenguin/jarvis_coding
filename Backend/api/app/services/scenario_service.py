@@ -47,6 +47,78 @@ class ScenarioService:
                     {"name": "Data Staging", "generators": ["aws_cloudtrail"], "duration": 15},
                     {"name": "Data Exfiltration", "generators": ["netskope"], "duration": 10}
                 ]
+            },
+            "attack_scenario_orchestrator": {
+                "id": "attack_scenario_orchestrator",
+                "name": "Operation Digital Heist",
+                "description": "14-day APT campaign against financial services - reconnaissance, credential harvesting, lateral movement, data exfiltration",
+                "phases": [
+                    {"name": "Reconnaissance & Phishing", "generators": ["proofpoint", "mimecast", "microsoft_defender_email"], "duration": 60},
+                    {"name": "Initial Access & Credential Harvesting", "generators": ["microsoft_azure_ad_signin", "crowdstrike_falcon", "darktrace"], "duration": 60},
+                    {"name": "Persistence & Lateral Movement", "generators": ["netskope", "cyberark_pas", "beyondtrust_passwordsafe", "hashicorp_vault"], "duration": 120},
+                    {"name": "Privilege Escalation & Discovery", "generators": ["microsoft_365_mgmt_api", "sentinelone_endpoint", "sentinelone_identity"], "duration": 90},
+                    {"name": "Data Exfiltration & Cover-up", "generators": ["netskope", "darktrace", "crowdstrike_falcon"], "duration": 60}
+                ]
+            },
+            "enterprise_scenario_sender": {
+                "id": "enterprise_scenario_sender",
+                "name": "Enterprise Attack Scenario",
+                "description": "330+ event enterprise attack scenario across 18+ security platforms",
+                "phases": [
+                    {"name": "Perimeter Breach", "generators": ["fortinet_fortigate", "cisco_umbrella", "imperva_waf", "paloalto_firewall"], "duration": 30},
+                    {"name": "Phishing & Initial Access", "generators": ["proofpoint", "zscaler", "netskope"], "duration": 30},
+                    {"name": "Credential Harvesting", "generators": ["crowdstrike_falcon", "okta_authentication", "microsoft_azuread", "cisco_duo", "pingone_mfa"], "duration": 45},
+                    {"name": "Lateral Movement", "generators": ["microsoft_windows_eventlog", "cisco_ise", "f5_networks"], "duration": 45},
+                    {"name": "Privilege Escalation", "generators": ["aws_cloudtrail", "hashicorp_vault", "github_audit"], "duration": 30},
+                    {"name": "Persistence & Exfiltration", "generators": ["harness_ci", "pingprotect"], "duration": 30}
+                ]
+            },
+            "showcase_scenario_sender": {
+                "id": "showcase_scenario_sender",
+                "name": "AI-SIEM Showcase Scenario",
+                "description": "Enterprise showcase attack scenario for AI-SIEM demonstration",
+                "phases": [
+                    {"name": "Perimeter Attack", "generators": ["fortinet_fortigate", "imperva_waf"], "duration": 20},
+                    {"name": "Cloud Reconnaissance", "generators": ["aws_cloudtrail", "zscaler"], "duration": 20},
+                    {"name": "Identity Compromise", "generators": ["okta_authentication", "microsoft_azuread", "cisco_duo"], "duration": 30},
+                    {"name": "Email Attack", "generators": ["proofpoint"], "duration": 15},
+                    {"name": "Endpoint Compromise", "generators": ["crowdstrike_falcon", "microsoft_windows_eventlog"], "duration": 30},
+                    {"name": "Secrets Access", "generators": ["hashicorp_vault", "harness_ci"], "duration": 20},
+                    {"name": "MFA Bypass", "generators": ["pingone_mfa", "pingprotect"], "duration": 15}
+                ]
+            },
+            "enterprise_scenario_sender_10min": {
+                "id": "enterprise_scenario_sender_10min",
+                "name": "Enterprise Breach (10 min)",
+                "description": "Compressed 10-minute enterprise attack scenario",
+                "phases": [
+                    {"name": "Perimeter Breach", "generators": ["fortinet_fortigate", "cisco_umbrella", "imperva_waf"], "duration": 2},
+                    {"name": "Credential Harvesting", "generators": ["crowdstrike_falcon", "okta_authentication", "microsoft_azuread", "cisco_duo"], "duration": 3},
+                    {"name": "Lateral Movement", "generators": ["microsoft_windows_eventlog", "cisco_ise", "f5_networks"], "duration": 2},
+                    {"name": "Privilege Escalation", "generators": ["aws_cloudtrail", "hashicorp_vault", "github_audit", "harness_ci"], "duration": 3}
+                ]
+            },
+            "finance_mfa_fatigue_scenario": {
+                "id": "finance_mfa_fatigue_scenario",
+                "name": "Finance Employee MFA Fatigue Attack",
+                "description": "8-day scenario with baseline behavior, MFA fatigue attack from Russia, OneDrive exfiltration, and SOAR response",
+                "phases": [
+                    {"name": "Normal Behavior (Days 1-7)", "generators": ["okta_authentication", "microsoft_azuread", "microsoft_365_collaboration"], "duration": 7},
+                    {"name": "MFA Fatigue Attack", "generators": ["okta_authentication"], "duration": 1},
+                    {"name": "Data Exfiltration", "generators": ["microsoft_365_collaboration"], "duration": 1},
+                    {"name": "Detection & Response", "generators": ["okta_authentication"], "duration": 1}
+                ]
+            },
+            "insider_cloud_download_exfiltration": {
+                "id": "insider_cloud_download_exfiltration",
+                "name": "Insider Data Exfiltration via Cloud Download",
+                "description": "8-day insider threat scenario with baseline, large-volume M365/SharePoint downloads, USB copy, and detection alerts",
+                "phases": [
+                    {"name": "Normal Behavior (Days 1-7)", "generators": ["okta_authentication", "microsoft_365_collaboration"], "duration": 7},
+                    {"name": "Off-Hours Access & Mass Download", "generators": ["okta_authentication", "microsoft_365_collaboration"], "duration": 1},
+                    {"name": "USB Media Copy", "generators": ["sentinelone_endpoint"], "duration": 1},
+                    {"name": "Detection Alerts", "generators": ["proofpoint", "sentinelone_endpoint"], "duration": 1}
+                ]
             }
         }
     

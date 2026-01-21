@@ -57,9 +57,10 @@
             }
           },
           {
-            "cast": {
+            "replace": {
               "field": "time",
-              "type": "epochMillisecondsToEpochSec"
+              "regexp": "(\\d+)\\d{3}",
+              "replacement": "$1"
             }
           },
           {
@@ -372,28 +373,28 @@
             "constant": {
               "value": "SHA1",
               "field": "process.file.hashes[0].type_id",
-              "predicate": "unmapped.src\\.process\\.image\\.sha1 is not null"
+              "predicate": "unmapped.src\\.process\\.image\\.sha1 != \"\""
             }
           },
           {
             "constant": {
               "value": "SHA256",
               "field": "process.file.hashes[1].type_id",
-              "predicate": "unmapped.src\\.process\\.image\\.sha256 is not null"
+              "predicate": "unmapped.src\\.process\\.image\\.sha256 != \"\""
             }
           },
           {
             "constant": {
               "value": "SHA1",
               "field": "process.parent_process.file.hashes[0].type_id",
-              "predicate": "unmapped.src\\.process\\.parent\\.image\\.sha1 is not null"
+              "predicate": "unmapped.src\\.process\\.parent\\.image\\.sha1 != \"\""
             }
           },
           {
             "constant": {
               "value": "SHA256",
               "field": "process.parent_process.file.hashes[1].type_id",
-              "predicate": "unmapped.src\\.process\\.parent\\.image\\.sha256 is not null"
+              "predicate": "unmapped.src\\.process\\.parent\\.image\\.sha256 != \"\""
             }
           },
           {
