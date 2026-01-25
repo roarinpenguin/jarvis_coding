@@ -680,6 +680,36 @@
                 </div>
                 
                 <div class="space-y-3 mt-6">
+                    <h3 class="text-xl font-bold text-[#f3e8ff]">GitHub Parser Repositories</h3>
+                    <p class="text-sm text-[#b8a0d2]">Configure up to 3 GitHub repositories where parsers can be fetched from before running scenarios. When a parser has similar names across repos, you'll be asked to confirm which one to use.</p>
+                    <div class="space-y-3 p-3 bg-[#241d3a] rounded-lg border border-[#3c325c]">
+                        <div class="input-group">
+                            <label for="parser-repo-1" class="text-sm font-semibold text-[#c8b3e8]">Repository 1</label>
+                            <input type="text" id="parser-repo-1" placeholder="https://github.com/owner/repo/tree/main/parsers" class="text-sm">
+                            <p class="text-xs text-[#8b7a9f] mt-1">e.g., https://github.com/SentinelOne/ai-siem/tree/main/parsers/community</p>
+                        </div>
+                        <div class="input-group">
+                            <label for="parser-repo-2" class="text-sm font-semibold text-[#c8b3e8]">Repository 2 (optional)</label>
+                            <input type="text" id="parser-repo-2" placeholder="https://github.com/owner/repo" class="text-sm">
+                        </div>
+                        <div class="input-group">
+                            <label for="parser-repo-3" class="text-sm font-semibold text-[#c8b3e8]">Repository 3 (optional)</label>
+                            <input type="text" id="parser-repo-3" placeholder="https://github.com/owner/repo" class="text-sm">
+                        </div>
+                        <div class="input-group">
+                            <label for="github-token" class="text-sm font-semibold text-[#c8b3e8]">GitHub Token (optional, for private repos)</label>
+                            <div class="relative">
+                                <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx" class="text-sm pr-10">
+                                <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 text-[#8b7a9f] hover:text-[#f3e8ff]" data-target="github-token" style="background:none;border:none;cursor:pointer;">👁</button>
+                            </div>
+                            <p class="text-xs text-[#8b7a9f] mt-1">Only needed for private repositories</p>
+                        </div>
+                    </div>
+                    <button type="button" id="save-parser-repos" class="btn" style="width: auto;">Save Parser Repositories</button>
+                    <button type="button" id="test-parser-repos" class="btn" style="width: auto; background: #3c325c; margin-left: 8px;">Test Connection</button>
+                </div>
+                
+                <div class="space-y-3 mt-6">
                     <h3 class="text-xl font-bold text-[#f3e8ff]">Scenario Visibility</h3>
                     <p class="text-sm text-[#b8a0d2]">Select which scenarios to hide from the dropdown menu. Hidden scenarios won't appear in the Scenarios tab.</p>
                     <div id="scenario-visibility-list" class="space-y-2 max-h-64 overflow-y-auto p-3 bg-[#241d3a] rounded-lg border border-[#3c325c]">
@@ -746,6 +776,29 @@
                 <button type="button" id="cancel-edit-modal" class="flex-1 px-4 py-2 bg-[#3c325c] hover:bg-[#4a416e] rounded-lg text-[#f3e8ff] transition-all" style="border: none; cursor: pointer;">Cancel</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Parser Selection Modal (for similar names) -->
+<div id="parser-select-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center overflow-y-auto" style="display: none;">
+    <div class="card max-w-2xl w-full mx-4 my-8 p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-[#f3e8ff]">Select Parser Version</h3>
+            <button type="button" id="close-parser-select-modal" class="text-[#8b7a9f] hover:text-[#f3e8ff]" style="background: transparent; border: none; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <p class="text-sm text-[#b8a0d2] mb-4">Multiple parsers with similar names were found. Please select which one to use:</p>
+        <div id="parser-select-list" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Parser options will be populated here -->
+        </div>
+        <div class="flex gap-3 pt-4 mt-4 border-t border-[#3c325c]">
+            <button type="button" id="confirm-parser-select" class="btn flex-1">Use Selected Parser</button>
+            <button type="button" id="skip-parser-select" class="flex-1 px-4 py-2 bg-[#3c325c] hover:bg-[#4a416e] rounded-lg text-[#f3e8ff] transition-all" style="border: none; cursor: pointer;">Skip (Use Local)</button>
+        </div>
     </div>
 </div>
 
@@ -1250,6 +1303,206 @@
         
         // Load settings on page load
         loadScenarioVisibilitySettings();
+        
+        // Parser Repositories Settings
+        async function loadParserRepositories() {
+            try {
+                const res = await fetch('/api/v1/settings/parser-repositories');
+                if (res.ok) {
+                    const data = await res.json();
+                    const repos = data.repositories || [];
+                    document.getElementById('parser-repo-1').value = repos[0] || '';
+                    document.getElementById('parser-repo-2').value = repos[1] || '';
+                    document.getElementById('parser-repo-3').value = repos[2] || '';
+                    if (data.github_token) {
+                        document.getElementById('github-token').value = data.github_token;
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to load parser repositories:', err);
+            }
+        }
+        
+        const saveParserReposBtn = document.getElementById('save-parser-repos');
+        if (saveParserReposBtn) {
+            saveParserReposBtn.addEventListener('click', async () => {
+                const repos = [
+                    document.getElementById('parser-repo-1').value.trim(),
+                    document.getElementById('parser-repo-2').value.trim(),
+                    document.getElementById('parser-repo-3').value.trim()
+                ].filter(r => r);
+                const githubToken = document.getElementById('github-token').value.trim();
+                
+                try {
+                    const res = await fetch('/api/v1/settings/parser-repositories', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ repositories: repos, github_token: githubToken || null })
+                    });
+                    
+                    if (res.ok) {
+                        alert('✓ Parser repositories saved');
+                    } else {
+                        throw new Error('Failed to save');
+                    }
+                } catch (err) {
+                    console.error('Failed to save parser repositories:', err);
+                    alert('Failed to save parser repositories');
+                }
+            });
+        }
+        
+        const testParserReposBtn = document.getElementById('test-parser-repos');
+        if (testParserReposBtn) {
+            testParserReposBtn.addEventListener('click', async () => {
+                const repos = [
+                    document.getElementById('parser-repo-1').value.trim(),
+                    document.getElementById('parser-repo-2').value.trim(),
+                    document.getElementById('parser-repo-3').value.trim()
+                ].filter(r => r);
+                
+                if (repos.length === 0) {
+                    alert('Please enter at least one repository URL');
+                    return;
+                }
+                
+                const githubToken = document.getElementById('github-token').value.trim();
+                testParserReposBtn.textContent = 'Testing...';
+                testParserReposBtn.disabled = true;
+                
+                try {
+                    let totalParsers = 0;
+                    let results = [];
+                    
+                    for (const repoUrl of repos) {
+                        const params = new URLSearchParams({ repo_url: repoUrl });
+                        if (githubToken) params.append('github_token', githubToken);
+                        
+                        const res = await fetch(`/api/v1/parser-sync/github/list?${params}`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            totalParsers += data.count || 0;
+                            results.push(`${repoUrl}: ${data.count} parsers found`);
+                        } else {
+                            results.push(`${repoUrl}: Failed to connect`);
+                        }
+                    }
+                    
+                    alert('✓ Connection Test Results:\n\n' + results.join('\n') + '\n\nTotal: ' + totalParsers + ' parsers');
+                } catch (err) {
+                    console.error('Failed to test parser repositories:', err);
+                    alert('Failed to test connection: ' + err.message);
+                } finally {
+                    testParserReposBtn.textContent = 'Test Connection';
+                    testParserReposBtn.disabled = false;
+                }
+            });
+        }
+        
+        // Load parser repositories on page load
+        loadParserRepositories();
+        
+        // Parser Selection Modal for similar names
+        const parserSelectModal = document.getElementById('parser-select-modal');
+        const closeParserSelectBtn = document.getElementById('close-parser-select-modal');
+        const confirmParserSelectBtn = document.getElementById('confirm-parser-select');
+        const skipParserSelectBtn = document.getElementById('skip-parser-select');
+        const parserSelectList = document.getElementById('parser-select-list');
+        
+        let parserSelectResolve = null;
+        let selectedParserData = null;
+        
+        function closeParserSelectModal(result = null) {
+            parserSelectModal.style.display = 'none';
+            if (parserSelectResolve) {
+                parserSelectResolve(result);
+                parserSelectResolve = null;
+            }
+        }
+        
+        closeParserSelectBtn?.addEventListener('click', () => closeParserSelectModal(null));
+        skipParserSelectBtn?.addEventListener('click', () => closeParserSelectModal(null));
+        parserSelectModal?.addEventListener('click', (e) => {
+            if (e.target === parserSelectModal) closeParserSelectModal(null);
+        });
+        
+        confirmParserSelectBtn?.addEventListener('click', () => {
+            const selected = parserSelectList.querySelector('input[name="parser-choice"]:checked');
+            if (selected && selectedParserData) {
+                const idx = parseInt(selected.value);
+                closeParserSelectModal(selectedParserData[idx]);
+            } else {
+                alert('Please select a parser');
+            }
+        });
+        
+        async function showParserSelectionDialog(parserName, matches) {
+            return new Promise((resolve) => {
+                parserSelectResolve = resolve;
+                selectedParserData = matches;
+                
+                parserSelectList.innerHTML = matches.map((match, idx) => `
+                    <label class="flex items-start gap-3 p-3 bg-[#241d3a] rounded-lg border border-[#3c325c] cursor-pointer hover:border-[#a78bfa] transition-all">
+                        <input type="radio" name="parser-choice" value="${idx}" class="mt-1" ${idx === 0 ? 'checked' : ''}>
+                        <div class="flex-1">
+                            <div class="text-[#f3e8ff] font-medium">${match.name}</div>
+                            <div class="text-xs text-[#8b7a9f] mt-1">
+                                <span class="text-[#a78bfa]">${Math.round(match.similarity * 100)}% match</span>
+                                ${match.is_exact_normalized ? '<span class="ml-2 text-green-400">✓ Normalized match</span>' : ''}
+                            </div>
+                            <div class="text-xs text-[#8b7a9f] mt-1 truncate" title="${match.repo_url}">
+                                From: ${match.repo_url.replace('https://github.com/', '')}
+                            </div>
+                        </div>
+                    </label>
+                `).join('');
+                
+                parserSelectModal.style.display = 'flex';
+            });
+        }
+        
+        // Function to search and select parser from GitHub repos
+        async function searchAndSelectParser(parserName) {
+            try {
+                const reposRes = await fetch('/api/v1/settings/parser-repositories');
+                if (!reposRes.ok) return null;
+                
+                const reposData = await reposRes.json();
+                const repos = reposData.repositories || [];
+                
+                if (repos.length === 0) return null;
+                
+                const searchRes = await fetch('/api/v1/parser-sync/github/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        parser_name: parserName,
+                        repo_urls: repos
+                    })
+                });
+                
+                if (!searchRes.ok) return null;
+                
+                const searchData = await searchRes.json();
+                const matches = searchData.matches || [];
+                
+                if (matches.length === 0) return null;
+                
+                // If single exact match, use it without asking
+                if (matches.length === 1 && matches[0].is_exact_normalized) {
+                    return matches[0];
+                }
+                
+                // Multiple or non-exact matches - ask user
+                return await showParserSelectionDialog(parserName, matches);
+            } catch (err) {
+                console.error('Error searching for parser:', err);
+                return null;
+            }
+        }
+        
+        // Make function available globally for scenario run
+        window.searchAndSelectParser = searchAndSelectParser;
         
         // Edit destination modal handlers
         const editModal = document.getElementById('edit-dest-modal');

@@ -5,6 +5,7 @@ from typing import Optional, Dict, List
 import logging
 
 from app.services.parser_sync_service import get_parser_sync_service, ParserSyncService
+from app.services.github_parser_service import get_github_parser_service
 from app.core.simple_auth import get_api_key
 
 logger = logging.getLogger(__name__)
@@ -18,6 +19,9 @@ class ParserSyncRequest(BaseModel):
     config_api_url: str = Field(..., description="Config API URL (e.g., https://xdr.us1.sentinelone.net)")
     config_write_token: str = Field(..., description="Config API token for reading and writing parsers")
     sources: Optional[List[str]] = Field(None, description="Optional list of sources to sync (overrides scenario defaults)")
+    github_repo_urls: Optional[List[str]] = Field(None, description="Optional GitHub repository URLs to fetch parsers from")
+    github_token: Optional[str] = Field(None, description="Optional GitHub token for private repositories")
+    selected_parsers: Optional[Dict[str, Dict]] = Field(None, description="Optional user-selected parsers for similar name resolution")
 
 
 class ParserSyncResponse(BaseModel):
@@ -67,14 +71,17 @@ async def sync_parsers(
     
     logger.info(f"Syncing parsers for scenario {request.scenario_id}: {sources}")
     
-    # Perform parser sync
+    # Perform parser sync with optional GitHub repos
     results = service.ensure_parsers_for_sources(
         sources=sources,
-        config_write_token=request.config_write_token
+        config_write_token=request.config_write_token,
+        github_repo_urls=request.github_repo_urls,
+        github_token=request.github_token,
+        selected_parsers=request.selected_parsers
     )
     
-    # Count results
-    uploaded = sum(1 for r in results.values() if r.get('status') == 'uploaded')
+    # Count results (include uploaded_from_github in uploaded count)
+    uploaded = sum(1 for r in results.values() if r.get('status') in ('uploaded', 'uploaded_from_github'))
     existing = sum(1 for r in results.values() if r.get('status') == 'exists')
     failed = sum(1 for r in results.values() if r.get('status') in ('failed', 'no_parser'))
     
@@ -135,4 +142,114 @@ async def check_parser_exists(
         "parser_path": parser_path,
         "exists": exists,
         "has_content": content is not None
+    }
+
+
+class GitHubParserSearchRequest(BaseModel):
+    """Request model for searching parsers in GitHub repos"""
+    parser_name: str = Field(..., description="Parser name to search for")
+    repo_urls: List[str] = Field(..., description="List of GitHub repository URLs to search")
+    github_token: Optional[str] = Field(None, description="Optional GitHub token for private repos")
+
+
+class GitHubParserMatch(BaseModel):
+    """A parser match from GitHub"""
+    name: str
+    path: str
+    repo_url: str
+    similarity: float
+    is_exact_normalized: bool
+
+
+class GitHubParserSearchResponse(BaseModel):
+    """Response model for GitHub parser search"""
+    parser_name: str
+    matches: List[Dict]
+    has_similar_names: bool
+
+
+@router.post("/github/search", response_model=GitHubParserSearchResponse)
+async def search_github_parsers(
+    request: GitHubParserSearchRequest,
+    auth_info: tuple = Depends(get_api_key)
+):
+    """
+    Search for a parser in configured GitHub repositories
+    
+    Returns matching parsers with similarity scores. If multiple similar
+    parsers are found, the frontend should prompt the user to select one.
+    """
+    service = get_github_parser_service()
+    
+    matches = service.search_parser_in_repos(
+        parser_name=request.parser_name,
+        repo_urls=request.repo_urls,
+        github_token=request.github_token
+    )
+    
+    # Check if there are multiple similar matches that need user confirmation
+    has_similar = len(matches) > 1 or (
+        len(matches) == 1 and not matches[0].get('is_exact_normalized', False)
+    )
+    
+    return GitHubParserSearchResponse(
+        parser_name=request.parser_name,
+        matches=matches,
+        has_similar_names=has_similar
+    )
+
+
+class GitHubParserFetchRequest(BaseModel):
+    """Request model for fetching a specific parser from GitHub"""
+    repo_url: str = Field(..., description="GitHub repository URL")
+    parser_path: str = Field(..., description="Path to the parser directory in the repo")
+    github_token: Optional[str] = Field(None, description="Optional GitHub token for private repos")
+
+
+@router.post("/github/fetch")
+async def fetch_github_parser(
+    request: GitHubParserFetchRequest,
+    auth_info: tuple = Depends(get_api_key)
+):
+    """
+    Fetch parser content from a specific GitHub repository path
+    """
+    service = get_github_parser_service()
+    
+    content = service.fetch_parser_content(
+        repo_url=request.repo_url,
+        parser_path=request.parser_path,
+        github_token=request.github_token
+    )
+    
+    if content is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Parser not found at {request.parser_path} in {request.repo_url}"
+        )
+    
+    return {
+        "repo_url": request.repo_url,
+        "parser_path": request.parser_path,
+        "content": content
+    }
+
+
+@router.get("/github/list")
+async def list_github_repo_parsers(
+    repo_url: str,
+    github_token: Optional[str] = None,
+    auth_info: tuple = Depends(get_api_key)
+):
+    """
+    List all parsers available in a GitHub repository
+    """
+    service = get_github_parser_service()
+    
+    parsers = service.list_parsers_in_repo(repo_url, github_token)
+    
+    return {
+        "repo_url": repo_url,
+        "parsers": parsers,
+        "count": len(parsers)
     }

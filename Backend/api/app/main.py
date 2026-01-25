@@ -227,7 +227,7 @@ app.include_router(
 
 app.include_router(
     parser_sync.router,
-    prefix=f"{settings.API_V1_STR}/parsers",
+    prefix=f"{settings.API_V1_STR}/parser-sync",
     tags=["parser-sync"]
 )
 
