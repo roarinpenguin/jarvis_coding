@@ -72,8 +72,9 @@ class GitHubParserService:
         self,
         repo_url: str,
         github_token: Optional[str] = None,
-        max_depth: int = 2
-    ) -> List[Dict[str, str]]:
+        max_depth: int = 2,
+        return_meta: bool = False
+    ):
         """
         List all parser directories in a GitHub repository, searching subdirectories
         
@@ -87,6 +88,15 @@ class GitHubParserService:
         """
         parsed = self.parse_github_url(repo_url)
         if not parsed:
+            if return_meta:
+                return {
+                    "repo_url": repo_url,
+                    "parsers": [],
+                    "count": 0,
+                    "rate_limited": False,
+                    "warning": "Could not parse GitHub repository URL",
+                    "status_code": None,
+                }
             return []
         
         owner = parsed['owner']
@@ -101,6 +111,12 @@ class GitHubParserService:
         else:
             logger.warning("No GitHub token provided - may hit rate limits")
         
+        meta = {
+            "rate_limited": False,
+            "warning": None,
+            "status_code": None,
+        }
+
         def fetch_directory(path: str, depth: int) -> List[Dict[str, str]]:
             """Recursively fetch parser directories"""
             if depth > max_depth:
@@ -115,6 +131,15 @@ class GitHubParserService:
                 response = self.session.get(api_url, headers=headers, timeout=30)
                 
                 if response.status_code != 200:
+                    meta["status_code"] = response.status_code
+                    body_preview = (response.text or "")[:200]
+                    if response.status_code == 403 and "rate limit" in (response.text or "").lower():
+                        meta["rate_limited"] = True
+                        meta["warning"] = "GitHub API rate limit exceeded. Add a GitHub PAT to increase limits."
+                    elif response.status_code == 401:
+                        meta["warning"] = "GitHub API authentication failed (401). Check your GitHub PAT."
+                    else:
+                        meta["warning"] = f"GitHub API returned {response.status_code}."
                     logger.warning(f"GitHub API returned {response.status_code} for {api_url}: {response.text[:200]}")
                     return []
                 
@@ -163,13 +188,31 @@ class GitHubParserService:
         try:
             parsers = fetch_directory(base_path, 0)
             logger.info(f"Found {len(parsers)} parser directories in {repo_url}")
+            if return_meta:
+                warning = meta["warning"]
+                if not parsers and not warning:
+                    warning = "No parsers found in this repository path. If this is unexpected, add a GitHub PAT to avoid rate limits or verify the URL path/branch."
+                return {
+                    "repo_url": repo_url,
+                    "parsers": parsers,
+                    "count": len(parsers),
+                    "rate_limited": meta["rate_limited"],
+                    "warning": warning,
+                    "status_code": meta["status_code"],
+                }
             return parsers
             
-        except requests.exceptions.Timeout:
-            logger.error(f"Timeout fetching repo contents: {repo_url}")
-            return []
         except Exception as e:
-            logger.error(f"Error fetching repo contents: {e}")
+            logger.error(f"Error listing parsers in repo {repo_url}: {e}")
+            if return_meta:
+                return {
+                    "repo_url": repo_url,
+                    "parsers": [],
+                    "count": 0,
+                    "rate_limited": False,
+                    "warning": "Error contacting GitHub. Add a GitHub PAT or try again.",
+                    "status_code": None,
+                }
             return []
     
     def fetch_parser_content(

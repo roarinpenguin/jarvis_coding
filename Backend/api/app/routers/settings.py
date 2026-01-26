@@ -16,6 +16,12 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+DEFAULT_PARSER_REPOSITORIES = [
+    "https://github.com/Sentinel-One/ai-siem/tree/main/parsers",
+    "https://github.com/natesmalley/jarvis_coding/tree/main/Backend/parsers",
+]
+
+
 class HiddenScenariosUpdate(BaseModel):
     """Request model for updating hidden scenarios"""
     hidden_scenarios: List[str]
@@ -91,6 +97,9 @@ async def get_parser_repositories(
             repos = json.loads(setting.value)
         except json.JSONDecodeError:
             pass
+
+    if not repos:
+        repos = DEFAULT_PARSER_REPOSITORIES
     
     # Get GitHub token
     token_result = await session.execute(

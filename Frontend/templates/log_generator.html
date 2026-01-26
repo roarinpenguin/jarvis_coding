@@ -26,21 +26,55 @@
             background: rgba(26, 22, 41, 0.6);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(139, 92, 246, 0.2);
-            margin-bottom: 2rem;
+            border-radius: 1rem;
             padding: 0.75rem 0;
             position: relative;
+        }
+        .top-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+        .brand-logo {
+            width: 34px;
+            height: 34px;
+            color: #a78bfa;
+            flex: 0 0 auto;
+        }
+        .brand-logo svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .brand-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #f3e8ff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .nav-toggle {
             background: transparent;
             border: none;
             color: #a78bfa;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            padding: 0.5rem 1rem;
-            font-size: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin: 0 auto;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            margin: 0;
             transition: all 0.3s ease;
         }
         .nav-toggle:hover {
@@ -63,9 +97,8 @@
             display: none;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
-            max-width: 600px;
-            margin: 1rem auto 0;
+            gap: 0.5rem;
+            flex-wrap: wrap;
             padding-top: 1rem;
             border-top: 1px solid rgba(139, 92, 246, 0.1);
         }
@@ -219,10 +252,40 @@
 <div class="container py-6">
     <!-- Top Navigation -->
     <nav class="top-nav">
-        <button class="nav-toggle" id="nav-toggle">
-            <span class="nav-toggle-icon">☰</span>
-            <span class="nav-toggle-text">Menu</span>
-        </button>
+        <div class="top-nav-header">
+            <div class="brand">
+                <div class="brand-logo" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" version="1.1">
+                      <title>HELIOS Minimalist Logo</title>
+                      <desc>A scalable, code-based minimalist logo representing an illuminating synthetic log generator. Features a central ring containing the prompt ">H" surrounded by eight radiating data blocks.</desc>
+                      <g fill="currentColor" fill-rule="evenodd" stroke="none">
+                        <path d="M50,18 C67.673112,18 82,32.326888 82,50 C82,67.673112 67.673112,82 50,82 C32.326888,82 18,67.673112 18,50 C18,32.326888 32.326888,18 50,18 Z M50,28 C62.1502645,28 72,37.8497355 72,50 C72,62.1502645 62.1502645,72 50,72 C37.8497355,72 28,62.1502645 28,50 C28,37.8497355 37.8497355,28 50,28 Z" id="Central-Ring"/>
+                        <g id="Prompt-Text">
+                            <polygon points="33 41 42 50 33 59 37 59 46 50 37 41"/>
+                            <rect x="50" y="40" width="5" height="20"/>
+                            <rect x="60" y="40" width="5" height="20"/>
+                            <rect x="50" y="47.5" width="15" height="5"/>
+                        </g>
+                        <g id="Rays">
+                            <rect x="47" y="2" width="6" height="11" rx="3"/>
+                            <rect x="47" y="87" width="6" height="11" rx="3"/>
+                            <rect x="87" y="47" width="11" height="6" rx="3"/>
+                            <rect x="2" y="47" width="11" height="6" rx="3"/>
+                            <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(45 50 50)"/>
+                            <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(135 50 50)"/>
+                            <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(225 50 50)"/>
+                            <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(315 50 50)"/>
+                        </g>
+                      </g>
+                    </svg>
+                </div>
+                <div class="brand-title">HELIOS</div>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" style="margin-left: auto;">
+                <span class="nav-toggle-text">Menu</span>
+                <span class="nav-toggle-icon">☰</span>
+            </button>
+        </div>
         <div class="nav-tabs" id="nav-tabs">
             <button type="button" data-target="generate-section" class="nav-tab active">
                 <div class="nav-tab-icon">📊</div>
@@ -557,7 +620,13 @@
 
             <div id="settings-section" class="card space-y-4" style="display:none;">
                 <h2 class="text-2xl font-bold text-[#f3e8ff]">Settings</h2>
-                <div class="space-y-3">
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" id="settings-nav-destinations" class="btn" style="width:auto; padding:0.6rem 1rem;">Destinations</button>
+                    <button type="button" id="settings-nav-github" class="btn" style="width:auto; padding:0.6rem 1rem; background:#3c325c;">GitHub Parser Repositories</button>
+                    <button type="button" id="settings-nav-scenarios" class="btn" style="width:auto; padding:0.6rem 1rem; background:#3c325c;">Scenario Visibility</button>
+                </div>
+
+                <div id="settings-panel-destinations" class="space-y-3">
                     <h3 class="text-xl font-bold text-[#f3e8ff]">Destinations</h3>
                     <form id="destinations-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="input-group">
@@ -678,8 +747,8 @@
                         </button>
                     </div>
                 </div>
-                
-                <div class="space-y-3 mt-6">
+
+                <div id="settings-panel-github" class="space-y-3" style="display:none;">
                     <h3 class="text-xl font-bold text-[#f3e8ff]">GitHub Parser Repositories</h3>
                     <p class="text-sm text-[#b8a0d2]">Configure up to 3 GitHub repositories where parsers can be fetched from before running scenarios. When a parser has similar names across repos, you'll be asked to confirm which one to use.</p>
                     <div class="space-y-3 p-3 bg-[#241d3a] rounded-lg border border-[#3c325c]">
@@ -708,8 +777,8 @@
                     <button type="button" id="save-parser-repos" class="btn" style="width: auto;">Save Parser Repositories</button>
                     <button type="button" id="test-parser-repos" class="btn" style="width: auto; background: #3c325c; margin-left: 8px;">Test Connection</button>
                 </div>
-                
-                <div class="space-y-3 mt-6">
+
+                <div id="settings-panel-scenarios" class="space-y-3" style="display:none;">
                     <h3 class="text-xl font-bold text-[#f3e8ff]">Scenario Visibility</h3>
                     <p class="text-sm text-[#b8a0d2]">Select which scenarios to hide from the dropdown menu. Hidden scenarios won't appear in the Scenarios tab.</p>
                     <div id="scenario-visibility-list" class="space-y-2 max-h-64 overflow-y-auto p-3 bg-[#241d3a] rounded-lg border border-[#3c325c]">
@@ -797,7 +866,7 @@
         </div>
         <div class="flex gap-3 pt-4 mt-4 border-t border-[#3c325c]">
             <button type="button" id="confirm-parser-select" class="btn flex-1">Use Selected Parser</button>
-            <button type="button" id="skip-parser-select" class="flex-1 px-4 py-2 bg-[#3c325c] hover:bg-[#4a416e] rounded-lg text-[#f3e8ff] transition-all" style="border: none; cursor: pointer;">Skip (Use Local)</button>
+            <button type="button" id="skip-parser-select" class="btn flex-1 px-4 py-2 bg-[#3c325c] hover:bg-[#4a416e] rounded-lg text-[#f3e8ff] transition-all" style="border: none; cursor: pointer;">Skip (Use Local)</button>
         </div>
     </div>
 </div>
@@ -856,6 +925,42 @@
                 eventsPanel.appendChild(destContainer);
             }
         }));
+
+        // Settings sub-navigation
+        const settingsNavDestinations = document.getElementById('settings-nav-destinations');
+        const settingsNavGithub = document.getElementById('settings-nav-github');
+        const settingsNavScenarios = document.getElementById('settings-nav-scenarios');
+        const settingsPanelDestinations = document.getElementById('settings-panel-destinations');
+        const settingsPanelGithub = document.getElementById('settings-panel-github');
+        const settingsPanelScenarios = document.getElementById('settings-panel-scenarios');
+
+        function setSettingsButtonActive(activeBtn) {
+            const buttons = [settingsNavDestinations, settingsNavGithub, settingsNavScenarios].filter(Boolean);
+            buttons.forEach(btn => {
+                if (btn === activeBtn) {
+                    btn.style.background = '';
+                } else {
+                    btn.style.background = '#3c325c';
+                }
+            });
+        }
+
+        function showSettingsPanel(panel) {
+            if (settingsPanelDestinations) settingsPanelDestinations.style.display = (panel === 'destinations') ? '' : 'none';
+            if (settingsPanelGithub) settingsPanelGithub.style.display = (panel === 'github') ? '' : 'none';
+            if (settingsPanelScenarios) settingsPanelScenarios.style.display = (panel === 'scenarios') ? '' : 'none';
+
+            if (panel === 'destinations') setSettingsButtonActive(settingsNavDestinations);
+            if (panel === 'github') setSettingsButtonActive(settingsNavGithub);
+            if (panel === 'scenarios') setSettingsButtonActive(settingsNavScenarios);
+        }
+
+        if (settingsNavDestinations) settingsNavDestinations.addEventListener('click', () => showSettingsPanel('destinations'));
+        if (settingsNavGithub) settingsNavGithub.addEventListener('click', () => showSettingsPanel('github'));
+        if (settingsNavScenarios) settingsNavScenarios.addEventListener('click', () => showSettingsPanel('scenarios'));
+
+        // Default Settings panel
+        showSettingsPanel('destinations');
 
         const form = document.getElementById('log-form');
         const scriptSelect = document.getElementById('script');
@@ -1310,7 +1415,12 @@
                 const res = await fetch('/api/v1/settings/parser-repositories');
                 if (res.ok) {
                     const data = await res.json();
-                    const repos = data.repositories || [];
+                    const repos = (data.repositories && data.repositories.length)
+                        ? data.repositories
+                        : [
+                            'https://github.com/Sentinel-One/ai-siem/tree/main/parsers',
+                            'https://github.com/natesmalley/jarvis_coding/tree/main/Backend/parsers'
+                        ];
                     document.getElementById('parser-repo-1').value = repos[0] || '';
                     document.getElementById('parser-repo-2').value = repos[1] || '';
                     document.getElementById('parser-repo-3').value = repos[2] || '';
@@ -1382,13 +1492,27 @@
                         if (res.ok) {
                             const data = await res.json();
                             totalParsers += data.count || 0;
-                            results.push(`${repoUrl}: ${data.count} parsers found`);
+                            const count = data.count || 0;
+                            const warning = data.warning;
+                            const rateLimited = data.rate_limited;
+                            const statusCode = data.status_code;
+                            let line = `${repoUrl}: ${count} parsers found`;
+                            if (rateLimited || statusCode === 403) {
+                                line += `\n  WARNING: ${warning || 'GitHub rate limit hit. Add a PAT to increase limits.'}`;
+                            } else if (count === 0) {
+                                line += `\n  WARNING: ${warning || '0 parsers returned. If unexpected, add a PAT to avoid rate limits or verify the repo URL/path.'}`;
+                            } else if (warning) {
+                                line += `\n  WARNING: ${warning}`;
+                            }
+                            results.push(line);
                         } else {
                             results.push(`${repoUrl}: Failed to connect`);
                         }
                     }
                     
-                    alert('✓ Connection Test Results:\n\n' + results.join('\n') + '\n\nTotal: ' + totalParsers + ' parsers');
+                    const needsPat = results.some(r => r.includes('rate limit') || r.includes('rate limit exceeded') || r.includes('0 parsers'));
+                    const patHint = needsPat ? '\n\nTip: Add a GitHub PAT in Settings to increase API limits (and access private repos).' : '';
+                    alert('✓ Connection Test Results:\n\n' + results.join('\n\n') + '\n\nTotal: ' + totalParsers + ' parsers' + patHint);
                 } catch (err) {
                     console.error('Failed to test parser repositories:', err);
                     alert('Failed to test connection: ' + err.message);

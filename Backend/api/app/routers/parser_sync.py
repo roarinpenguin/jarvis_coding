@@ -245,11 +245,18 @@ async def list_github_repo_parsers(
     List all parsers available in a GitHub repository
     """
     service = get_github_parser_service()
-    
-    parsers = service.list_parsers_in_repo(repo_url, github_token)
-    
+
+    result = service.list_parsers_in_repo(
+        repo_url=repo_url,
+        github_token=github_token,
+        return_meta=True
+    )
+
     return {
         "repo_url": repo_url,
-        "parsers": parsers,
-        "count": len(parsers)
+        "parsers": result.get("parsers", []),
+        "count": result.get("count", 0),
+        "rate_limited": result.get("rate_limited", False),
+        "warning": result.get("warning"),
+        "status_code": result.get("status_code"),
     }
