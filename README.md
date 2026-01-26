@@ -1,6 +1,9 @@
-# Welcome to HELIOS - HEC-enabled Event Log Inject & Orchestration System
+<p align="center">
+  <img src="docs/helios-logo.svg" alt="HELIOS Logo" width="80" height="80" style="vertical-align: middle;">
+  <span style="font-size: 2.5em; font-weight: bold; vertical-align: middle; margin-left: 10px;">HELIOS</span>
+</p>
 
-## HELIOS Frontend & Backend – Docker Quickstart
+<h3 align="center">Synthetic Log Generator – Docker Quickstart</h3>
 
 This repository contains two services:
 - Backend API (FastAPI) under `Backend/api/`
