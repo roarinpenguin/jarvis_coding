@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/helios-logo.png" alt="HELIOS Logo" width="80" height="80">
+  <img src="docs/helioslogo.png" alt="HELIOS Logo" width="80" height="80">
 </p>
 
 # Welcome to HELIOS - HEC-enabled Event Log Inject & Orchestration System
