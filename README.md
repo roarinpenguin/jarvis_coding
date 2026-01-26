@@ -49,6 +49,10 @@ docker compose up -d --build
 docker compose down
 ```
 
+## The RoarinPenguin Guide to HELIOS 1.0 - January 2026
+In the docs directory, you will find a PDF file that provides a comprehensive guide to HELIOS 1.0. 
+Or click this link: [The RoarinPenguin Guide to HELIOS 1.0 - January 2026](docs/The%20RoarinPenguin%20Guide%20to%20HELIOS%201.0%20-%20January%202026.pdf)
+
 ## Step-by-Step (Beginner Friendly)
 1. Build images (compiles dependencies and copies code):
 ```bash
@@ -140,7 +144,7 @@ docker compose down && docker compose up -d
 ```
 
 ### "port already in use"
-Another process is using that port. The UI maps `9001:8000`. Either stop the other app or change the left number in `docker-compose.yml`.
+Another process is using that port. The UI maps `9002:8000`. Either stop the other app or change the left number in `docker-compose.yml`.
 
 ### API keeps restarting with missing modules
 Rebuild the API image: 
@@ -152,7 +156,7 @@ docker compose build api --no-cache && docker compose up -d
 The image includes symlinks for these paths; ensure you rebuilt after recent changes.
 
 ### Frontend can’t reach backend
-Inside containers, the UI uses `API_BASE_URL=http://api:8000`. From your host, use `http://localhost:8000` for the API and `http://localhost:9001` for the UI.
+Inside containers, the UI uses `API_BASE_URL=http://api:8000`. From your host, use `http://localhost:8000` for the API and `http://localhost:9002` for the UI.
 
 ## Development Tips
 - Live code mounting is enabled for the UI and backend content in Compose (read-only) to keep container images small and consistent. Rebuild images when you change Dockerfiles or dependencies.
