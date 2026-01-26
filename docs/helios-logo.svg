@@ -10,14 +10,16 @@
       <rect x="50" y="47.5" width="15" height="5"/>
     </g>
     <g id="Rays">
+      <!-- Cardinal rays -->
       <rect x="47" y="2" width="6" height="11" rx="3"/>
       <rect x="47" y="87" width="6" height="11" rx="3"/>
       <rect x="87" y="47" width="11" height="6" rx="3"/>
       <rect x="2" y="47" width="11" height="6" rx="3"/>
-      <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(45 50 50)"/>
-      <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(135 50 50)"/>
-      <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(225 50 50)"/>
-      <rect x="47" y="2" width="6" height="11" rx="3" transform="rotate(315 50 50)"/>
+      <!-- Diagonal rays (pre-calculated positions) -->
+      <ellipse cx="84" cy="16" rx="3" ry="5.5"/>
+      <ellipse cx="16" cy="84" rx="3" ry="5.5"/>
+      <ellipse cx="84" cy="84" rx="3" ry="5.5"/>
+      <ellipse cx="16" cy="16" rx="3" ry="5.5"/>
     </g>
   </g>
 </svg>
