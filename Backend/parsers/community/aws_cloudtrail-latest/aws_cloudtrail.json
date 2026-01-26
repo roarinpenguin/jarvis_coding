@@ -240,56 +240,56 @@
             "constant": {
               "value": 1,
               "field": "activity_id",
-              "predicate": "unmapped.errorCode == """
+              "predicate": "unmapped.errorCode == \"\""
             }
           },
           {
             "constant": {
               "value": 2,
               "field": "activity_id",
-              "predicate": "unmapped.errorCode != """
+              "predicate": "unmapped.errorCode != \"\""
             }
           },
           {
             "constant": {
               "value": 1,
               "field": "severity_id",
-              "predicate": "unmapped.errorCode == """
+              "predicate": "unmapped.errorCode == \"\""
             }
           },
           {
             "constant": {
               "value": 3,
               "field": "severity_id",
-              "predicate": "unmapped.errorCode != """
+              "predicate": "unmapped.errorCode != \"\""
             }
           },
           {
             "constant": {
               "value": 1,
               "field": "status_id",
-              "predicate": "unmapped.errorCode == """
+              "predicate": "unmapped.errorCode == \"\""
             }
           },
           {
             "constant": {
               "value": 2,
               "field": "status_id",
-              "predicate": "unmapped.errorCode != """
+              "predicate": "unmapped.errorCode != \"\""
             }
           },
           {
             "constant": {
               "value": "Success",
               "field": "status",
-              "predicate": "unmapped.errorCode == """
+              "predicate": "unmapped.errorCode == \"\""
             }
           },
           {
             "constant": {
               "value": "Failure",
               "field": "status",
-              "predicate": "unmapped.errorCode != """
+              "predicate": "unmapped.errorCode != \"\""
             }
           }
         ]

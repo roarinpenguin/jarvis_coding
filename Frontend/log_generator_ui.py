@@ -399,6 +399,88 @@ def set_hidden_scenarios():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/v1/settings/parser-repositories', methods=['GET'])
+def get_parser_repositories():
+    """Proxy to get parser GitHub repositories from backend"""
+    try:
+        headers = {'X-API-Key': BACKEND_API_KEY} if BACKEND_API_KEY else {}
+        res = requests.get(f"{API_BASE_URL}/api/v1/settings/parser-repositories", headers=headers, timeout=5)
+        return jsonify(res.json()), res.status_code
+    except Exception as e:
+        logger.error(f"Failed to get parser repositories: {e}")
+        return jsonify({'repositories': []}), 200
+
+
+@app.route('/api/v1/settings/parser-repositories', methods=['PUT'])
+def set_parser_repositories():
+    """Proxy to set parser GitHub repositories in backend"""
+    try:
+        headers = {'X-API-Key': BACKEND_API_KEY, 'Content-Type': 'application/json'} if BACKEND_API_KEY else {'Content-Type': 'application/json'}
+        res = requests.put(
+            f"{API_BASE_URL}/api/v1/settings/parser-repositories",
+            headers=headers,
+            json=request.json,
+            timeout=5
+        )
+        return jsonify(res.json()), res.status_code
+    except Exception as e:
+        logger.error(f"Failed to set parser repositories: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/v1/parser-sync/github/search', methods=['POST'])
+def search_github_parsers():
+    """Proxy to search for parsers in GitHub repositories"""
+    try:
+        headers = {'X-API-Key': BACKEND_API_KEY, 'Content-Type': 'application/json'} if BACKEND_API_KEY else {'Content-Type': 'application/json'}
+        res = requests.post(
+            f"{API_BASE_URL}/api/v1/parser-sync/github/search",
+            headers=headers,
+            json=request.json,
+            timeout=30
+        )
+        return jsonify(res.json()), res.status_code
+    except Exception as e:
+        logger.error(f"Failed to search GitHub parsers: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/v1/parser-sync/github/fetch', methods=['POST'])
+def fetch_github_parser():
+    """Proxy to fetch parser content from GitHub"""
+    try:
+        headers = {'X-API-Key': BACKEND_API_KEY, 'Content-Type': 'application/json'} if BACKEND_API_KEY else {'Content-Type': 'application/json'}
+        res = requests.post(
+            f"{API_BASE_URL}/api/v1/parser-sync/github/fetch",
+            headers=headers,
+            json=request.json,
+            timeout=30
+        )
+        return jsonify(res.json()), res.status_code
+    except Exception as e:
+        logger.error(f"Failed to fetch GitHub parser: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/v1/parser-sync/github/list', methods=['GET'])
+def list_github_repo_parsers():
+    """Proxy to list parsers in a GitHub repository"""
+    try:
+        headers = {'X-API-Key': BACKEND_API_KEY} if BACKEND_API_KEY else {}
+        repo_url = request.args.get('repo_url', '')
+        github_token = request.args.get('github_token', '')
+        res = requests.get(
+            f"{API_BASE_URL}/api/v1/parser-sync/github/list",
+            headers=headers,
+            params={'repo_url': repo_url, 'github_token': github_token},
+            timeout=30
+        )
+        return jsonify(res.json()), res.status_code
+    except Exception as e:
+        logger.error(f"Failed to list GitHub parsers: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
 # Track running scenario process for stop functionality
 _running_scenario_process = None
 _running_scenario_lock = threading.Lock()
@@ -488,6 +570,8 @@ def run_scenario():
         # Fetch config token and URL for parser sync if available
         config_api_url = chosen.get('config_api_url')
         config_write_token = None
+        github_repo_urls = []
+        github_token = None
         if sync_parsers and chosen.get('has_config_write_token') and config_api_url:
             try:
                 config_resp = requests.get(
@@ -501,6 +585,22 @@ def run_scenario():
                     logger.info(f"Retrieved config token for parser sync (API URL: {config_api_url})")
             except Exception as ce:
                 logger.warning(f"Failed to retrieve config token: {ce}")
+            
+            # Fetch GitHub parser repositories from settings
+            try:
+                repos_resp = requests.get(
+                    f"{API_BASE_URL}/api/v1/settings/parser-repositories",
+                    headers=_get_api_headers(),
+                    timeout=10
+                )
+                if repos_resp.status_code == 200:
+                    repos_data = repos_resp.json()
+                    github_repo_urls = [url for url in repos_data.get('repositories', []) if url]
+                    github_token = repos_data.get('github_token')
+                    if github_repo_urls:
+                        logger.info(f"Retrieved {len(github_repo_urls)} GitHub parser repositories")
+            except Exception as ge:
+                logger.warning(f"Failed to retrieve GitHub parser repositories: {ge}")
     except Exception as e:
         logger.error(f"Failed to resolve destination: {e}")
         return jsonify({'error': f'Failed to resolve destination: {str(e)}'}), 500
@@ -513,15 +613,21 @@ def run_scenario():
             if sync_parsers and config_write_token and config_api_url:
                 yield "INFO: Checking required parsers in destination SIEM...\n"
                 try:
-                    # Call the parser sync API
+                    # Call the parser sync API with GitHub repos
+                    sync_payload = {
+                        "scenario_id": scenario_id,
+                        "config_api_url": config_api_url,
+                        "config_write_token": config_write_token
+                    }
+                    if github_repo_urls:
+                        sync_payload["github_repo_urls"] = github_repo_urls
+                    if github_token:
+                        sync_payload["github_token"] = github_token
+                    
                     sync_resp = requests.post(
-                        f"{API_BASE_URL}/api/v1/parsers/sync",
+                        f"{API_BASE_URL}/api/v1/parser-sync/sync",
                         headers=_get_api_headers(),
-                        json={
-                            "scenario_id": scenario_id,
-                            "config_api_url": config_api_url,
-                            "config_write_token": config_write_token
-                        },
+                        json=sync_payload,
                         timeout=120
                     )
                     if sync_resp.status_code == 200:

@@ -14,6 +14,8 @@ from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 import requests
 
+from app.services.github_parser_service import get_github_parser_service
+
 logger = logging.getLogger(__name__)
 
 # Mapping from generator/source names to parser sourcetypes
@@ -163,6 +165,68 @@ class ParserSyncService:
         logger.warning(f"Parser not found locally: {sourcetype}")
         return None
     
+    def load_parser_from_github(
+        self,
+        sourcetype: str,
+        repo_urls: List[str],
+        selected_parser: Optional[Dict] = None,
+        github_token: Optional[str] = None
+    ) -> Optional[str]:
+        """
+        Load parser content from configured GitHub repositories
+        
+        Args:
+            sourcetype: The parser sourcetype to find
+            repo_urls: List of GitHub repository URLs to search
+            selected_parser: Optional pre-selected parser info from user choice
+            github_token: Optional GitHub personal access token
+            
+        Returns:
+            Parser JSON content as string, or None if not found
+        """
+        if not repo_urls:
+            return None
+        
+        github_service = get_github_parser_service()
+        
+        # If user already selected a specific parser, fetch that one
+        if selected_parser:
+            repo_url = selected_parser.get('repo_url')
+            parser_path = selected_parser.get('path')
+            if repo_url and parser_path:
+                content = github_service.fetch_parser_content(
+                    repo_url=repo_url,
+                    parser_path=parser_path,
+                    github_token=github_token
+                )
+                if content:
+                    logger.info(f"Loaded parser from GitHub: {parser_path}")
+                    return content
+        
+        # Otherwise, search for matching parser in all repos
+        matches = github_service.search_parser_in_repos(
+            parser_name=sourcetype,
+            repo_urls=repo_urls,
+            github_token=github_token
+        )
+        
+        if not matches:
+            logger.info(f"No matching parser found in GitHub repos for: {sourcetype}")
+            return None
+        
+        # Use the best match (first one, sorted by similarity)
+        best_match = matches[0]
+        content = github_service.fetch_parser_content(
+            repo_url=best_match.get('repo_url'),
+            parser_path=best_match.get('path'),
+            github_token=github_token
+        )
+        
+        if content:
+            logger.info(f"Loaded parser from GitHub: {best_match.get('path')} (similarity: {best_match.get('similarity', 0):.0%})")
+        
+        return content
+    
     def check_parser_exists(
         self,
         config_token: str,
@@ -287,7 +351,10 @@ class ParserSyncService:
     def ensure_parsers_for_sources(
         self,
         sources: List[str],
-        config_write_token: str
+        config_write_token: str,
+        github_repo_urls: Optional[List[str]] = None,
+        github_token: Optional[str] = None,
+        selected_parsers: Optional[Dict[str, Dict]] = None
     ) -> Dict[str, dict]:
         """
         Ensure all required parsers exist in the destination SIEM
@@ -295,21 +362,42 @@ class ParserSyncService:
         Args:
             sources: List of scenario sources (e.g., ['okta_authentication', 'microsoft_azuread'])
             config_write_token: The config API token (used for both reading and writing)
+            github_repo_urls: Optional list of GitHub repository URLs to fetch parsers from
+            github_token: Optional GitHub personal access token for private repos
+            selected_parsers: Optional dict mapping sourcetype to user-selected parser info
             
         Returns:
             Dict with status for each source:
             {
                 'okta_authentication': {
-                    'status': 'exists' | 'uploaded' | 'failed' | 'no_parser',
+                    'status': 'exists' | 'uploaded' | 'uploaded_from_github' | 'failed' | 'no_parser',
                     'sourcetype': str,
                     'message': str
                 }
             }
         """
         results = {}
+        selected_parsers = selected_parsers or {}
+        github_service = get_github_parser_service() if github_repo_urls else None
         
         for source in sources:
             sourcetype = self.get_parser_sourcetype(source)
+            
+            # If no local mapping, try to find parser in GitHub using source name directly
+            if not sourcetype and github_repo_urls and github_service:
+                logger.info(f"No local mapping for '{source}', searching GitHub repos...")
+                matches = github_service.search_parser_in_repos(
+                    parser_name=source,
+                    repo_urls=github_repo_urls,
+                    github_token=github_token
+                )
+                if matches:
+                    # Use the best match's name as sourcetype
+                    best_match = matches[0]
+                    sourcetype = best_match.get('name')
+                    # Store the match for later use
+                    selected_parsers[sourcetype] = best_match
+                    logger.info(f"Found GitHub parser '{sourcetype}' for source '{source}' (similarity: {best_match.get('similarity', 0):.0%})")
             
             if not sourcetype:
                 results[source] = {
@@ -332,30 +420,53 @@ class ParserSyncService:
                 }
                 continue
             
-            # Parser doesn't exist, try to upload it
-            local_content = self.load_local_parser(sourcetype)
+            # Parser doesn't exist, try to find it
+            parser_content = None
+            from_github = False
+            actual_sourcetype = sourcetype  # Track what we actually upload
             
-            if not local_content:
+            # First, try local parser (preferred - known good quality)
+            parser_content = self.load_local_parser(sourcetype)
+            
+            # Fall back to GitHub repositories if no local parser found
+            if not parser_content and github_repo_urls:
+                selected = selected_parsers.get(sourcetype)
+                parser_content = self.load_parser_from_github(
+                    sourcetype=sourcetype,
+                    repo_urls=github_repo_urls,
+                    selected_parser=selected,
+                    github_token=github_token
+                )
+                if parser_content:
+                    from_github = True
+                    # If we found from selected parser, use its name for the path
+                    if selected and selected.get('name'):
+                        actual_sourcetype = selected.get('name')
+                        parser_path = self.get_parser_path_in_siem(actual_sourcetype)
+            
+            if not parser_content:
                 results[source] = {
                     "status": "failed",
                     "sourcetype": sourcetype,
-                    "message": f"Parser not found locally: {sourcetype}"
+                    "message": f"Parser not found locally or in GitHub repos: {sourcetype}"
                 }
                 continue
             
             # Upload the parser
-            success = self.upload_parser(config_write_token, parser_path, local_content)
+            success = self.upload_parser(config_write_token, parser_path, parser_content)
             
             if success:
+                status = "uploaded_from_github" if from_github else "uploaded"
+                source_label = "GitHub" if from_github else "local"
                 results[source] = {
-                    "status": "uploaded",
-                    "sourcetype": sourcetype,
-                    "message": f"Parser uploaded successfully: {parser_path}"
+                    "status": status,
+                    "sourcetype": actual_sourcetype,
+                    "message": f"Parser uploaded successfully from {source_label}: {parser_path}"
                 }
             else:
                 results[source] = {
                     "status": "failed",
-                    "sourcetype": sourcetype,
+                    "sourcetype": actual_sourcetype,
                     "message": f"Failed to upload parser: {parser_path}"
                 }
         
